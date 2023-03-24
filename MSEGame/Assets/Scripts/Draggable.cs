@@ -12,7 +12,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentAfterDrag = transform.parent;
-        Debug.Log("Begin Parent: " + transform.parent.name);
         transform.SetParent(transform.root);
         Debug.Log(transform.root.name);
         transform.SetAsLastSibling();

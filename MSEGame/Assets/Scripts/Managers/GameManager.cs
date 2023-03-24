@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -12,12 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameState state;
     public static event Action<GameState> OnGameStateChange;
-
-    // Cards
-    public List<Card> deck = new List<Card>();
-    public Transform[] cardSlots;
-    public bool[] availableCardSlots;
-
+    public Button nextStageButton;
 
     void Awake()
     {
@@ -27,22 +21,26 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UpdateGameStates(GameState.InventoryManagement);
+        nextStageButton.onClick.AddListener(HandleNextStageButtonClicked);
     }
 
-    // Update is called once per frame
-    void UpdateGameStates(GameState newState)
+    public void UpdateGameStates(GameState newState)
     {
         state = newState;
+        Debug.Log("New Stage: " + state.ToString());
 
         switch (newState)
         {
             case GameState.InventoryManagement:
                 break;
             case GameState.DrawCard:
+                CardManager.instance.DrawCards(1);
                 break;
             case GameState.Combat:
+
                 break;
             case GameState.Victory:
+                CardManager.instance.DrawCards(3);
                 break;
             case GameState.Defeat:
                 break;
@@ -53,12 +51,9 @@ public class GameManager : MonoBehaviour
         OnGameStateChange?.Invoke(newState);
     }
 
-    public void DrawCard()
+    void HandleNextStageButtonClicked()
     {
-        if(deck.Count >= 1)
-        {
-            Card randomCard = deck[Random.Range(0, deck.Count)];
-        }
+        UpdateGameStates(GameState.DrawCard);
     }
 }
 

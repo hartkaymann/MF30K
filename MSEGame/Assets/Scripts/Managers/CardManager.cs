@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
+    public static CardManager instance;
+
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private GameObject canvas;
 
@@ -13,27 +15,13 @@ public class CardManager : MonoBehaviour
     public Sprite cardArtwork;
     public int cardCost;
     public int cardStat;
-    public int amount;
 
-    void Start()
+    void Awake()
     {
-        Card card = new Card(cardTitle, cardType, cardArtwork, cardCost, cardStat);
-
-        int baseX = amount * -5;
-        for(int i = 0; i < amount; i++)
-        {
-            Vector2 pos = new Vector3(baseX + i * 10, -50, 0);
-            InstantiateCard(card, pos);
-
-        }
+        instance = this;
     }
 
-    void Update()
-    {
-
-    }
-
-    void InstantiateCard(Card card, Vector3 pos)
+    public void InstantiateCard(Card card, Vector3 pos)
     {
         GameObject go = Instantiate(cardPrefab, pos, Quaternion.identity);
         go.transform.SetParent(canvas.transform, false);
@@ -42,7 +30,16 @@ public class CardManager : MonoBehaviour
         {
             cd.setCard(card);
         }
+    }
 
-        Debug.Log("Instantiating Card" + card.name);
+    public void DrawCards(int amount)
+    {
+        Card card = new Card(cardTitle, cardType, cardArtwork, cardCost, cardStat);
+
+        int baseX = -50 * amount;
+        for (int i = 0; i < amount; i++)
+        {
+            InstantiateCard(card, new Vector3(baseX + i + amount, 0, 0));
+        }
     }
 }
