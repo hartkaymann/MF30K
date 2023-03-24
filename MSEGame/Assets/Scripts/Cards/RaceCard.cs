@@ -10,14 +10,14 @@ public enum Race
     Orc
 }
 
-public class RaceCard : Card
+public class RaceCard
 {
     private int id;
     private string ability;
 
     private Race race;
 
-    public RaceCard(Race race) : base(race.ToString())
+    public RaceCard(Race race)
     {
         this.race = race;
     }

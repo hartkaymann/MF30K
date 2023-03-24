@@ -10,12 +10,11 @@ enum EquipmentType
     Boots
 }
 
-public class EquipmentCard : Card
+public class EquipmentCard
 {
 
     private EquipmentType type;
-    public EquipmentCard(string name) : base(name)
-    {
+    public EquipmentCard(string name) {
 
     }
 }

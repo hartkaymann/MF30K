@@ -8,7 +8,7 @@ public enum Gender
     Female
 }
 
-public class Player
+public class Player : ScriptableObject
 {
     private int level = 0;
     private int combatLevel = 0;
