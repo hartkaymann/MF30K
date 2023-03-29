@@ -39,7 +39,7 @@ public class CardManager : MonoBehaviour
         int baseX = -50 * amount;
         for (int i = 0; i < amount; i++)
         {
-            InstantiateCard(card, new Vector3(baseX + i + amount, 0, 0));
+            InstantiateCard(card, new Vector3(baseX + i * 100, 0, 0));
         }
     }
 }

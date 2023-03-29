@@ -9,7 +9,8 @@ public class MenuManager : MonoBehaviour
     public static MenuManager instance;
  
     [SerializeField] private GameObject hand;
-    [SerializeField] private GameObject nextStageButton;
+    [SerializeField] private GameObject btnNext;
+    [SerializeField] private GameObject btnCombat;
 
     private void Awake()
     {
@@ -24,7 +25,8 @@ public class MenuManager : MonoBehaviour
 
     private void GameManagerOnGameStateChanged(GameState state)
     {
-        nextStageButton.SetActive(state == GameState.InventoryManagement);
+        btnNext.SetActive(state == GameState.InventoryManagement);
+        btnCombat.SetActive(state == GameState.CombatPreparations);
     }
 
 }
