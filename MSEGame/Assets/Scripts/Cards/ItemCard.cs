@@ -2,14 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemCard
+public class ItemCard : Card
 {
-
-    private int value;
-    private int stat;
-
-    public ItemCard(string name)    {
+    public ItemCard(string name, Sprite artwork, int cost, int stat) : base(name, CardTypes.Item, artwork, cost, stat)
+    {
 
     }
-
 }

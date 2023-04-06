@@ -30,7 +30,7 @@ public class CardRenderer : MonoBehaviour
     void UpdateCardData()
     {
         nameText.text = card.name;
-        typeText.text = card.type;
+        typeText.text = card.type.ToString().Substring(0, 1);
 
         artworkImage.sprite = card.artwork;
 

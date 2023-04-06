@@ -10,13 +10,12 @@ public enum Profession
     Ranger
 }
 
-public class ProfessionCard
+public class ProfessionCard : Card
 {
-    private int id;
     private Profession profession;
     private string ability;
 
-    public ProfessionCard(Profession profession)
+    public ProfessionCard(Profession profession, Sprite artwork, int cost, int stat) : base(profession.ToString(), CardTypes.Profession, artwork, cost, stat)
     {
         this.profession = profession;
     }

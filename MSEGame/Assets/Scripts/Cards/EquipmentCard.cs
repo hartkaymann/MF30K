@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-enum EquipmentType
+public enum EquipmentType
 {
     Weapon,
     Helmet,
@@ -10,11 +10,12 @@ enum EquipmentType
     Boots
 }
 
-public class EquipmentCard
+public class EquipmentCard : Card
 {
 
-    private EquipmentType type;
-    public EquipmentCard(string name) {
-
+    private EquipmentType equipType;
+    public EquipmentCard(string name, EquipmentType equipType, Sprite artwork, int cost, int stat) : base(name, CardTypes.Equipment, artwork, cost, stat)
+    {
+        this.equipType = equipType;
     }
 }

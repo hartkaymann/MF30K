@@ -14,8 +14,8 @@ public class Player : MonoBehaviour
     private int combatLevel = 0;
 
     private Gender gender;
-    private RaceCard race;
-    private ProfessionCard profession;
+    private Race race;
+    private Profession profession;
 
     private EquipmentCard weaponL;
     private EquipmentCard weaponR;
@@ -26,16 +26,18 @@ public class Player : MonoBehaviour
     private List<Card> backpack;
     private List<Card> hand;
 
-    public Player(Gender gender, Race race, Profession profession) { 
+    public Player(Gender gender, Race race, Profession profession)
+    {
         backpack = new List<Card>();
         hand = new List<Card>();
 
         this.gender = gender;
-        this.race = new RaceCard(race);
-        this.profession = new ProfessionCard(profession);
+        this.race = race;
+        this.profession = profession;
     }
 
-    public bool equip(Card card) {
+    public bool equip(Card card)
+    {
         return true;
     }
 
