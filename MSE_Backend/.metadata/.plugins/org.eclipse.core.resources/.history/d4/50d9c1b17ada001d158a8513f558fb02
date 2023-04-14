@@ -22,7 +22,6 @@ public class GameController {
 		model.addAttribute("name", name);
 		
 		return "test";
-		//test
 	}
 	
 
