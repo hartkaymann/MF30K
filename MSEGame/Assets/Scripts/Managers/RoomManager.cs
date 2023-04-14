@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class RoomManager : MonoBehaviour
 {
-    public static RoomManager instance; 
+    public static RoomManager instance;
+    public RoomRenderer roomRenderer;
 
-    public Monster monster;
-    public Player player;
+    private Room currentRoom;
 
-    public GameObject enemy;
+    private GameObject roomPrefab;
     public GameObject treasure;
+    public GameObject enemy;
 
     void Awake()
     {
-        instance = this; 
+        instance = this;
+        roomRenderer = roomPrefab.GetComponent<RoomRenderer>();
     }
 
-    public void InstantiateRoom()
+    public void InstantiateRoom(Room room)
     {
-        
+        currentRoom = room;
+
+        GameObject go = Instantiate(roomPrefab, Vector3.zero, Quaternion.identity);
+        roomRenderer.Render(room);
     }
 }

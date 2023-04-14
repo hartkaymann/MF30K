@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class CardRenderer : MonoBehaviour
 {
-    public Card card;
-
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI typeText;
 
@@ -16,18 +14,7 @@ public class CardRenderer : MonoBehaviour
     public TextMeshProUGUI costText;
     public TextMeshProUGUI statText;
 
-    void Start()
-    {
-       
-    }
-
-    public void setCard(Card card)
-    {
-        this.card = card;
-        UpdateCardData();
-    }
-
-    void UpdateCardData()
+    public void Render(Card card)
     {
         nameText.text = card.name;
         typeText.text = card.type.ToString().Substring(0, 1);

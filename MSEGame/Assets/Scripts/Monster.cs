@@ -5,6 +5,7 @@ using UnityEngine;
 public class Monster
 {
     private int combatLevel;
+    private Sprite sprite;
     
     public Monster(int combatLevel)
     {

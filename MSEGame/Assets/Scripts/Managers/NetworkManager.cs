@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -26,11 +23,24 @@ class ResponseObject
 
 public class NetworkManager : MonoBehaviour
 {
+    public static NetworkManager instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     [ContextMenu("Send Request")]
     private async void testRequest()
     {
-        UnityWebRequest req = CreateRequest("https://jsonplaceholder.typicode.com/posts/1");
+        ResponseObject data = new ResponseObject();
+        data.userId = 12345;
+        data.id = 1;
+        data.title = "Test Title";
+        data.body = "Test Body Lorem Ipsum ladida";
+        
+
+        UnityWebRequest req = CreateRequest("http://192.168.0.37:5555/test", RequestType.POST, data);
         var operation = req.SendWebRequest();
 
         while (!operation.isDone)
@@ -68,5 +78,15 @@ public class NetworkManager : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
 
         return request;
+    }
+
+    public Card getCard()
+    {
+        return new ItemCard("Card", Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero), 10, 5);
+    }
+
+    public void getRoom()
+    {
+
     }
 }

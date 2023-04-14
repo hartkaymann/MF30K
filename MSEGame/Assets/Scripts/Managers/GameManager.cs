@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,8 +10,9 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameState state;
     public static event Action<GameState> OnGameStateChange;
+
+    // UI
     public Button btnNext;
-    public Button btnCombat;
 
     void Awake()
     {
@@ -21,9 +21,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // Event handlers and listeners
         UpdateGameStates(GameState.InventoryManagement);
         btnNext.onClick.AddListener(HandleNextStageButtonClicked);
-        btnCombat.onClick.AddListener(HandleCombatButtonClicked);
     }
 
     public void UpdateGameStates(GameState newState)
@@ -36,8 +36,7 @@ public class GameManager : MonoBehaviour
             case GameState.InventoryManagement:
                 break;
             case GameState.DrawCard:
-                CardManager.instance.DrawCards(1);
-                Invoke("DrawCard", 10);
+                DrawCard();
                 break;
             case GameState.CombatPreparations:
                 break;
@@ -46,7 +45,6 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Victory:
                 Victory();
-                CardManager.instance.DrawCards(3);
                 break;
             case GameState.Defeat:
                 break;
@@ -59,8 +57,9 @@ public class GameManager : MonoBehaviour
 
     void DrawCard()
     {
-        Debug.Log("DRAW CARD (10sec)!");
-        UpdateGameStates(GameState.CombatPreparations);
+        Card card = NetworkManager.instance.getCard();
+        CardManager.instance.InstantiateCard(card);
+
     }
 
     void Combat()
@@ -76,13 +75,36 @@ public class GameManager : MonoBehaviour
         UpdateGameStates(GameState.InventoryManagement);
     }
 
+    private void NextStage()
+    {
+        switch (state)
+        {
+            case GameState.InventoryManagement:
+                UpdateGameStates(GameState.DrawCard);
+                break;
+            case GameState.DrawCard:
+                UpdateGameStates(GameState.CombatPreparations);
+                break;
+            case GameState.CombatPreparations:
+                UpdateGameStates(GameState.Combat);
+                break;
+            case GameState.Combat:
+                UpdateGameStates(GameState.Victory);
+                break;
+            case GameState.Victory:
+                UpdateGameStates(GameState.InventoryManagement);
+                break;
+            case GameState.Defeat:
+                UpdateGameStates(GameState.InventoryManagement);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
+    }
+
     void HandleNextStageButtonClicked()
     {
         UpdateGameStates(GameState.DrawCard);
-    }
-    void HandleCombatButtonClicked()
-    {
-        UpdateGameStates(GameState.Combat);
     }
 }
 
