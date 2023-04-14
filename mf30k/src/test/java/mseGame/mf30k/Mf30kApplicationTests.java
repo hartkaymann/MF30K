@@ -1,10 +1,10 @@
-package com.mse.mf30k;
+package mseGame.mf30k;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Mf30KApplicationTests {
+class Mf30kApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,11 +1,11 @@
 package cards;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public abstract class Card {
 	protected String name;
-	
-	public void drawCard() {
-		//TODO
-	}
 	
 	public String getName() {
 		return this.name;
