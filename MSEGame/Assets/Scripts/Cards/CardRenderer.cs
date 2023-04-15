@@ -16,6 +16,7 @@ public class CardRenderer : MonoBehaviour
 
     public void Render(Card card)
     {
+        Debug.Log("Rendering Card.");
         nameText.text = card.name;
         typeText.text = card.type.ToString().Substring(0, 1);
 

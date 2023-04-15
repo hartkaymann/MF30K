@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-    public static MenuManager instance;
- 
+    public static UIManager instance;
+
     [SerializeField] private GameObject hand;
     [SerializeField] private GameObject btnNext;
+    [SerializeField] private GameObject backpack;
+    [SerializeField] private GameObject equipment;
 
     private void Awake()
     {
@@ -26,6 +28,22 @@ public class MenuManager : MonoBehaviour
     {
         btnNext.SetActive(true);
         //btnNext.SetActive(state == GameState.InventoryManagement);
+    }
+
+    public void HandleToggleEquipment()
+    {
+        if (backpack.activeInHierarchy)
+            backpack.SetActive(false); 
+
+        equipment.SetActive(!equipment.activeInHierarchy);
+    }
+
+    public void HandleToggleBackpack()
+    {
+        if (equipment.activeInHierarchy)
+            equipment.SetActive(false);
+
+        backpack.SetActive(!backpack.activeInHierarchy);
     }
 
 }

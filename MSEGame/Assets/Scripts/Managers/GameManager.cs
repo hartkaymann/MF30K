@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         UpdateGameStates(GameState.InventoryManagement);
     }
 
-    private void NextStage()
+    public void NextStage()
     {
         switch (state)
         {

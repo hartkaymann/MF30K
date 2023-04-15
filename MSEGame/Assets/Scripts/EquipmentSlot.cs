@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Inventory : MonoBehaviour, IDropHandler
+public class EquipmentSlot : MonoBehaviour, IDropHandler
 {
-    [SerializeField] private int inventorySize;
+
+    private bool isEmpty = false;
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (transform.childCount < inventorySize)
+        if (isEmpty)
         {
+            isEmpty = true;
             GameObject dropped = eventData.pointerDrag;
             Draggable draggable = dropped.GetComponent<Draggable>();
             draggable.parentAfterDrag = transform;
