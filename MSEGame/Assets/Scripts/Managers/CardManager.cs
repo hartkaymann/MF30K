@@ -19,10 +19,10 @@ public class CardManager : MonoBehaviour
     {
         GameObject go = Instantiate(cardPrefab, Vector3.zero, Quaternion.identity);
         go.transform.SetParent(canvas.transform, false);
-        CardRenderer cd = go.GetComponent<CardRenderer>();
+        CardController cd = go.GetComponent<CardController>();
         if (cd != null)
         {
-            cd.Render(card);
+            cd.setCard(card);
         }
     }
 }

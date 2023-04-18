@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardRenderer : MonoBehaviour
+public class CardController : MonoBehaviour
 {
+    private Card card;
+
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI typeText;
 
@@ -14,16 +14,25 @@ public class CardRenderer : MonoBehaviour
     public TextMeshProUGUI costText;
     public TextMeshProUGUI statText;
 
-    public void Render(Card card)
+    public void Render()
     {
-        Debug.Log("Rendering Card.");
-        nameText.text = card.name;
+        nameText.text = card.title;
         typeText.text = card.type.ToString().Substring(0, 1);
 
         artworkImage.sprite = card.artwork;
 
         costText.text = card.cost.ToString();
         statText.text = card.cost.ToString();
+    }
+
+    public void setCard(Card card)
+    {
+        this.card = card;
+    }
+
+    public Card getCard()
+    {
+        return card;
     }
 
 }

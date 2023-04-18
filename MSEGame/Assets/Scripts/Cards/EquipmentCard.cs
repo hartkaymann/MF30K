@@ -13,7 +13,7 @@ public enum EquipmentType
 public class EquipmentCard : Card
 {
 
-    private EquipmentType equipType;
+    public  EquipmentType equipType;
     public EquipmentCard(string name, EquipmentType equipType, Sprite artwork, int cost, int stat) : base(name, CardTypes.Equipment, artwork, cost, stat)
     {
         this.equipType = equipType;

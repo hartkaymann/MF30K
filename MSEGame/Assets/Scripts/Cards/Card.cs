@@ -13,7 +13,7 @@ public enum CardTypes
 
 public abstract class Card
 {
-    public string name;
+    public string title;
     public CardTypes type;
 
     public Sprite artwork;
@@ -23,7 +23,7 @@ public abstract class Card
 
     public Card(string name, CardTypes type, Sprite artwork, int cost, int stat)
     {
-        this.name = name;
+        this.title = name;
         this.type = type;
         this.cost = cost;
         this.stat = stat;

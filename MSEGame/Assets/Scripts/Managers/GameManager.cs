@@ -11,9 +11,6 @@ public class GameManager : MonoBehaviour
     public GameState state;
     public static event Action<GameState> OnGameStateChange;
 
-    // UI
-    public Button btnNext;
-
     void Awake()
     {
         instance = this;
@@ -23,7 +20,6 @@ public class GameManager : MonoBehaviour
     {
         // Event handlers and listeners
         UpdateGameStates(GameState.InventoryManagement);
-        btnNext.onClick.AddListener(HandleNextStageButtonClicked);
     }
 
     public void UpdateGameStates(GameState newState)
@@ -100,11 +96,6 @@ public class GameManager : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
         }
-    }
-
-    void HandleNextStageButtonClicked()
-    {
-        UpdateGameStates(GameState.DrawCard);
     }
 }
 

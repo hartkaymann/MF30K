@@ -5,13 +5,11 @@ using UnityEngine;
 public class RoomManager : MonoBehaviour
 {
     public static RoomManager instance;
-    public RoomRenderer roomRenderer;
+    private RoomRenderer roomRenderer;
 
     private Room currentRoom;
 
-    private GameObject roomPrefab;
-    public GameObject treasure;
-    public GameObject enemy;
+    [SerializeField] private GameObject roomPrefab;
 
     void Awake()
     {

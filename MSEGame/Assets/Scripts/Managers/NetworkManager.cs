@@ -82,7 +82,7 @@ public class NetworkManager : MonoBehaviour
 
     public Card getCard()
     {
-        return new ItemCard("Card", Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero), 10, 5);
+        return new EquipmentCard("Helmet of Coolness", EquipmentType.Helmet, Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero), 10, 5);
     }
 
     public void getRoom()

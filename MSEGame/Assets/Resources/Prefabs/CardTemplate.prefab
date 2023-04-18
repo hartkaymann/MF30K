@@ -704,7 +704,6 @@ GameObject:
   - component: {fileID: 6099103722832472882}
   - component: {fileID: 6099103722832472885}
   - component: {fileID: 1761166794496600624}
-  - component: {fileID: 5876812592475266232}
   m_Layer: 5
   m_Name: CardTemplate
   m_TagString: Untagged
@@ -757,11 +756,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86dc41b882bdfe84890dce772e1f4393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 6099103722142098200}
-  typeText: {fileID: 6099103721779467372}
-  artworkImage: {fileID: 6099103721305893396}
-  costText: {fileID: 6099103722607227577}
-  statText: {fileID: 6099103721594697324}
 --- !u!114 &1761166794496600624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,37 +769,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentAfterDrag: {fileID: 0}
-  image: {fileID: 0}
---- !u!114 &5876812592475266232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099103722832472881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.78718615, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  image: {fileID: 8382046009390176714}
 --- !u!1 &8526615051853761021
 GameObject:
   m_ObjectHideFlags: 0

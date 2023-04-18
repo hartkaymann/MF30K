@@ -34,7 +34,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             RectTransform rt = image.GetComponent<RectTransform>();
             float scaleFactor =  Mathf.Min(cellHeight / rt.rect.height, 1f);
 
-            Debug.Log("Scale: " + scaleFactor);
             transform.localScale = Vector2.one * scaleFactor;
         }
 

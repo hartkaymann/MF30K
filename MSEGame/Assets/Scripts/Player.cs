@@ -17,31 +17,38 @@ public class Player : MonoBehaviour
     private Race race;
     private Profession profession;
 
-    private EquipmentCard weaponL;
-    private EquipmentCard weaponR;
-    private EquipmentCard helmet;
-    private EquipmentCard armor;
-    private EquipmentCard boots;
+    [SerializeField] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     private List<Card> backpack;
     private List<Card> hand;
 
-    public Player(Gender gender, Race race, Profession profession)
+    private void Start()
     {
+        equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
         backpack = new List<Card>();
         hand = new List<Card>();
+    }
 
+    void Create(Gender gender, Race race, Profession profession)
+    {
         this.gender = gender;
         this.race = race;
         this.profession = profession;
     }
 
-    public bool equip(Card card)
+    public void Equip(EquipmentSlot slot, EquipmentCard card)
     {
-        return true;
+        Debug.Log($"Equip {card.title} to {slot}");
+        equipment[slot] = card;
     }
 
-    public bool fight(Monster mob)
+    public void Uneqip(EquipmentSlot slot)
+    {
+        Debug.Log($"Unequip {slot}");
+        equipment[slot] = null;
+    }
+
+    public bool Fight(Monster mob)
     {
         return this.combatLevel > mob.GetCombatLevel();
     }
