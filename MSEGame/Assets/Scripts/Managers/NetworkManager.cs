@@ -3,6 +3,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
+using static System.Net.WebRequestMethods;
+using Newtonsoft.Json.Linq;
 
 enum RequestType
 {
@@ -12,20 +15,12 @@ enum RequestType
     DELETE
 }
 
-class ResponseObject
-{
-    public int userId;
-    public int id;
-    public string title;
-    public string body;
-}
-
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
 
-    public string url = "http://192.168.0.37";
-    public string port = "5555";
+    public string url = "localhost";
+    public string port = "8080";
 
     private void Awake()
     {
@@ -35,14 +30,13 @@ public class NetworkManager : MonoBehaviour
     [ContextMenu("Send Request")]
     private async void testRequest()
     {
-        ResponseObject data = new ResponseObject();
-        data.userId = 12345;
-        data.id = 1;
-        data.title = "Test Title";
-        data.body = "Test Body Lorem Ipsum ladida";
-        
 
-        UnityWebRequest req = CreateRequest("http://192.168.0.37:5555/test", RequestType.POST, data);
+        string apiKey = "0d8dc82ca22ed494ecc0955e0a6187cc";
+        float lat = 37.532600f;
+        float lon = 127.024612f; 
+        string path = $"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}";      
+
+        UnityWebRequest req = CreateRequest(path, RequestType.GET);
         var operation = req.SendWebRequest();
 
         while (!operation.isDone)
@@ -57,8 +51,8 @@ public class NetworkManager : MonoBehaviour
 
         try
         {
-            ResponseObject obj = JsonUtility.FromJson<ResponseObject>(jsonResponse);
-            Debug.Log($"Response Object Title: " +  obj.title);
+            JObject o = JObject.Parse(jsonResponse);
+            Debug.Log($"Response Code: {o.SelectToken("weather[0].main")}");
         }
         catch (Exception ex)
         {
@@ -72,7 +66,7 @@ public class NetworkManager : MonoBehaviour
 
         if (data != null)
         {
-            var bodyRaw = Encoding.UTF8.GetBytes(JsonUtility.ToJson(data));
+            var bodyRaw = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         }
 

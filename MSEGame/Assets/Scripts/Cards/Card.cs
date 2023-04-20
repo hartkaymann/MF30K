@@ -16,6 +16,7 @@ public enum CardType
 
 public abstract class Card
 {
+    public int id;
     public string title;
     public CardType type;
 
