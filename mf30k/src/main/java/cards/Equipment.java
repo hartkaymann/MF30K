@@ -1,19 +1,20 @@
 package cards;
 
 public class Equipment extends Treasure {
-	private String type;
+	private equipmentType type;
 	
-	public Equipment(String _name, int _gold, int _combatBonus, String _type) {
+	public Equipment(String _name, int _gold, int _combatBonus, equipmentType _type, int _id) {
 		this.name = _name;
 		this.goldValue = _gold;
 		this.combatBonus = _combatBonus;
 		this.type = _type;
+		this.id = _id;
 	}
 	
-	public String getType() {
+	public equipmentType getType() {
 		return this.type;
 	}
-	public void setType(String _type) {
+	public void setType(equipmentType _type) {
 		this.type = _type;
 	}
 }

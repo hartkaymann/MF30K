@@ -1,7 +1,6 @@
 package player;
 
-import java.util.ArrayList;
-
+import java.util.HashMap;
 import org.springframework.stereotype.Component;
 
 import cards.*;
@@ -10,19 +9,29 @@ import cards.*;
 public class Player {
 	
 	private String name;
-	private ArrayList<Equipment> weapons;
-	private Equipment armor;
-	private Equipment helmet;
+	private HashMap<Integer, Equipment> equipment;
 	private Profession profession;
 	private Race race;
-	private Boolean gender; //True is female, false is male
-	private ArrayList<Card> handCards;
-	private ArrayList<Card> backpack;
+	private Gender gender;
+	private HashMap<Integer, Card> handCards;
+	private HashMap<Integer, Card> backpack;
 	private int playerLevel;
 	private int combatLevel;
 	
 	
-	
+	public Player(String name, HashMap<Integer, Equipment> equipment, Profession profession, Race race, Gender gender,
+			HashMap<Integer, Card> handCards, HashMap<Integer, Card> backpack, int playerLevel, int combatLevel) {
+		super();
+		this.name = name;
+		this.equipment = equipment;
+		this.profession = profession;
+		this.race = race;
+		this.gender = gender;
+		this.handCards = handCards;
+		this.backpack = backpack;
+		this.playerLevel = playerLevel;
+		this.combatLevel = combatLevel;
+	}
 	
 	
 	public String getName() {
@@ -31,27 +40,35 @@ public class Player {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ArrayList<Equipment> getWeapons() {
-		return weapons;
+	
+	public HashMap<Integer, Equipment> getEquipment() {
+		return equipment;
 	}
-	public void addWeapon(Equipment weapon) {
-		this.weapons.add(weapon);
+	public void setAllEquipment(HashMap<Integer, Equipment> equipment) {
+		this.equipment = equipment;
 	}
-	public boolean removeWeapon(Equipment weapon) {
-		return this.weapons.remove(weapon);
+	
+	//removes one equipment specified by key
+	public boolean removeEquipment(int key) {
+		if(this.equipment.containsKey(key)) {
+			this.equipment.remove(key);
+			return true;
+		} else {
+			return false;
+		}
 	}
-	public Equipment getArmor() {
-		return armor;
+	
+	//adds one equipment. Returns false if the equipment already exists
+	// returns true otherwise
+	public boolean addOneEquipment(Equipment equip) {
+		if(equipment.containsKey(equip.getId())) {
+			return false;
+		} else {
+			equipment.put(equip.getId(), equip);
+			return true;
+		}
 	}
-	public void setArmor(Equipment armor) {
-		this.armor = armor;
-	}
-	public Equipment getHelmet() {
-		return helmet;
-	}
-	public void setHelmet(Equipment helmet) {
-		this.helmet = helmet;
-	}
+	
 	public Profession getProfession() {
 		return profession;
 	}
@@ -64,29 +81,44 @@ public class Player {
 	public void setRace(Race race) {
 		this.race = race;
 	}
-	public Boolean getGender() {
+	public Gender getGender() {
 		return gender;
 	}
-	public void setGender(Boolean gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
-	public ArrayList<Card> getHandCards() {
+	public HashMap<Integer, Card> getHandCards() {
 		return handCards;
 	}
-	public void addHandCard(Card newCard) {
-		this.handCards.add(newCard);
+	public boolean addHandCard(Card newCard) {
+		if(handCards.containsKey(newCard.getId())) {
+			return false;
+		} else {
+			handCards.put(newCard.getId(), newCard);
+			return true;
+		}
 	}
 	public boolean removeHandCard(Card toRemove) {
-		return this.handCards.remove(toRemove);
+		if (handCards.containsKey(toRemove.getId())) {
+			handCards.remove(toRemove.getId());
+			return true;
+		} else {
+			return false;
+		}
 	}
-	public ArrayList<Card> getBackpack() {
+	public HashMap<Integer, Card> getBackpack() {
 		return backpack;
 	}
 	public void addCardToBackPack(Card newCard) {
-		this.backpack.add(newCard);
+		this.backpack.put(newCard.getId(),newCard);
 	}
 	public boolean removeCardFromBackpack(Card toRemove) {
-		return this.backpack.remove(toRemove);
+		if(backpack.containsKey(toRemove.getId())) {
+			backpack.remove(toRemove.getId());
+			return true;
+		} else {
+			return false;
+		}
 	}
 	public int getPlayerLevel() {
 		return playerLevel;
