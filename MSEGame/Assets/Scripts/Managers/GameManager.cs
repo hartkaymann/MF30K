@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,7 +29,7 @@ public class GameManager : MonoBehaviour
             case GameState.InventoryManagement:
                 break;
             case GameState.DrawCard:
-                DrawCard();
+                DrawDoorCard();
                 break;
             case GameState.CombatPreparations:
                 break;
@@ -51,11 +48,10 @@ public class GameManager : MonoBehaviour
         OnGameStateChange?.Invoke(newState);
     }
 
-    void DrawCard()
+    async void DrawDoorCard()
     {
-        Card card = NetworkManager.instance.getCard();
+        Card card = await NetworkManager.instance.GetCard(CardType.Door);
         CardManager.instance.InstantiateCard(card);
-
     }
 
     void Combat()

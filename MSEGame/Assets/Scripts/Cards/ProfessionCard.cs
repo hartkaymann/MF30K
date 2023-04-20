@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum Profession
@@ -10,12 +8,12 @@ public enum Profession
     Ranger
 }
 
-public class ProfessionCard : Card
+public class ProfessionCard : DoorCard
 {
     private Profession profession;
     private string ability;
 
-    public ProfessionCard(Profession profession, Sprite artwork, int cost, int stat) : base(profession.ToString(), CardTypes.Profession, artwork, cost, stat)
+    public ProfessionCard(Profession profession, Sprite artwork, int cost, int stat) : base(profession.ToString(), CardType.Profession, artwork, cost, stat)
     {
         this.profession = profession;
     }

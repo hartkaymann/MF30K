@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -24,6 +23,9 @@ class ResponseObject
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
+
+    public string url = "http://192.168.0.37";
+    public string port = "5555";
 
     private void Awake()
     {
@@ -80,13 +82,54 @@ public class NetworkManager : MonoBehaviour
         return request;
     }
 
-    public Card getCard()
+    async Task<object> SendRequestWithResponse(UnityWebRequest req)
     {
-        return new EquipmentCard("Helmet of Coolness", EquipmentType.Helmet, Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero), 10, 5);
+        var operation = req.SendWebRequest();
+
+        while (!operation.isDone)
+            await Task.Yield();
+
+        var jsonResponse = req.downloadHandler.text;
+
+        if (req.result == UnityWebRequest.Result.Success)
+            Debug.Log($"Success: {req.downloadHandler.text}");
+        else
+            Debug.Log($"Failed: {req.error}");
+
+        try
+        {
+            object obj = JsonUtility.FromJson<object>(jsonResponse);
+            return obj;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Could not parse {jsonResponse}. {ex.Message}");
+        }
+
+        return null;
     }
 
-    public void getRoom()
+    public async Task<Card> GetCard(CardType type)
     {
+        UnityWebRequest req = CreateRequest($"{url}:{port}/card?type={type}", RequestType.GET);
 
+        object obj = await SendRequestWithResponse(req);
+
+        // Assign different type here
+        Card card = obj as Card;
+        Debug.Log($"GET CARD RESPONSE: {obj}");
+
+        return card;
+        //return new EquipmentCard("Helmet of Coolness", EquipmentType.Helmet, Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero), 10, 5);
     }
+
+    public async void PostPlayer(Player player)
+    {
+        UnityWebRequest req = CreateRequest($"{url}:{port}/player", RequestType.POST, player);
+
+        var response = await SendRequestWithResponse(req);
+        Debug.Log($"POST PLAYER RESPONSE: {response}");
+    }
+
+
 }

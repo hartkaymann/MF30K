@@ -15,7 +15,7 @@ public enum EquipmentSlot
 
 public class EquipmentInventory : Inventory
 {
-    private Player player;
+    private PlayerController player;
 
     [SerializeField] EquipmentSlot slot;
     [SerializeField] EquipmentType type;
@@ -24,7 +24,7 @@ public class EquipmentInventory : Inventory
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         if (player == null)
         {
             Debug.LogAssertion("No player could be found.");
@@ -42,7 +42,7 @@ public class EquipmentInventory : Inventory
 
         // Check if card is equipment card
         Card card = dropped.GetComponent<CardController>().getCard();
-        if (card.type != CardTypes.Equipment)
+        if (card.type != CardType.Equipment)
             return;
 
         // Check if card types match

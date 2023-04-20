@@ -1645,7 +1645,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1392584334}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5565ce3cb9fa4bd41a0d1a29f464b52f, type: 3}
+  m_Script: {fileID: 11500000, guid: cdb0ffe0f865b3549b5e04ae3a840dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1398429921
@@ -1692,6 +1692,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc89affc1acc2a408d8d2711d6479a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  url: http://192.168.0.37
+  port: 5555
 --- !u!1 &1437425354
 GameObject:
   m_ObjectHideFlags: 0

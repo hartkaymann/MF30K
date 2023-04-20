@@ -1,18 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterCard : MonoBehaviour
+public class MonsterCard : DoorCard
 {
-    // Start is called before the first frame update
-    void Start()
+    public MonsterCard(string name, Sprite artwork, int cost, int stat) : base(name, CardType.Monster, artwork, cost, stat)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

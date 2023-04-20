@@ -2,26 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CardTypes
+public enum CardType
 {
+    Door,
+    Treasure,
     Consumable,
     Equipment,
     Item,
     Profession,
-    Race
+    Race,
+    Monster
 }
 
 public abstract class Card
 {
     public string title;
-    public CardTypes type;
+    public CardType type;
 
     public Sprite artwork;
 
     public int cost;
     public int stat;
 
-    public Card(string name, CardTypes type, Sprite artwork, int cost, int stat)
+    public Card(string name, CardType type, Sprite artwork, int cost, int stat)
     {
         this.title = name;
         this.type = type;
