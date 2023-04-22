@@ -13,7 +13,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
-        Debug.Log(transform.root.name);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
     }
@@ -26,6 +25,18 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnEndDrag(PointerEventData eventData)
     {
         transform.SetParent(parentAfterDrag);
+
+        // Resize dragged object to fit inside grid
+        GridLayoutGroup grid = parentAfterDrag.GetComponent<GridLayoutGroup>();
+        if(grid != null)
+        {
+            float cellHeight = grid.cellSize.y;
+            RectTransform rt = image.GetComponent<RectTransform>();
+            float scaleFactor =  Mathf.Min(cellHeight / rt.rect.height, 1f);
+
+            transform.localScale = Vector2.one * scaleFactor;
+        }
+
         image.raycastTarget = true;
     }
 

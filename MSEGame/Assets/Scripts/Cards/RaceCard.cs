@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum Race
@@ -10,13 +8,13 @@ public enum Race
     Orc
 }
 
-public class RaceCard : Card
+public class RaceCard : DoorCard
 {
     private string ability;
 
     private Race race;
 
-    public RaceCard(Race race, Sprite artwork, int cost, int stat) : base(race.ToString(), CardTypes.Race, artwork, cost, stat)
+    public RaceCard(Race race, Sprite artwork, int cost, int stat) : base(race.ToString(), CardType.Race, artwork, cost, stat)
     {
         this.race = race;
     }
