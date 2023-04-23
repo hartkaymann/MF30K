@@ -31,7 +31,7 @@ public class FrontController {
 	private GameStage stage;
 	
 	
-	@PostMapping(value = "/addPlayer", consumes = "application/json")
+	@PostMapping(value = "/player", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
 		System.out.println("Received Player: " + p.getName());
 		player_mgr.addPlayer(p);
@@ -79,7 +79,7 @@ public class FrontController {
 		this.stage = stage;
 	}
 	
-	@GetMapping(value = "/getStage")
+	@GetMapping(value = "/stage")
 	public GameStage getStage() {
 		return this.stage;
 	}

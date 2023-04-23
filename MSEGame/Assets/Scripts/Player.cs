@@ -8,10 +8,10 @@ public enum Gender
     Female
 }
 
-public class Player : MonoBehaviour
+public class Player
 {
     public int id;
-    public new string name;
+    public string name;
     public int level = 0;
     public int combatLevel = 0;
 

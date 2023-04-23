@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
         GameManager.OnGameStateChange -= GameManagerOnGameStateChanged;
     }
 
-    private void GameManagerOnGameStateChanged(GameState state)
+    private void GameManagerOnGameStateChanged(GameStage state)
     {
         btnNext.SetActive(true);
         //btnNext.SetActive(state == GameState.InventoryManagement);

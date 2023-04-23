@@ -6,10 +6,10 @@ public class CardController : MonoBehaviour
 {
     private Card card;
 
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI typeText;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI typeText;
 
-    public Image artworkImage;
+    [SerializeField] private Image artworkImage;
 
     public void Render()
     {
@@ -22,6 +22,7 @@ public class CardController : MonoBehaviour
     public void setCard(Card card)
     {
         this.card = card;
+        Render();
     }
 
     public Card getCard()

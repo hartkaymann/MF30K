@@ -20,9 +20,9 @@ public abstract class Card
 
     public Sprite artwork;
 
-    public Card(string name, CardType type, Sprite artwork)
+    public Card(string title, CardType type, Sprite artwork)
     {
-        this.title = name;
+        this.title = title;
         this.type = type;
         this.artwork = null;
     }

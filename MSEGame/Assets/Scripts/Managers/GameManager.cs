@@ -5,8 +5,8 @@ public class GameManager : MonoBehaviour
 {
     // State management
     public static GameManager instance;
-    public GameState state;
-    public static event Action<GameState> OnGameStateChange;
+    public GameStage stage;
+    public static event Action<GameStage> OnGameStateChange;
 
     void Awake()
     {
@@ -16,36 +16,37 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Event handlers and listeners
-        UpdateGameStates(GameState.InventoryManagement);
+        UpdateGameStage(GameStage.InventoryManagement);
     }
 
-    public void UpdateGameStates(GameState newState)
+    public void UpdateGameStage(GameStage newStage)
     {
-        state = newState;
-        Debug.Log("New Stage: " + state.ToString());
+        stage = newStage;
+        Debug.Log("New Stage: " + stage.ToString());
 
-        switch (newState)
+        switch (newStage)
         {
-            case GameState.InventoryManagement:
+            case GameStage.InventoryManagement:
                 break;
-            case GameState.DrawCard:
+            case GameStage.DrawCard:
                 DrawDoorCard();
                 break;
-            case GameState.CombatPreparations:
+            case GameStage.CombatPreparations:
                 break;
-            case GameState.Combat:
+            case GameStage.Combat:
                 Combat();
                 break;
-            case GameState.Victory:
+            case GameStage.Victory:
                 Victory();
                 break;
-            case GameState.Defeat:
+            case GameStage.Defeat:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+                throw new ArgumentOutOfRangeException(nameof(newStage), newStage, null);
         }
 
-        OnGameStateChange?.Invoke(newState);
+        OnGameStateChange?.Invoke(newStage);
+        NetworkManager.instance.PutStage(stage);
     }
 
     async void DrawDoorCard()
@@ -58,44 +59,44 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("DOING COMBAT!");
 
-        UpdateGameStates(GameState.Victory);
+        UpdateGameStage(GameStage.Victory);
     }
 
     private void Victory()
     {
         Debug.Log("VICTORY!");
-        UpdateGameStates(GameState.InventoryManagement);
+        UpdateGameStage(GameStage.InventoryManagement);
     }
 
     public void NextStage()
     {
-        switch (state)
+        switch (stage)
         {
-            case GameState.InventoryManagement:
-                UpdateGameStates(GameState.DrawCard);
+            case GameStage.InventoryManagement:
+                UpdateGameStage(GameStage.DrawCard);
                 break;
-            case GameState.DrawCard:
-                UpdateGameStates(GameState.CombatPreparations);
+            case GameStage.DrawCard:
+                UpdateGameStage(GameStage.CombatPreparations);
                 break;
-            case GameState.CombatPreparations:
-                UpdateGameStates(GameState.Combat);
+            case GameStage.CombatPreparations:
+                UpdateGameStage(GameStage.Combat);
                 break;
-            case GameState.Combat:
-                UpdateGameStates(GameState.Victory);
+            case GameStage.Combat:
+                UpdateGameStage(GameStage.Victory);
                 break;
-            case GameState.Victory:
-                UpdateGameStates(GameState.InventoryManagement);
+            case GameStage.Victory:
+                UpdateGameStage(GameStage.InventoryManagement);
                 break;
-            case GameState.Defeat:
-                UpdateGameStates(GameState.InventoryManagement);
+            case GameStage.Defeat:
+                UpdateGameStage(GameStage.InventoryManagement);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+                throw new ArgumentOutOfRangeException(nameof(stage), stage, null);
         }
     }
 }
 
-public enum GameState
+public enum GameStage
 {
     InventoryManagement,
     DrawCard,

@@ -15,6 +15,7 @@ public class CardManager : MonoBehaviour
     {
         GameObject go = Instantiate(cardPrefab, Vector3.zero, Quaternion.identity);
         go.transform.SetParent(canvas.transform, false);
+
         CardController cd = go.GetComponent<CardController>();
         if (cd != null)
         {

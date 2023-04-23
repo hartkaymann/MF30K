@@ -5,10 +5,10 @@ public class PlayerController : MonoBehaviour
 {
     private Player player;
 
-    [SerializeField] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
+    [SerializeField] public Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
-    private List<Card> backpack;
-    private List<Card> hand;
+    public List<Card> backpack;
+    public List<Card> hand;
 
     void Start()
     {
