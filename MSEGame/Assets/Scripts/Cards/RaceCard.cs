@@ -14,7 +14,7 @@ public class RaceCard : DoorCard
 
     private Race race;
 
-    public RaceCard(Race race, Sprite artwork, int cost, int stat) : base(race.ToString(), CardType.Race, artwork, cost, stat)
+    public RaceCard(Race race, Sprite artwork) : base(race.ToString(), CardType.Race, artwork)
     {
         this.race = race;
     }
