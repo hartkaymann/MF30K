@@ -10,21 +10,118 @@ public enum Gender
 
 public class Player
 {
-    public int id;
-    public string name;
-    public int level = 0;
-    public int combatLevel = 0;
 
-    public Gender gender;
-    public Race race;
-    public Profession profession;
+    private int id;
+    private string name;
+    private int level;
+    private int combatLevel;
 
-    public Player(string name, Gender gender, Race race, Profession profession)
+    private Gender gender;
+    private Race race;
+    private Profession profession;
+
+
+    public int Id
     {
-        this.id = 0;
-        this.name = name;
-        this.gender = gender;
-        this.race = race;
-        this.profession = profession;
+        get => id;
+        set
+        {
+            if (value != id)
+            {
+                id = value;
+                HandlePropertyChanged();
+            }
+        }
     }
+
+    public string Name
+    {
+        get => name;
+        set
+        {
+            if (value != name)
+            {
+                name = value;
+                HandlePropertyChanged();
+            }
+        }
+    }
+
+    public int Level
+    {
+        get => level;
+        set
+        {
+            if (value != level)
+            {
+                level = value;
+                HandlePropertyChanged();
+            }
+        }
+    }
+
+    public int CombatLevel
+    {
+        get => combatLevel;
+        set
+        {
+            if (value != combatLevel)
+            {
+                combatLevel = value;
+                HandlePropertyChanged();
+            }
+        }
+    }
+
+    public Gender Gender
+    {
+        get => gender;
+        set
+        {
+            if (value != gender)
+            {
+                gender = value;
+                HandlePropertyChanged();
+            }
+        }
+    }
+
+    public Race Race
+    {
+        get => race;
+        set
+        {
+            if (value != race)
+            {
+                race = value;
+                HandlePropertyChanged();
+            }
+        }
+    }
+
+    public Profession Profession
+    {
+        get => profession;
+        set
+        {
+            if (value != profession)
+            {
+                profession = value;
+                HandlePropertyChanged();
+            }
+        }
+    }
+
+    public Player(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
+    public void HandlePropertyChanged()
+    {
+        NetworkManager.instance.PutPlayer(this);
+    }
+
+
 }

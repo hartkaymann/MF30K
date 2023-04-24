@@ -1,11 +1,6 @@
 package mseGame.mf30k;
 
-import player.Gender;
-import player.Player;
-
-import java.awt.PageAttributes.MediaType;
 import java.util.HashMap;
-import cards.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
@@ -17,6 +12,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import cards.Card;
+import cards.Equipment;
+import cards.Profession;
+import cards.Race;
+import cards.Treasure;
+import cards.equipmentType;
+import player.Gender;
+import player.Player;
 
 @RestController
 public class FrontController {
@@ -74,7 +78,7 @@ public class FrontController {
 	}
 	
 	@PutMapping(value = "/stage",
-			consumes = "application/json")
+			consumes = "application/json")	
 	public void updateStage(@RequestBody GameStage stage) {
 		this.stage = stage;
 	}

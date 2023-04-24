@@ -7,16 +7,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] public Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
-    public List<Card> backpack;
-    public List<Card> hand;
 
     void Start()
     {
-        player = new Player("Kay", Gender.Male, Race.Human, Profession.Warrior);
-        
+        player = new Player(0, "Kay");
+
         equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
-        backpack = new List<Card>();
-        hand = new List<Card>();
 
         NetworkManager.instance.PostPlayer(player);
     }
@@ -25,16 +21,23 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log($"Equip {card.title} to {slot}");
         equipment[slot] = card;
+
+        NetworkManager.instance.PutEquipment(player, equipment);
     }
 
     public void Uneqip(EquipmentSlot slot)
     {
         Debug.Log($"Unequip {slot}");
         equipment[slot] = null;
+
+        NetworkManager.instance.PutEquipment(player, equipment);
     }
 
     public bool Fight(Monster mob)
     {
-        return this.player.combatLevel > mob.GetCombatLevel();
+        return this.player.CombatLevel > mob.GetCombatLevel();
     }
+
+    public Player GetPlayer() { return this.player; }
+    public void setPlayer(Player player) { this.player = player; }
 }
