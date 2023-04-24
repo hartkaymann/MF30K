@@ -650,7 +650,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 566842942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77e07284b459a254db20fa58e3ee92ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 3dc6f659f8c55384e955f24c2cef01d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inventorySize: 5
@@ -1501,10 +1501,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1345133456}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77e07284b459a254db20fa58e3ee92ea, type: 3}
+  m_Script: {fileID: 11500000, guid: b2e6e880de7866142835906b4d5b1523, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventorySize: 6
+  inventorySize: 10
 --- !u!1 &1385262711
 GameObject:
   m_ObjectHideFlags: 0
@@ -1873,7 +1873,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5804b2538da5d41806988b025945d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  stage: 0
 --- !u!1 &1565677694
 GameObject:
   m_ObjectHideFlags: 0
