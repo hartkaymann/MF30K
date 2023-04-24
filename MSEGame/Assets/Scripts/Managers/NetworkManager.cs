@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using static System.Net.WebRequestMethods;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using System.Net;
 
 enum RequestType
 {
@@ -20,8 +22,8 @@ public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
 
-    public string url = "localhost";
-    public string port = "8080";
+    [SerializeField] private string url;
+    [SerializeField] private string port;
 
     private void Awake()
     {
@@ -99,7 +101,7 @@ public class NetworkManager : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Could not parse {jsonResponse}. {ex.Message}");
+            Debug.LogWarning($"Could not parse {jsonResponse.Prettify()}. {ex.Message}");
         }
 
         return null;
@@ -114,6 +116,7 @@ public class NetworkManager : MonoBehaviour
 
         var response = await SendRequestWithResponse(req);
 
+        req.Dispose();
         //TODO: set assigned player id to new player
     }
 
@@ -163,6 +166,8 @@ public class NetworkManager : MonoBehaviour
                 }
         }
 
+        req.Dispose();
+        
         return card;
         //return new EquipmentCard("Helmet of Coolness", EquipmentType.Helmet, Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero), 10, 5);
     }
@@ -180,11 +185,16 @@ public class NetworkManager : MonoBehaviour
         int level = int.Parse((string)obj.SelectToken("playerLevel"));
         int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
 
-        Player p = new Player(name, ParseEnum<Gender>(gender), ParseEnum<Race>(race), ParseEnum<Profession>(profession))
+        Player p = new Player(id, name)
         {
-            level = level,
-            combatLevel = combatLvl
+            Gender = ParseEnum<Gender>(gender),
+            Race = ParseEnum<Race>(race),
+            Profession = ParseEnum<Profession>(profession),
+            Level = level,
+            CombatLevel = combatLvl,
         };
+
+        req.Dispose();
 
         return p;
     }
@@ -196,6 +206,8 @@ public class NetworkManager : MonoBehaviour
 
         var obj = await SendRequestWithResponse(req);
 
+        req.Dispose();
+
         return ParseEnum<GameStage>((string) obj.SelectToken("GameStage"));
     }
 
@@ -206,36 +218,42 @@ public class NetworkManager : MonoBehaviour
     public void PutPlayer(Player player)
     {
         Debug.Log("Put Player");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.id}", RequestType.PUT, player);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.Id}", RequestType.PUT, player);
         req.SendWebRequest();
+        req.Dispose();
+
     }
 
     public void PutStage(GameStage stage)
     {
         Debug.Log("Put Stage");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.PUT, stage);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.PUT, stage.ToString());
         req.SendWebRequest();
+        req.Dispose();
     }
 
     public void PutBackpack(Player player, List<Card> backpack)
     {
         Debug.Log("Put Backpack");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.id}/backpack", RequestType.PUT, backpack);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Id}/backpack", RequestType.PUT, backpack);
         req.SendWebRequest();
+        req.Dispose();
     }
     public void PutEquipment(Player player, Dictionary<EquipmentSlot, EquipmentCard> equipment)
     {
         Debug.Log("Put Backpack");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.id}/backpack", RequestType.PUT, equipment);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Id}/backpack", RequestType.PUT, equipment);
         req.SendWebRequest();
+        req.Dispose();
     }
+
     ///////////
     // DELET //
     ///////////
 
-
+        
     public static T ParseEnum<T>(string value)
-    {
+    {   
         return (T)Enum.Parse(typeof(T), value, true);
     }
 }
