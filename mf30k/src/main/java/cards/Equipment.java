@@ -1,9 +1,10 @@
 package cards;
+import java.util.UUID;
 
 public class Equipment extends Treasure {
 	private equipmentType type;
 	
-	public Equipment(String _name, int _gold, int _combatBonus, equipmentType _type, int _id) {
+	public Equipment(String _name, int _gold, int _combatBonus, equipmentType _type, UUID _id) {
 		this.name = _name;
 		this.goldValue = _gold;
 		this.combatBonus = _combatBonus;

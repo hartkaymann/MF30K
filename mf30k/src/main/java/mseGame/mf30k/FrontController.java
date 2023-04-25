@@ -1,11 +1,10 @@
 package mseGame.mf30k;
 
-import player.Gender;
 import player.Player;
 
-import java.awt.PageAttributes.MediaType;
-import java.util.HashMap;
 import cards.*;
+
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
@@ -46,7 +45,7 @@ public class FrontController {
 	public Card drawCard(@RequestParam(name="type") String type) {
 		//TODO
 		//Let ContentManager create a card
-		Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, 123);
+		Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, UUID.randomUUID());
 		return dummy;
 	}
 	
@@ -54,13 +53,15 @@ public class FrontController {
 	public Player getPlayer(@RequestParam(name="name", required=true, defaultValue="Kay") String name, Model model) {
 		model.addAttribute("name", name);
 		
-		HashMap<Integer, Equipment> equip = new HashMap<Integer, Equipment>();
+		return player_mgr.getPlayer(name);
+		
+		/*HashMap<Integer, Equipment> equip = new HashMap<Integer, Equipment>();
 		HashMap<Integer, Card> hand = new HashMap<Integer, Card>();
 		HashMap<Integer, Card> backPack = new HashMap<Integer, Card>();
 		Equipment helmet = new Equipment("testHelmet", 1, 2, equipmentType.HELMET, 123);
 		equip.put(helmet.getId(), helmet);
 		Player dummy = new Player("DummyPlayer", equip, Profession.BARBARIAN, Race.DWARF, Gender.FEMALE, hand, backPack, 2, 4 );
-		return dummy;
+		return dummy;*/
 	}
 	
 	@PutMapping(value = "/player/{playerID}",

@@ -1,17 +1,17 @@
 package cards;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.util.UUID;
 
 @Component
 public abstract class Card {
 	protected String name;
-	protected int id;
+	protected UUID id;
 	
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 	public String getName() {
