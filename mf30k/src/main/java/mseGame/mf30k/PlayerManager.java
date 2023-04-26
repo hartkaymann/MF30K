@@ -2,7 +2,6 @@ package mseGame.mf30k;
 
 import java.util.HashMap;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import player.*;

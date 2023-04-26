@@ -1,6 +1,10 @@
 package mseGame.mf30k;
 
-import java.util.HashMap;
+import player.Player;
+
+import cards.*;
+
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
@@ -12,15 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import cards.Card;
-import cards.Equipment;
-import cards.Profession;
-import cards.Race;
-import cards.Treasure;
-import cards.equipmentType;
-import player.Gender;
-import player.Player;
 
 @RestController
 public class FrontController {
@@ -35,7 +30,7 @@ public class FrontController {
 	private GameStage stage;
 	
 	
-	@PostMapping(value = "/player", consumes = "application/json")
+	@PostMapping(value = "/addPlayer", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
 		System.out.println("Received Player: " + p.getName());
 		player_mgr.addPlayer(p);
@@ -50,7 +45,7 @@ public class FrontController {
 	public Card drawCard(@RequestParam(name="type") String type) {
 		//TODO
 		//Let ContentManager create a card
-		Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, 123);
+		Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, UUID.randomUUID());
 		return dummy;
 	}
 	
@@ -58,13 +53,15 @@ public class FrontController {
 	public Player getPlayer(@RequestParam(name="name", required=true, defaultValue="Kay") String name, Model model) {
 		model.addAttribute("name", name);
 		
-		HashMap<Integer, Equipment> equip = new HashMap<Integer, Equipment>();
+		return player_mgr.getPlayer(name);
+		
+		/*HashMap<Integer, Equipment> equip = new HashMap<Integer, Equipment>();
 		HashMap<Integer, Card> hand = new HashMap<Integer, Card>();
 		HashMap<Integer, Card> backPack = new HashMap<Integer, Card>();
 		Equipment helmet = new Equipment("testHelmet", 1, 2, equipmentType.HELMET, 123);
 		equip.put(helmet.getId(), helmet);
 		Player dummy = new Player("DummyPlayer", equip, Profession.BARBARIAN, Race.DWARF, Gender.FEMALE, hand, backPack, 2, 4 );
-		return dummy;
+		return dummy;*/
 	}
 	
 	@PutMapping(value = "/player/{playerID}",
@@ -78,12 +75,12 @@ public class FrontController {
 	}
 	
 	@PutMapping(value = "/stage",
-			consumes = "application/json")	
+			consumes = "application/json")
 	public void updateStage(@RequestBody GameStage stage) {
 		this.stage = stage;
 	}
 	
-	@GetMapping(value = "/stage")
+	@GetMapping(value = "/getStage")
 	public GameStage getStage() {
 		return this.stage;
 	}

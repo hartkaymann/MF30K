@@ -1,22 +1,26 @@
-package monster;
+package cards;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Monster {
+public class Monster extends Card {
 	
 	
-	public Monster(String name, int combatLevel, int treasureAmount, String type) {
+	public Monster(UUID id, String name, int combatLevel, int treasureAmount) {
+		this.id = id;
 		this.name = name;
 		this.combatLevel = combatLevel;
 		this.treasureAmount = treasureAmount;
-		this.type = type;
+		//this.type = type;
 	}
+	
 	private String name;
 	private int combatLevel;
 	private int treasureAmount;
-	private String type;
+	//private String type;
+	
 	public String getName() {
 		return name;
 	}
@@ -35,12 +39,13 @@ public class Monster {
 	public void setTreasureAmount(int treasureAmount) {
 		this.treasureAmount = treasureAmount;
 	}
+	/*
 	public String getType() {
 		return type;
 	}
 	public void setType(String type) {
 		this.type = type;
-	}
+	}*/
 	
 	//Losing consequences should be done in the front end, "randomly" generated there
 	// maybe they could grouped into mild, hard, severe or something based on the combatLevel of the monster
