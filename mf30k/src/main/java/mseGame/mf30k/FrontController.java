@@ -4,6 +4,8 @@ import player.Player;
 
 import cards.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +99,33 @@ public class FrontController {
 		return this.stage;
 	}
 	
+	@PutMapping(value = "/player/{playerID}/backpack",
+			consumes = "application/json")
+	public void updatePlayerBackpack(@PathVariable String playerID,
+			@RequestBody HashMap<UUID, Card> newCards) {
+		
+		Player currentPlayer = this.player_mgr.getPlayer(playerID);
+		/*HashMap<UUID, Card> currentBackpack = currentPlayer.getBackpack();
+		for(Map.Entry<UUID, Card> entry : new_cards.entrySet()) {
+			if(!currentBackpack.containsKey(entry.getKey())) {
+				//add Card
+			}
+		}*/
+		currentPlayer.setBackpack(newCards);
+		this.player_mgr.updatePlayer(playerID, currentPlayer);
+		
+	}
 	
+	@PutMapping(value = "/player/{playerID}/equipment",
+			consumes = "application/json")
+	public void updatePlayerEquipment(@PathVariable String playerID,
+			@RequestBody HashMap<UUID, Equipment> newEquip) {
+		
+		Player currentPlayer = this.player_mgr.getPlayer(playerID);
+		currentPlayer.setAllEquipment(newEquip);
+		this.player_mgr.updatePlayer(playerID, currentPlayer);
+		
+	}
 	
 
 }
