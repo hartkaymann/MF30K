@@ -10,7 +10,7 @@ import player.*;
 @Service
 public class PlayerManager {
 
-	private HashMap<String, Player> players;
+	private HashMap<String, Player> players = new HashMap<>();
 	
 	public boolean addPlayer(Player player) {
 		if(players.containsKey(player.getName())) {
