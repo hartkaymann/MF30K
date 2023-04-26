@@ -22,7 +22,7 @@ public class FrontController {
 	
 	//private HashMap<String, Player> players = new HashMap<String, Player>();
 	@Autowired
-	private GameContentManager content_mgr;
+	private CardCreator crd_creator;
 	
 	@Autowired 
 	private PlayerManager player_mgr;
@@ -43,10 +43,19 @@ public class FrontController {
 	// Return as JSON String
 	@GetMapping(value = "/card", produces = "application/json")
 	public Card drawCard(@RequestParam(name="type") String type) {
-		//TODO
-		//Let ContentManager create a card
-		Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, UUID.randomUUID());
-		return dummy;
+		if (type.equals("door")) {
+			System.out.println("DoorCard requested.");
+			return crd_creator.createMonster();
+		} else if (type.equals("treasure")) {
+			System.out.println("TreasureCard requested");
+			Card card = crd_creator.createTreasure();
+			System.out.println(card);
+			return card;
+		} else {
+			System.out.println("Could not determine request type.");
+			return null;
+		}
+		//Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, UUID.randomUUID());
 	}
 	
 	@GetMapping(value = "/player")
@@ -55,13 +64,15 @@ public class FrontController {
 		
 		return player_mgr.getPlayer(name);
 		
-		/*HashMap<Integer, Equipment> equip = new HashMap<Integer, Equipment>();
+		/*
+		 * HashMap<Integer, Equipment> equip = new HashMap<Integer, Equipment>();
 		HashMap<Integer, Card> hand = new HashMap<Integer, Card>();
 		HashMap<Integer, Card> backPack = new HashMap<Integer, Card>();
 		Equipment helmet = new Equipment("testHelmet", 1, 2, equipmentType.HELMET, 123);
 		equip.put(helmet.getId(), helmet);
 		Player dummy = new Player("DummyPlayer", equip, Profession.BARBARIAN, Race.DWARF, Gender.FEMALE, hand, backPack, 2, 4 );
-		return dummy;*/
+		return dummy;
+		*/
 	}
 	
 	@PutMapping(value = "/player/{playerID}",

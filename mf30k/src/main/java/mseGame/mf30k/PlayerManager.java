@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 
+import cards.Card;
 import player.*;
 
 @Service
@@ -47,4 +48,12 @@ public class PlayerManager {
 	}
 	
 	//TODO: Manage Backpack, Hand and Equipment
+	
+	public void updateBackpack(Card[] cards) {
+		
+	}
+	
+	public void removeCardFromBackpack(Player player, Card card) {
+		
+	}
 }

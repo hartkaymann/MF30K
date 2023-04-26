@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
-public class GameContentManager {
+public class CardCreator {
 	
 	private Random rand = new Random();
 	private RandomNames randNames = new RandomNames();
@@ -33,19 +33,19 @@ public class GameContentManager {
 		int equip = rand.nextInt(4);
 		switch(equip) {
 		case 0:
-			_type = equipmentType.HELMET;	
+			_type = equipmentType.Helmet;	
 			_name += " Helmet";
 			break;
 		case 1:
-			_type = equipmentType.ARMOR;
+			_type = equipmentType.Armor;
 			_name += " Armor";
 			break;
 		case 2:
-			_type = equipmentType.BOOTS;
+			_type = equipmentType.Boots;
 			_name += " Boots";
 			break;
 		case 3:
-			_type = equipmentType.WEAPON;
+			_type = equipmentType.Weapon;
 			_name += randNames.randomWeapon();
 			break;
 		}
@@ -80,7 +80,5 @@ public class GameContentManager {
 		
 		return new Monster(id, _name, _combatLevel, _treasureAmount);
 	}
-	
-	// Track and Update Stage
-	//TODO
+
 }
