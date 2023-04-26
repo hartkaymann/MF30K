@@ -30,6 +30,8 @@ public class CardCreator {
 		
 		equipmentType _type = null;
 		
+		
+		//TODO: Change this so its not hardcoded, but like in RaceCard or Profession
 		int equip = rand.nextInt(4);
 		switch(equip) {
 		case 0:
@@ -68,7 +70,39 @@ public class CardCreator {
 	}
 	
 	// Create Random DoorCard
-	//TODO: Profession and Race
+	public Card createDoorCard()
+	{
+		if (rand.nextBoolean()) {
+			return createMonster();
+		} else {
+			if (rand.nextBoolean()) {
+				return createProfession();
+			} else {
+				return createRace();
+			}
+		}
+	}
+	//Create ProfessionCard
+	public ProfessionCard createProfession() {
+		Profession professions[] = Profession.values();
+		int index = rand.nextInt(professions.length);
+		
+		Profession newProf = professions[index];
+		UUID newID = UUID.randomUUID();
+		
+		return new ProfessionCard(newProf.toString(), newID, newProf);
+	}
+	
+	//Create RaceCard
+	public RaceCard createRace() {
+		Race races[] = Race.values();
+		int index = rand.nextInt(races.length);
+		
+		Race newRace = races[index];
+		UUID newID = UUID.randomUUID();
+		
+		return new RaceCard(newRace.toString(), newID, newRace);
+	}
 	
 	// Create Monster
 	public Monster createMonster() {

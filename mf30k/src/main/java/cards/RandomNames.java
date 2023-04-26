@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class RandomNames {
 
-	private Random rand;
+	private Random rand = new Random();
 	
 	private static String[] adjectives = {
 			"Normal",
@@ -24,8 +24,6 @@ public class RandomNames {
 		"Axe",
 		"Dagger",
 		"Halbard",
-		"Khopis",
-		"Chakram",
 		"Stick"
 	};
 	

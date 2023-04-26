@@ -50,10 +50,14 @@ public class PlayerManager {
 	//TODO: Manage Backpack, Hand and Equipment
 	
 	public void updateBackpack(Card[] cards) {
-		
+		//TODO
 	}
 	
 	public void removeCardFromBackpack(Player player, Card card) {
-		
+		//TODO
+	}
+	
+	public void addCardToBackPack(Player player, Card card) {
+		//TODO
 	}
 }

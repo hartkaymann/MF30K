@@ -30,7 +30,7 @@ public class FrontController {
 	private GameStage stage;
 	
 	
-	@PostMapping(value = "/addPlayer", consumes = "application/json")
+	@PostMapping(value = "/player", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
 		System.out.println("Received Player: " + p.getName());
 		player_mgr.addPlayer(p);
@@ -45,12 +45,14 @@ public class FrontController {
 	public Card drawCard(@RequestParam(name="type") String type) {
 		if (type.equals("door")) {
 			System.out.println("DoorCard requested.");
-			return crd_creator.createMonster();
+			return crd_creator.createDoorCard();
+			
 		} else if (type.equals("treasure")) {
 			System.out.println("TreasureCard requested");
 			Card card = crd_creator.createTreasure();
 			System.out.println(card);
 			return card;
+			
 		} else {
 			System.out.println("Could not determine request type.");
 			return null;
@@ -58,9 +60,8 @@ public class FrontController {
 		//Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, UUID.randomUUID());
 	}
 	
-	@GetMapping(value = "/player")
-	public Player getPlayer(@RequestParam(name="name", required=true, defaultValue="Kay") String name, Model model) {
-		model.addAttribute("name", name);
+	@GetMapping(value = "/player/{playerID}")
+	public Player getPlayer(@PathVariable String name) {
 		
 		return player_mgr.getPlayer(name);
 		
@@ -91,7 +92,7 @@ public class FrontController {
 		this.stage = stage;
 	}
 	
-	@GetMapping(value = "/getStage")
+	@GetMapping(value = "/stage")
 	public GameStage getStage() {
 		return this.stage;
 	}

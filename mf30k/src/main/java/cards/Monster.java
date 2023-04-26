@@ -1,25 +1,20 @@
 package cards;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Monster extends Card {
-	
-	
-	public Monster(UUID id, String name, int combatLevel, int treasureAmount) {
-		this.id = id;
-		this.name = name;
-		this.combatLevel = combatLevel;
-		this.treasureAmount = treasureAmount;
-		//this.type = type;
-	}
-	
+
 	private String name;
 	private int combatLevel;
 	private int treasureAmount;
-	//private String type;
+	
+	public Monster(UUID _id, String _name, int combatLevel, int treasureAmount) {
+		super(_name, _id, "Monster");
+		this.combatLevel = combatLevel;
+		this.treasureAmount = treasureAmount;
+	}
 	
 	public String getName() {
 		return name;

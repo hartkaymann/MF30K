@@ -20,6 +20,7 @@ public class Consumable extends Treasure {
 		this.combatBonus = _combat;
 		this.heroSide = _heroSide;
 		this.monsterSide = _monsterSide;
+		this.type = "Consumable";
 	}
 	
 	
