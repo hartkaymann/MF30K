@@ -33,6 +33,11 @@ public class FrontController {
 	@PostMapping(value = "/player", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
 		System.out.println("Received Player: " + p.getName());
+		System.out.println(p.getRace());
+		System.out.println(p.getProfession());
+		System.out.println(p.getGender());
+		System.out.println(p.getPlayerLevel());
+		System.out.println(p.getCombatLevel());
 		player_mgr.addPlayer(p);
 		return;
 	}
@@ -45,11 +50,14 @@ public class FrontController {
 	public Card drawCard(@RequestParam(name="type") String type) {
 		if (type.equals("door")) {
 			System.out.println("DoorCard requested.");
-			return crd_mgr.createDoorCard();
+			Card card = crd_mgr.createDoorCard();
+			System.out.println(crd_mgr.getCards());
+			return card;
 			
 		} else if (type.equals("treasure")) {
 			System.out.println("TreasureCard requested");
 			Card card = crd_mgr.createTreasure();
+			System.out.println(crd_mgr.getCards());
 			System.out.println(card);
 			return card;
 			
@@ -61,8 +69,9 @@ public class FrontController {
 	}
 	
 	@GetMapping(value = "/player/{playerID}")
-	public Player getPlayer(@PathVariable String name) {
+	public Player getPlayer(@PathVariable(name = "playerID") String name) {
 		
+		System.out.println(player_mgr.getPlayer(name));
 		return player_mgr.getPlayer(name);
 		
 		/*
@@ -79,7 +88,7 @@ public class FrontController {
 	@PutMapping(value = "/player/{playerID}",
 		consumes =  "application/json"
 			)
-	public void updatePlayer(@PathVariable String playerID,
+	public void updatePlayer(@PathVariable(name = "playerID") String playerID,
 			@RequestBody Player playerDetails) {
 		Player updated = player_mgr.updatePlayer(playerID, playerDetails);
 		System.out.println(updated);
@@ -99,10 +108,15 @@ public class FrontController {
 	
 	@PutMapping(value = "/player/{playerID}/backpack",
 			consumes = "application/json")
-	public void updatePlayerBackpack(@PathVariable String playerID,
-			@RequestBody UUID[] newCardIDs) {
+	public void updatePlayerBackpack(@PathVariable(name = "playerID") String playerID,
+			@RequestBody String[] IDStrings) {
 		
-		Card[] updatedBackpack = {};
+		UUID[] newCardIDs = new UUID[IDStrings.length];
+		for (int i = 0; i < IDStrings.length; i++) {
+			newCardIDs[i] = UUID.fromString(IDStrings[i]);
+		}
+				
+		Card[] updatedBackpack = new Card[newCardIDs.length];
 		for(int i = 0; i < newCardIDs.length; i++) {
 			updatedBackpack[i] = crd_mgr.getCardByID(newCardIDs[i]);
 		}
@@ -112,10 +126,15 @@ public class FrontController {
 	
 	@PutMapping(value = "/player/{playerID}/equipment",
 			consumes = "application/json")
-	public void updatePlayerEquipment(@PathVariable String playerID,
-			@RequestBody UUID[] equipIDs) {
+	public void updatePlayerEquipment(@PathVariable(name = "playerID") String playerID,
+			@RequestBody String[] IDStrings) {
 		
-		Equipment[] newEquip = {};
+		UUID[] equipIDs = new UUID[IDStrings.length];
+		for (int i = 0; i < IDStrings.length; i++) {
+			equipIDs[i] = UUID.fromString(IDStrings[i]);
+		}
+		
+		Equipment[] newEquip = new Equipment[equipIDs.length];
 		for(int i = 0; i < equipIDs.length; i++) {
 			Card equipment = crd_mgr.getCardByID(equipIDs[i]);
 			if(equipment instanceof Equipment) {

@@ -66,7 +66,7 @@ public class RandomNames {
 	}
 	
 	public String randomMonsterName() {
-		String name = this.monsterAdjectives[rand.nextInt(monsterAdjectives.length)];
+		String name = monsterAdjectives[rand.nextInt(monsterAdjectives.length)];
 		name += " ";
 		name += monster[rand.nextInt(monster.length)];
 		return name;

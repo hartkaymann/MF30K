@@ -12,11 +12,18 @@ public class PlayerManager {
 
 	private HashMap<String, Player> players = new HashMap<>();
 	
-	public boolean addPlayer(Player player) {
-		if(players.containsKey(player.getName())) {
+	public boolean addPlayer(Player p) {
+		System.out.println("Adding Player: " + p.getName());
+		System.out.println(p.getRace());
+		System.out.println(p.getProfession());
+		System.out.println(p.getGender());
+		System.out.println(p.getPlayerLevel());
+		System.out.println(p.getCombatLevel());
+		if(players.containsKey(p.getName())) {
 			return false;
 		} else {
-			players.put(player.getName(), player);
+			players.put(p.getName(), p);
+			System.out.println(players);
 			return true;
 		}
 	}

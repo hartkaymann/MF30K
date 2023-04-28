@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class Monster extends Card {
 
-	private String name;
 	private int combatLevel;
 	private int treasureAmount;
 	

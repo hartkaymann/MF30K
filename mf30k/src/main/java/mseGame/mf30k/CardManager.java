@@ -12,9 +12,14 @@ public class CardManager {
 	
 	private Random rand = new Random();
 	private RandomNames randNames = new RandomNames();
-	private HashMap<UUID, Card> cards;
-	private HashMap<UUID, Card> discarded;
+	private HashMap<UUID, Card> cards = new HashMap<UUID, Card>();
+	private HashMap<UUID, Card> discarded = new HashMap<UUID, Card>();
 	
+	
+	public HashMap<UUID, Card> getCards() {
+		return cards;
+	}
+
 	//Access cards by ID
 	public Card getCardByID(UUID id) {
 		return cards.get(id);
@@ -53,7 +58,7 @@ public class CardManager {
 		equipmentType _type = null;
 		
 		
-		//TODO: Change this so its not hardcoded, but like in RaceCard or Profession
+		//TODO: Change this so its not hard coded, but like in RaceCard or Profession
 		int equip = rand.nextInt(4);
 		switch(equip) {
 		case 0:
@@ -85,10 +90,13 @@ public class CardManager {
 		_name += " " + randNames.randomConsumable();
 		int _gold = rand.nextInt(11);
 		int _combat = rand.nextInt(6);
-		boolean _heroside = rand.nextBoolean();
-		boolean _monsterside = rand.nextBoolean();
 		
-		Consumable consum =  new Consumable(_id, _name, _gold, _combat, _heroside, _monsterside);
+		BuffTarget targets[] = BuffTarget.values();
+		int index = rand.nextInt(targets.length);
+		
+		BuffTarget _target = targets[index];
+		
+		Consumable consum =  new Consumable(_id, _name, _gold, _combat, _target);
 		this.cards.put(_id, consum);
 		return consum;
 	}
