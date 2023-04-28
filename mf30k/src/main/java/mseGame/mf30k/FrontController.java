@@ -5,12 +5,10 @@ import player.Player;
 import cards.*;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +22,7 @@ public class FrontController {
 	
 	//private HashMap<String, Player> players = new HashMap<String, Player>();
 	@Autowired
-	private CardCreator crd_creator;
+	private CardManager crd_mgr;
 	
 	@Autowired 
 	private PlayerManager player_mgr;
@@ -47,11 +45,11 @@ public class FrontController {
 	public Card drawCard(@RequestParam(name="type") String type) {
 		if (type.equals("door")) {
 			System.out.println("DoorCard requested.");
-			return crd_creator.createDoorCard();
+			return crd_mgr.createDoorCard();
 			
 		} else if (type.equals("treasure")) {
 			System.out.println("TreasureCard requested");
-			Card card = crd_creator.createTreasure();
+			Card card = crd_mgr.createTreasure();
 			System.out.println(card);
 			return card;
 			
@@ -102,29 +100,33 @@ public class FrontController {
 	@PutMapping(value = "/player/{playerID}/backpack",
 			consumes = "application/json")
 	public void updatePlayerBackpack(@PathVariable String playerID,
-			@RequestBody HashMap<UUID, Card> newCards) {
+			@RequestBody UUID[] newCardIDs) {
 		
-		Player currentPlayer = this.player_mgr.getPlayer(playerID);
-		/*HashMap<UUID, Card> currentBackpack = currentPlayer.getBackpack();
-		for(Map.Entry<UUID, Card> entry : new_cards.entrySet()) {
-			if(!currentBackpack.containsKey(entry.getKey())) {
-				//add Card
-			}
-		}*/
-		currentPlayer.setBackpack(newCards);
-		this.player_mgr.updatePlayer(playerID, currentPlayer);
-		
+		Card[] updatedBackpack = {};
+		for(int i = 0; i < newCardIDs.length; i++) {
+			updatedBackpack[i] = crd_mgr.getCardByID(newCardIDs[i]);
+		}
+		player_mgr.updateBackpack(updatedBackpack, playerID);
+		return;
 	}
 	
 	@PutMapping(value = "/player/{playerID}/equipment",
 			consumes = "application/json")
 	public void updatePlayerEquipment(@PathVariable String playerID,
-			@RequestBody HashMap<UUID, Equipment> newEquip) {
+			@RequestBody UUID[] equipIDs) {
 		
-		Player currentPlayer = this.player_mgr.getPlayer(playerID);
-		currentPlayer.setAllEquipment(newEquip);
-		this.player_mgr.updatePlayer(playerID, currentPlayer);
+		Equipment[] newEquip = {};
+		for(int i = 0; i < equipIDs.length; i++) {
+			Card equipment = crd_mgr.getCardByID(equipIDs[i]);
+			if(equipment instanceof Equipment) {
+				newEquip[i] = (Equipment) equipment;
+			} else {
+				System.out.println("Wrong Card type for Equipment.");
+			}
+		}
 		
+		player_mgr.updateEquipment(newEquip, playerID);
+		return;
 	}
 	
 

@@ -1,10 +1,10 @@
 package mseGame.mf30k;
 
 import java.util.HashMap;
-
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
-import cards.Card;
+import cards.*;
 import player.*;
 
 @Service
@@ -47,17 +47,27 @@ public class PlayerManager {
 		return players.get(name);
 	}
 	
-	//TODO: Manage Backpack, Hand and Equipment
-	
-	public void updateBackpack(Card[] cards) {
-		//TODO
+
+	//Update Backpack and Equipment
+	public void updateBackpack(Card[] cards, String playerID) {
+		Player currentPlayer = players.get(playerID);
+		HashMap<UUID, Card> newBackpack = new HashMap<UUID, Card>();
+		for(int i = 0; i < cards.length; i++) {
+			newBackpack.put(cards[i].getId(), cards[i]);
+		}
+		currentPlayer.setBackpack(newBackpack);
+		players.replace(playerID, currentPlayer);
+		return;
 	}
 	
-	public void removeCardFromBackpack(Player player, Card card) {
-		//TODO
-	}
-	
-	public void addCardToBackPack(Player player, Card card) {
-		//TODO
+	public void updateEquipment(Equipment[] equip, String playerID) {
+		Player currentPlayer = players.get(playerID);
+		HashMap<UUID, Equipment> newEquip = new HashMap<UUID, Equipment>();
+		for(int i = 0; i < equip.length; i++) {
+			newEquip.put(equip[i].getId(), equip[i]);
+		}
+		currentPlayer.setAllEquipment(newEquip);
+		players.replace(playerID, currentPlayer);
+		return;		
 	}
 }

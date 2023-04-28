@@ -2,14 +2,36 @@ package mseGame.mf30k;
 
 import org.springframework.stereotype.Service;
 import cards.*;
+
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
 @Service
-public class CardCreator {
+public class CardManager {
 	
 	private Random rand = new Random();
 	private RandomNames randNames = new RandomNames();
+	private HashMap<UUID, Card> cards;
+	private HashMap<UUID, Card> discarded;
+	
+	//Access cards by ID
+	public Card getCardByID(UUID id) {
+		return cards.get(id);
+	}
+	
+	//Discard card by ID
+	public void discard(UUID id) {
+		Card to_discard = cards.get(id);
+		cards.remove(id);
+		discarded.put(id, to_discard);
+		return;
+	}
+	
+	//Access the discarded Cards by ID
+	public Card getDiscardedByID(UUID id) {
+		return discarded.get(id);
+	}
 	
 	//Create Random Treasure
 	public Treasure createTreasure() {
@@ -51,8 +73,9 @@ public class CardCreator {
 			_name += randNames.randomWeapon();
 			break;
 		}
-		
-		return new Equipment(_name, _gold, _combat, _type, _id);
+		Equipment equipment = new Equipment(_name, _gold, _combat, _type, _id);
+		this.cards.put(_id, equipment);
+		return equipment;
 	}
 	
 	//create Random Consumable
@@ -65,8 +88,9 @@ public class CardCreator {
 		boolean _heroside = rand.nextBoolean();
 		boolean _monsterside = rand.nextBoolean();
 		
-		
-		return new Consumable(_id, _name, _gold, _combat, _heroside, _monsterside);
+		Consumable consum =  new Consumable(_id, _name, _gold, _combat, _heroside, _monsterside);
+		this.cards.put(_id, consum);
+		return consum;
 	}
 	
 	// Create Random DoorCard
@@ -89,8 +113,9 @@ public class CardCreator {
 		
 		Profession newProf = professions[index];
 		UUID newID = UUID.randomUUID();
-		
-		return new ProfessionCard(newProf.toString(), newID, newProf);
+		ProfessionCard prof = new ProfessionCard(newProf.toString(), newID, newProf);
+		this.cards.put(newID, prof);
+		return prof;
 	}
 	
 	//Create RaceCard
@@ -101,7 +126,9 @@ public class CardCreator {
 		Race newRace = races[index];
 		UUID newID = UUID.randomUUID();
 		
-		return new RaceCard(newRace.toString(), newID, newRace);
+		RaceCard race = new RaceCard(newRace.toString(), newID, newRace);
+		this.cards.put(newID, race);
+		return race;
 	}
 	
 	// Create Monster
@@ -111,8 +138,9 @@ public class CardCreator {
 		int _combatLevel = rand.nextInt(25);
 		int _treasureAmount = rand.nextInt(2) + 1;
 		
-		
-		return new Monster(id, _name, _combatLevel, _treasureAmount);
+		Monster monster = new Monster(id, _name, _combatLevel, _treasureAmount);
+		this.cards.put(id, monster);
+		return monster;
 	}
 
 }
