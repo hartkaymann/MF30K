@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public enum Gender
 {
     Male,
@@ -10,8 +6,6 @@ public enum Gender
 
 public class Player
 {
-
-    private int id;
     private string name;
     private int level;
     private int combatLevel;
@@ -19,20 +13,6 @@ public class Player
     private Gender gender;
     private Race race;
     private Profession profession;
-
-
-    public int Id
-    {
-        get => id;
-        set
-        {
-            if (value != id)
-            {
-                id = value;
-                HandlePropertyChanged();
-            }
-        }
-    }
 
     public string Name
     {
