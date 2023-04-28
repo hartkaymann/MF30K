@@ -129,7 +129,7 @@ public class NetworkManager : MonoBehaviour
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/card?type={type}", RequestType.GET);
 
         var obj = await SendRequestWithResponse(req);
-        string cardType = (string)obj.SelectToken("class");
+        string cardType = (string)obj.SelectToken("type");
         string name = (string)obj.SelectToken("name");
         Card card = null;
 
@@ -139,7 +139,7 @@ public class NetworkManager : MonoBehaviour
         {
             default:
                 {
-                    string equipType = (string)obj.SelectToken("type");
+                    string equipType = (string)obj.SelectToken("equipType");
                     int cost = int.Parse((string)obj.SelectToken("goldValue"));
                     int stat = int.Parse((string)obj.SelectToken("combatBonus"));
                     card = new EquipmentCard(name, ParseEnum<EquipmentType>(equipType), dummySprite, cost, stat);
