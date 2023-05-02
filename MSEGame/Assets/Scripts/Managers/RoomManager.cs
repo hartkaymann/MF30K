@@ -7,7 +7,9 @@ public class RoomManager : MonoBehaviour
     public static RoomManager instance;
     private RoomRenderer roomRenderer;
 
-    private Room currentRoom;
+    // Current room infomation
+    private DoorCard card;
+    private RoomController currentRoom; 
 
     [SerializeField] private GameObject roomPrefab;
 
@@ -17,11 +19,16 @@ public class RoomManager : MonoBehaviour
         roomRenderer = roomPrefab.GetComponent<RoomRenderer>();
     }
 
-    public void InstantiateRoom(Room room)
+    public void InstantiateRoom(DoorCard card)
     {
-        currentRoom = room;
+        this.card = card;
 
+        // Destroy old room
+        Destroy(currentRoom.gameObject);
+
+        // Create new room
         GameObject go = Instantiate(roomPrefab, Vector3.zero, Quaternion.identity);
-        roomRenderer.Render(room);
+        currentRoom = go.GetComponent<RoomController>();
+        roomRenderer.Render(card);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -15,8 +16,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Event handlers and listeners
-        UpdateGameStage(GameStage.InventoryManagement);
+        UpdateGameStage(GameStage.DrawCard);
     }
 
     public void UpdateGameStage(GameStage newStage)
@@ -29,15 +29,15 @@ public class GameManager : MonoBehaviour
             case GameStage.InventoryManagement:
                 break;
             case GameStage.DrawCard:
-                DrawDoorCard();
+                HandleDrawCard();
                 break;
             case GameStage.CombatPreparations:
                 break;
             case GameStage.Combat:
-                Combat();
+                HandleCombat();
                 break;
             case GameStage.Victory:
-                Victory();
+                HandleVictory();
                 break;
             case GameStage.Defeat:
                 break;
@@ -49,22 +49,32 @@ public class GameManager : MonoBehaviour
         NetworkManager.instance.PutStage(stage);
     }
 
-    async void DrawDoorCard()
+    async void HandleDrawCard()
     {
-        Card card = await NetworkManager.instance.GetCard(CardType.Door);
+        DoorCard card = await NetworkManager.instance.GetCard(CardCategory.Door) as DoorCard;
+        if (card is null)
+            return;
+
+        RoomManager.instance.InstantiateRoom(card);
+    }
+
+    async void DrawTreasureCard()
+    {
+        Card card = await NetworkManager.instance.GetCard(CardCategory.Treasure);
         CardManager.instance.InstantiateCard(card);
     }
 
-    void Combat()
+    void HandleCombat()
     {
-        Debug.Log("DOING COMBAT!");
+
 
         UpdateGameStage(GameStage.Victory);
     }
 
-    private void Victory()
+    private void HandleVictory()
     {
         Debug.Log("VICTORY!");
+        DrawTreasureCard();
         UpdateGameStage(GameStage.InventoryManagement);
     }
 
