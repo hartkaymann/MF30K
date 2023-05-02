@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,6 +8,8 @@ public class GameManager : MonoBehaviour
     public GameStage stage;
     public static event Action<GameStage> OnGameStateChange;
 
+    [SerializeField] private PlayerController playerController;
+
     void Awake()
     {
         instance = this;
@@ -16,6 +17,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        NetworkManager.instance.PostPlayer(playerController.Player);
+        // TODO: check if player can be created, but no persistence or multiplayer yet, so...
+
         UpdateGameStage(GameStage.DrawCard);
     }
 
@@ -40,6 +44,7 @@ public class GameManager : MonoBehaviour
                 HandleVictory();
                 break;
             case GameStage.Defeat:
+                HandleDefeat();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(newStage), newStage, null);
@@ -51,8 +56,7 @@ public class GameManager : MonoBehaviour
 
     async void HandleDrawCard()
     {
-        DoorCard card = await NetworkManager.instance.GetCard(CardCategory.Door) as DoorCard;
-        if (card is null)
+        if (await NetworkManager.instance.GetCard(CardCategory.Door) is not DoorCard card)
             return;
 
         RoomManager.instance.InstantiateRoom(card);
@@ -66,15 +70,27 @@ public class GameManager : MonoBehaviour
 
     void HandleCombat()
     {
+        if (RoomManager.instance.CurrentRoom.Card is not MonsterCard monsterCard)
+        {
+            Debug.LogWarning($"Trying to do combat while not in monster room. Current room: {RoomManager.instance.CurrentRoom.Card.type}");
+            return;
+        }
 
-
-        UpdateGameStage(GameStage.Victory);
+        bool victorious = playerController.Player.CombatLevel > monsterCard.level;
+        Debug.Log($"{(victorious ? "Player" : "Monster")} won!");
+        UpdateGameStage(victorious ? GameStage.Victory : GameStage.Defeat);
     }
 
     private void HandleVictory()
     {
         Debug.Log("VICTORY!");
         DrawTreasureCard();
+        UpdateGameStage(GameStage.InventoryManagement);
+    }
+
+    private void HandleDefeat()
+    {
+        Debug.Log("DEFEAT!");
         UpdateGameStage(GameStage.InventoryManagement);
     }
 

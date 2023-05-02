@@ -2,10 +2,10 @@ using UnityEngine;
 
 public enum Profession
 {
-    Warrior,
-    Mage,
-    Priest,
-    Ranger
+    Wizard,
+    Rogue,
+    Barbarian,
+    Cleric
 }
 
 public class ProfessionCard : DoorCard

@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
-using static System.Net.WebRequestMethods;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using System.Net;
 
 enum RequestType
 {
@@ -120,7 +118,6 @@ public class NetworkManager : MonoBehaviour
         var response = await SendRequestWithResponse(req);
 
         req.Dispose();
-        //TODO: set assigned player id to new player
     }
 
     /////////
@@ -137,7 +134,7 @@ public class NetworkManager : MonoBehaviour
 
         Card card = null;
 
-        Debug.Log($"Class: {cardType}, Name: {name}");
+        //Debug.Log($"Class: {cardType}, Name: {name}");
         Sprite dummySprite = Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero);
         switch (cardType)
         {
@@ -188,20 +185,19 @@ public class NetworkManager : MonoBehaviour
         return card;
     }
 
-    public async Task<Player> GetPlayer(int id)
+    public async Task<Player> GetPlayer(string name)
     {
         Debug.Log("Get Player");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={id}", RequestType.GET);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={name}", RequestType.GET);
 
         var obj = await SendRequestWithResponse(req);
-        string name = (string)obj.SelectToken("name");
         string gender = (string)obj.SelectToken("gender");
         string race = (string)obj.SelectToken("race");
         string profession = (string)obj.SelectToken("profession");
         int level = int.Parse((string)obj.SelectToken("playerLevel"));
         int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
 
-        Player p = new Player(id, name)
+        Player p = new Player(name)
         {
             Gender = ParseEnum<Gender>(gender),
             Race = ParseEnum<Race>(race),
@@ -234,7 +230,7 @@ public class NetworkManager : MonoBehaviour
     public void PutPlayer(Player player)
     {
         Debug.Log("Put Player");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.Id}", RequestType.PUT, player);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.Name}", RequestType.PUT, player);
         req.SendWebRequest();
         req.Dispose();
 
@@ -251,14 +247,14 @@ public class NetworkManager : MonoBehaviour
     public void PutBackpack(Player player, List<Card> backpack)
     {
         Debug.Log("Put Backpack");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Id}/backpack", RequestType.PUT, backpack);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, backpack);
         req.SendWebRequest();
         req.Dispose();
     }
     public void PutEquipment(Player player, Dictionary<EquipmentSlot, EquipmentCard> equipment)
     {
         Debug.Log("Put Backpack");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Id}/backpack", RequestType.PUT, equipment);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, equipment);
         req.SendWebRequest();
         req.Dispose();
     }

@@ -1,18 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomController : MonoBehaviour
 {
 
-    void Start()
+    [SerializeField] private RoomRenderer roomRenderer;
+    [SerializeField] public RoomRenderer Renderer { get { return roomRenderer; } }
+
+    // Current room infomation
+    private DoorCard card;
+    public DoorCard Card
     {
-        
+        get
+        {
+            return card;
+        }
+        set
+        {
+            card = value;
+            roomRenderer.Render(value);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
     }
+
 }

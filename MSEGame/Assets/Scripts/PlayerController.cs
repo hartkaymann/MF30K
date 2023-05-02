@@ -4,13 +4,21 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Player player;
+    public Player Player { get { return player; } set { player = value; } }
 
-    [SerializeField] public Dictionary<EquipmentSlot, EquipmentCard> equipment;
-
+    [SerializeField] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     void Start()
     {
-        player = new Player(0, "Kay");
+        // Will later move to character creation
+        player = new Player("Kay")
+        {
+            Gender = Gender.Male,
+            Race = Race.Human,
+            Profession = Profession.Rogue,
+            Level = 1,
+            CombatLevel = 5
+        };
 
         equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
 
@@ -33,11 +41,8 @@ public class PlayerController : MonoBehaviour
         NetworkManager.instance.PutEquipment(player, equipment);
     }
 
-    public bool Fight(Monster mob)
+    public bool Fight(MonsterCard mob)
     {
-        return this.player.CombatLevel > mob.GetCombatLevel();
+        return this.player.CombatLevel > mob.level;
     }
-
-    public Player GetPlayer() { return this.player; }
-    public void setPlayer(Player player) { this.player = player; }
 }

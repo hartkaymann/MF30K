@@ -2,10 +2,10 @@ using UnityEngine;
 
 public enum Race
 {
-    Human,
+    Orc,
     Elf,
     Dwarf,
-    Orc
+    Human
 }
 
 public class RaceCard : DoorCard

@@ -92,9 +92,8 @@ public class Player
         }
     }
 
-    public Player(int id, string name)
+    public Player(string name)
     {
-        Id = id;
         Name = name;
     }
 
