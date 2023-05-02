@@ -1,6 +1,6 @@
 package cards;
 
-public class Treasure extends Card {
+public abstract class Treasure extends Card {
 	protected int goldValue;
 	protected int combatBonus;
 	

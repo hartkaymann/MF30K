@@ -69,7 +69,9 @@ public class Player {
 			return true;
 		}
 	}
-	
+	public void setEquipment(HashMap<UUID, Equipment> equipment) {
+		this.equipment = equipment;
+	}	
 	public Profession getProfession() {
 		return profession;
 	}
@@ -120,6 +122,9 @@ public class Player {
 		} else {
 			return false;
 		}
+	}
+	public void setBackpack(HashMap<UUID, Card> backpack) {
+		this.backpack = backpack;
 	}
 	public int getPlayerLevel() {
 		return playerLevel;
