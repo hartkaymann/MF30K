@@ -18,14 +18,22 @@ enum RequestType
 
 public class NetworkManager : MonoBehaviour
 {
-    public static NetworkManager instance;
+    private readonly string url = "localhost";
+    private readonly string port = "8080";
 
-    [SerializeField] private string url;
-    [SerializeField] private string port;
-
+    public static NetworkManager Instance { get; private set; }
     private void Awake()
     {
-        instance = this;
+        // If there is an instance, and it's not me, delete myself.
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
     [ContextMenu("Send Request")]
@@ -197,18 +205,16 @@ public class NetworkManager : MonoBehaviour
         int level = int.Parse((string)obj.SelectToken("playerLevel"));
         int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
 
-        Player p = new Player(name)
-        {
-            Gender = ParseEnum<Gender>(gender),
-            Race = ParseEnum<Race>(race),
-            Profession = ParseEnum<Profession>(profession),
-            Level = level,
-            CombatLevel = combatLvl,
-        };
-
         req.Dispose();
 
-        return p;
+        return new Player(
+            name,
+            ParseEnum<Race>(race),
+            ParseEnum<Profession>(profession),
+            ParseEnum<Gender>(gender),
+            level,
+            combatLvl
+        );
     }
 
     public async Task<GameStage> GetStage()
@@ -259,9 +265,9 @@ public class NetworkManager : MonoBehaviour
         req.Dispose();
     }
 
-    ///////////
-    // DELET //
-    ///////////
+    ////////////
+    // DELETE //
+    ////////////
 
 
     public static T ParseEnum<T>(string value)

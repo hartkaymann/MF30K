@@ -1,3 +1,5 @@
+using Unity.Android.Types;
+
 public enum Gender
 {
     Male,
@@ -92,15 +94,24 @@ public class Player
         }
     }
 
-    public Player(string name)
+    public Player(string name, Race race, Profession profession, Gender gender, int level, int combatLevel)
     {
-        Name = name;
+        this.name = name;
+        this.race = race;
+        this.profession = profession;
+        this.gender = gender;
+        this.level = level;
+        this.combatLevel = combatLevel;
     }
 
     public void HandlePropertyChanged()
     {
-        NetworkManager.instance.PutPlayer(this);
+        NetworkManager.Instance.PutPlayer(this);
     }
 
+    public static Player GetDummy()
+    {
+        return new("Kay", Race.Human, Profession.Barbarian, Gender.Male, 1, 1);
+    }
 
 }

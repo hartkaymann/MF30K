@@ -9,20 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     void Start()
-    {
-        // Will later move to character creation
-        player = new Player("Kay")
-        {
-            Gender = Gender.Male,
-            Race = Race.Human,
-            Profession = Profession.Rogue,
-            Level = 1,
-            CombatLevel = 5
-        };
-
+    {       
         equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
-
-        NetworkManager.instance.PostPlayer(player);
     }
 
     public void Equip(EquipmentSlot slot, EquipmentCard card)
@@ -30,7 +18,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Equip {card.title} to {slot}");
         equipment[slot] = card;
 
-        NetworkManager.instance.PutEquipment(player, equipment);
+        NetworkManager.Instance.PutEquipment(player, equipment);
     }
 
     public void Uneqip(EquipmentSlot slot)
@@ -38,7 +26,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Unequip {slot}");
         equipment[slot] = null;
 
-        NetworkManager.instance.PutEquipment(player, equipment);
+        NetworkManager.Instance.PutEquipment(player, equipment);
     }
 
     public bool Fight(MonsterCard mob)

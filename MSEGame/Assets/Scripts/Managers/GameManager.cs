@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -17,8 +18,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        NetworkManager.instance.PostPlayer(playerController.Player);
-        // TODO: check if player can be created, but no persistence or multiplayer yet, so...
+        FetchPlayerInformation();
 
         UpdateGameStage(GameStage.DrawCard);
     }
@@ -51,12 +51,29 @@ public class GameManager : MonoBehaviour
         }
 
         OnGameStateChange?.Invoke(newStage);
-        NetworkManager.instance.PutStage(stage);
+        NetworkManager.Instance.PutStage(stage);
+    }
+
+    async void FetchPlayerInformation()
+    {
+        string playerName = LoadSceneInformation.PlayerName;
+        Player playerInfo;
+
+        if (playerName.Length == 0)
+        {
+            playerInfo = Player.GetDummy();
+        }
+        else
+        {
+            playerInfo = await NetworkManager.Instance.GetPlayer(playerName);
+        }
+
+        playerController.Player = playerInfo;
     }
 
     async void HandleDrawCard()
     {
-        if (await NetworkManager.instance.GetCard(CardCategory.Door) is not DoorCard card)
+        if (await NetworkManager.Instance.GetCard(CardCategory.Door) is not DoorCard card)
             return;
 
         RoomManager.instance.InstantiateRoom(card);
@@ -64,7 +81,7 @@ public class GameManager : MonoBehaviour
 
     async void DrawTreasureCard()
     {
-        Card card = await NetworkManager.instance.GetCard(CardCategory.Treasure);
+        Card card = await NetworkManager.Instance.GetCard(CardCategory.Treasure);
         CardManager.instance.InstantiateCard(card);
     }
 
@@ -130,4 +147,12 @@ public enum GameStage
     Combat,
     Victory,
     Defeat
+}
+
+/// <summary>
+/// Utility class to pass information between scenes.
+/// </summary>
+public static class LoadSceneInformation
+{
+    public static string PlayerName { get; set; } = "";
 }
