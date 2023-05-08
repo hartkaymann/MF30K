@@ -15,21 +15,10 @@ public enum EquipmentSlot
 
 public class EquipmentInventory : Inventory
 {
-    private PlayerController player;
-
     [SerializeField] EquipmentSlot slot;
     [SerializeField] EquipmentType type;
 
     Boolean isEquipped = false;
-
-    private void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        if (player == null)
-        {
-            Debug.LogAssertion("No player could be found.");
-        }
-    }
 
     public override void OnDrop(PointerEventData eventData)
     {
@@ -55,7 +44,9 @@ public class EquipmentInventory : Inventory
 
     private void Update()
     {
-        if (player == null) return;
+        PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
+        if (playerController == null) 
+            return;
 
         if (!isEquipped && transform.childCount > 0)
         {
@@ -64,7 +55,7 @@ public class EquipmentInventory : Inventory
             CardController cc = transform.GetComponentInChildren<CardController>();
             if (cc != null)
             {
-                player.Equip(slot, cc.getCard() as EquipmentCard);
+                playerController.Equip(slot, cc.getCard() as EquipmentCard);
             }
 
         }
@@ -72,7 +63,7 @@ public class EquipmentInventory : Inventory
         {
             isEquipped = false;
 
-            player.Uneqip(slot);
+            playerController.Uneqip(slot);
         }
 
 

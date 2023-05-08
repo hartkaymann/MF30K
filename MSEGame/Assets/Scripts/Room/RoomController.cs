@@ -4,9 +4,8 @@ public class RoomController : MonoBehaviour
 {
 
     [SerializeField] private RoomRenderer roomRenderer;
-    [SerializeField] public RoomRenderer Renderer { get { return roomRenderer; } }
+    public RoomRenderer Renderer { get { return roomRenderer; } }
 
-    // Current room infomation
     private DoorCard card;
     public DoorCard Card
     {
@@ -16,13 +15,13 @@ public class RoomController : MonoBehaviour
         }
         set
         {
-            card = value;
-            roomRenderer.Render(value);
+            if (card != value)
+            {
+
+                card = value;
+                roomRenderer.Render(card);
+            }
+
         }
     }
-
-    void Start()
-    {
-    }
-
 }

@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
+    public static GameManager Instance { get; private set; }
+
     // State management
-    public static GameManager instance;
-    public GameStage stage;
+    public GameStage stage; 
     public static event Action<GameStage> OnGameStateChange;
 
-    [SerializeField] private PlayerController playerController;
-
-    void Awake()
+    private void Awake()
     {
-        instance = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
     void Start()
@@ -33,18 +40,18 @@ public class GameManager : MonoBehaviour
             case GameStage.InventoryManagement:
                 break;
             case GameStage.DrawCard:
-                HandleDrawCard();
+                DrawDoorCard();
                 break;
             case GameStage.CombatPreparations:
                 break;
             case GameStage.Combat:
-                HandleCombat();
+                Combat();
                 break;
             case GameStage.Victory:
-                HandleVictory();
+                Victory();
                 break;
             case GameStage.Defeat:
-                HandleDefeat();
+                Defeat();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(newStage), newStage, null);
@@ -68,44 +75,48 @@ public class GameManager : MonoBehaviour
             playerInfo = await NetworkManager.Instance.GetPlayer(playerName);
         }
 
-        playerController.Player = playerInfo;
+        PlayerManager.Instance.InstantiatePlayer(playerInfo);
     }
 
-    async void HandleDrawCard()
+    async void DrawDoorCard()
     {
         if (await NetworkManager.Instance.GetCard(CardCategory.Door) is not DoorCard card)
             return;
 
-        RoomManager.instance.InstantiateRoom(card);
+        RoomManager.Instance.InstantiateRoom(card);
     }
 
     async void DrawTreasureCard()
     {
         Card card = await NetworkManager.Instance.GetCard(CardCategory.Treasure);
+        if(card == null) 
+            return;
+
         CardManager.instance.InstantiateCard(card);
     }
 
-    void HandleCombat()
+    void Combat()
     {
-        if (RoomManager.instance.CurrentRoom.Card is not MonsterCard monsterCard)
+        RoomController rc = RoomManager.Instance.CurrentRoom;
+        if (rc.Card is not MonsterCard monsterCard)
         {
-            Debug.LogWarning($"Trying to do combat while not in monster room. Current room: {RoomManager.instance.CurrentRoom.Card.type}");
+            Debug.LogWarning($"Trying to do combat while not in monster room. Current room: {rc.Card.type}");
             return;
         }
 
-        bool victorious = playerController.Player.CombatLevel > monsterCard.level;
+        bool victorious = PlayerManager.Instance.CurrentPlayer.Player.CombatLevel > monsterCard.level;
         Debug.Log($"{(victorious ? "Player" : "Monster")} won!");
         UpdateGameStage(victorious ? GameStage.Victory : GameStage.Defeat);
     }
 
-    private void HandleVictory()
+    private void Victory()
     {
         Debug.Log("VICTORY!");
         DrawTreasureCard();
         UpdateGameStage(GameStage.InventoryManagement);
     }
 
-    private void HandleDefeat()
+    private void Defeat()
     {
         Debug.Log("DEFEAT!");
         UpdateGameStage(GameStage.InventoryManagement);

@@ -18,14 +18,13 @@ enum RequestType
 
 public class NetworkManager : MonoBehaviour
 {
+    public static NetworkManager Instance { get; private set; }
+    
     private readonly string url = "localhost";
     private readonly string port = "8080";
 
-    public static NetworkManager Instance { get; private set; }
     private void Awake()
     {
-        // If there is an instance, and it's not me, delete myself.
-
         if (Instance != null && Instance != this)
         {
             Destroy(this);
@@ -71,13 +70,13 @@ public class NetworkManager : MonoBehaviour
 
     private UnityWebRequest CreateRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
-        Debug.Log("New Request: " + path);
+        //Debug.Log("New Request: " + path);
         var request = new UnityWebRequest(path, type.ToString());
 
         if (data != null)
         {
             string jsonData = JsonConvert.SerializeObject(data);
-            Debug.Log($"Request Body: {jsonData}");
+            //Debug.Log($"Request Body: {jsonData}");
             var bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         }
@@ -135,7 +134,14 @@ public class NetworkManager : MonoBehaviour
     {
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/card?type={type.ToString().ToLower()}", RequestType.GET);
 
+        if (req == null)
+            return null;
+
         var obj = await SendRequestWithResponse(req);
+        if (!obj.HasValues)
+            return null;
+
+        //TODO: Check if key exist before trying to get it
         string cardType = (string)obj.SelectToken("type");
         string name = (string)obj.SelectToken("name");
         string id = (string)obj.SelectToken("id");
@@ -195,7 +201,6 @@ public class NetworkManager : MonoBehaviour
 
     public async Task<Player> GetPlayer(string name)
     {
-        Debug.Log("Get Player");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={name}", RequestType.GET);
 
         var obj = await SendRequestWithResponse(req);
@@ -219,7 +224,6 @@ public class NetworkManager : MonoBehaviour
 
     public async Task<GameStage> GetStage()
     {
-        Debug.Log("Get Stage");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.GET);
 
         var obj = await SendRequestWithResponse(req);
@@ -235,7 +239,6 @@ public class NetworkManager : MonoBehaviour
 
     public void PutPlayer(Player player)
     {
-        Debug.Log("Put Player");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.Name}", RequestType.PUT, player);
         req.SendWebRequest();
         req.Dispose();
@@ -244,7 +247,6 @@ public class NetworkManager : MonoBehaviour
 
     public void PutStage(GameStage stage)
     {
-        Debug.Log("Put Stage");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.PUT, stage.ToString());
         req.SendWebRequest();
         req.Dispose();
@@ -252,14 +254,12 @@ public class NetworkManager : MonoBehaviour
 
     public void PutBackpack(Player player, List<Card> backpack)
     {
-        Debug.Log("Put Backpack");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, backpack);
         req.SendWebRequest();
         req.Dispose();
     }
     public void PutEquipment(Player player, Dictionary<EquipmentSlot, EquipmentCard> equipment)
     {
-        Debug.Log("Put Backpack");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, equipment);
         req.SendWebRequest();
         req.Dispose();

@@ -27,7 +27,7 @@ public class BackpackController : Inventory
                 }
             }
 
-            Player player = GameObject.Find("Player").GetComponent<PlayerController>().Player;
+            Player player = PlayerManager.Instance.CurrentPlayer.Player;
             NetworkManager.Instance.PutBackpack(player, items);
 
             noItems = transform.childCount;

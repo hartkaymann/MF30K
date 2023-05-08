@@ -3,7 +3,7 @@ using UnityEngine;
 public class ObjectFollow : MonoBehaviour
 {
 
-    public Transform Follow;
+    [HideInInspector] public Transform Follow;
 
     private Camera MainCamera;
 
@@ -16,6 +16,9 @@ public class ObjectFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Follow == null)
+            return;
+
         var screenPos = MainCamera.WorldToScreenPoint(Follow.position);
 
         transform.position = screenPos;

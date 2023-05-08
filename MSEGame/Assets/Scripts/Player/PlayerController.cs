@@ -4,12 +4,28 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Player player;
-    public Player Player { get { return player; } set { player = value; } }
+    public Player Player
+    {
+        get
+        {
+            return player;
+        }
+        set
+        {
+            if (player != value)
+            {
+                player = value;
+                playerRenderer.Render();
+            }
+        }
+    }
 
     [SerializeField] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
+    [SerializeField] PlayerRenderer playerRenderer;
+
     void Start()
-    {       
+    {
         equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
     }
 
