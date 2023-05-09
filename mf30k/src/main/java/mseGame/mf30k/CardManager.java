@@ -75,7 +75,7 @@ public class CardManager {
 			break;
 		case 3:
 			_type = equipmentType.Weapon;
-			_name += randNames.randomWeapon();
+			_name +=  " " + randNames.randomWeapon();
 			break;
 		}
 		Equipment equipment = new Equipment(_name, _gold, _combat, _type, _id);
