@@ -52,11 +52,16 @@ public class RoomManager : MonoBehaviour
             infoName.text = card.title;
         }
 
-        if (card is MonsterCard monsterCard)
+        if (currentNpcInfo.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
         {
-            if (currentNpcInfo.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
+            if (card is MonsterCard monsterCard)
             {
+                infoLevel.gameObject.SetActive(true);
                 infoLevel.text = monsterCard.level.ToString();
+            }
+            else
+            {
+                infoLevel.gameObject.SetActive(false);
             }
         }
     }

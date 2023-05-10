@@ -5,7 +5,10 @@ public class CardManager : MonoBehaviour
     public static CardManager instance;
 
     [SerializeField] private GameObject cardPrefab;
-    [SerializeField] private GameObject canvas;
+    [SerializeField] private Transform canvas;
+
+    [SerializeField] private Transform doorStackTransform;
+    [SerializeField] private Transform treasureStackTransform;
 
     void Awake()
     {
@@ -13,13 +16,24 @@ public class CardManager : MonoBehaviour
     }
     public void InstantiateCard(Card card)
     {
-        GameObject go = Instantiate(cardPrefab, Vector3.zero, Quaternion.identity);
-        go.transform.SetParent(canvas.transform, false);
+        Vector3 position = Vector2.zero;
+        if (card is DoorCard)
+            position = doorStackTransform.position;
+        else if (card is TreasureCard)
+            position = treasureStackTransform.position;
 
-        CardController cd = go.GetComponent<CardController>();
-        if (cd != null)
+        GameObject go = Instantiate(cardPrefab, position, Quaternion.identity);
+        go.transform.SetParent(canvas, false);
+
+        if (go.TryGetComponent<CardController>(out var cardController))
         {
-            cd.setCard(card);
+            cardController.Card = card;
+
+            StartCoroutine(AnimationManager.Instance.MoveFromTo(
+                cardController.gameObject.transform,
+                position,
+                new Vector3(Screen.width / 2f, Screen.height / 2f, 0f),
+                1.0f));
         }
     }
 }

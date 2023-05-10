@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603086300083164797}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4, y: -1.85, z: 0}
+  m_LocalPosition: {x: 3.729, y: -2.222, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -149,7 +149,6 @@ MonoBehaviour:
   door: {fileID: 1603086300902248466}
   npc: {fileID: 4897053708023727647}
   treasure: {fileID: 1603086300083164797}
-  npcc: {fileID: 0}
 --- !u!1 &1603086300902248466
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +174,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603086300902248466}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: -1.05, z: 0}
+  m_LocalPosition: {x: -1, y: -2.222, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -223,7 +222,7 @@ SpriteRenderer:
   m_SortingLayerID: 547932015
   m_SortingLayer: -1
   m_SortingOrder: 2
-  m_Sprite: {fileID: -808086923, guid: d65a1ed9600223a44a9ae9432e3d1e3d, type: 3}
+  m_Sprite: {fileID: 992565073, guid: d65a1ed9600223a44a9ae9432e3d1e3d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -344,7 +343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7534806363865152850, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.6
+      value: -2.222
       objectReference: {fileID: 0}
     - target: {fileID: 7534806363865152850, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -377,6 +376,22 @@ PrefabInstance:
     - target: {fileID: 7534806363865152850, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534806363865152851, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
+      propertyPath: m_Size.x
+      value: 1.5625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534806363865152851, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
+      propertyPath: m_Size.y
+      value: 1.21875
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534806363865152851, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 198286836, guid: 51ad086e312254446a78168bf3a09c05, type: 3}
+    - target: {fileID: 7534806363865152851, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7534806363865152877, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
       propertyPath: m_Name

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public enum Race
@@ -10,9 +11,9 @@ public enum Race
 
 public class RaceCard : DoorCard
 {
-    private string ability;
+    public readonly string ability;
 
-    private readonly Race race;
+    public readonly Race race;
 
     public RaceCard(Race race, string id, Sprite artwork) : base(race.ToString(), CardType.Race, id, artwork)
     {

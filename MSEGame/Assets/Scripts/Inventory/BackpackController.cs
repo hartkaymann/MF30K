@@ -23,7 +23,7 @@ public class BackpackController : Inventory
             {
                 if (child.TryGetComponent<CardController>(out var card))
                 {
-                    items.Add(card.getCard());
+                    items.Add(card.Card);
                 }
             }
 

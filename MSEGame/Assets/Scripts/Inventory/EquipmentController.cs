@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,7 +11,7 @@ public enum EquipmentSlot
     WeaponR
 }
 
-public class EquipmentInventory : Inventory
+public class EquipmentController : Inventory
 {
     [SerializeField] EquipmentSlot slot;
     [SerializeField] EquipmentType type;
@@ -22,6 +20,8 @@ public class EquipmentInventory : Inventory
 
     public override void OnDrop(PointerEventData eventData)
     {
+        Debug.Log("Equipment OnDrop");
+
         // Check if slot is empty
         if (isEquipped)
             return;
@@ -30,7 +30,7 @@ public class EquipmentInventory : Inventory
         Draggable draggable = dropped.GetComponent<Draggable>();
 
         // Check if card is equipment card
-        Card card = dropped.GetComponent<CardController>().getCard();
+        Card card = dropped.GetComponent<CardController>().Card;
         if (card.type != CardType.Equipment)
             return;
 
@@ -39,7 +39,8 @@ public class EquipmentInventory : Inventory
         if (equipmentCard.equipType != type)
             return;
 
-        Attach(draggable);
+        // Attach to self
+        draggable.parentAfterDrag = transform;
     }
 
     private void Update()
@@ -55,7 +56,7 @@ public class EquipmentInventory : Inventory
             CardController cc = transform.GetComponentInChildren<CardController>();
             if (cc != null)
             {
-                playerController.Equip(slot, cc.getCard() as EquipmentCard);
+                playerController.Equip(slot, cc.Card as EquipmentCard);
             }
 
         }
@@ -65,7 +66,5 @@ public class EquipmentInventory : Inventory
 
             playerController.Uneqip(slot);
         }
-
-
     }
 }

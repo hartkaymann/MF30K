@@ -16,6 +16,8 @@ public class Player
     private Race race;
     private Profession profession;
 
+    public int gold;
+
     public string Name
     {
         get => name;
@@ -94,6 +96,24 @@ public class Player
         }
     }
 
+    public int Gold
+    {
+        get
+        {
+            return gold;
+        }
+        set
+        {
+            gold = value;
+            //TODO: Set level up amount somewhere else, also when your item is worth more than 10 gold this fails
+            if (gold >= 10)
+            {
+                gold %= 10;
+                Level += 1;
+            }
+        }
+    }
+
     public Player(string name, Race race, Profession profession, Gender gender, int level, int combatLevel)
     {
         this.name = name;
@@ -102,16 +122,19 @@ public class Player
         this.gender = gender;
         this.level = level;
         this.combatLevel = combatLevel;
+
+        this.gold = 0;
     }
 
     public void HandlePropertyChanged()
     {
+        PlayerManager.Instance.UpdatePlayerInfo(this);
         NetworkManager.Instance.PutPlayer(this);
     }
 
     public static Player GetDummy()
     {
-        return new("Kay", Race.Human, Profession.Barbarian, Gender.Male, 1, 1);
+        return new("Kay", Race.Human, Profession.Barbarian, Gender.Male, 1, 0);
     }
 
 }

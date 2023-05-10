@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpriteManager : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class SpriteManager : MonoBehaviour
         public Sprite sprite;
     }
     [SerializeField] private NamedSprite[] namedSprites;
+    [SerializeField] private Sprite[] cardSprites;
 
     private Dictionary<string, Sprite> sprites;
 
@@ -43,6 +44,12 @@ public class SpriteManager : MonoBehaviour
     public Sprite GetSprite(string name)
     {
         return sprites[name];
+    }
+
+    public Sprite GetCardSprite()
+    {
+        int idx = Random.Range(0, cardSprites.Length);
+        return cardSprites[idx];
     }
 
 }

@@ -10,8 +10,8 @@ public enum Profession
 
 public class ProfessionCard : DoorCard
 {
-    private Profession profession;
-    private string ability;
+    public readonly Profession profession;
+    public readonly string ability;
 
     public ProfessionCard(Profession profession, string id, Sprite artwork) : base(profession.ToString(), CardType.Profession, id, artwork)
     {
