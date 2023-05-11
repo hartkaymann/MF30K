@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,12 +23,12 @@ public class BackpackController : Inventory
             {
                 if (child.TryGetComponent<CardController>(out var card))
                 {
-                    items.Add(card.getCard());
+                    items.Add(card.Card);
                 }
             }
 
-            Player player = GameObject.Find("Player").GetComponent<PlayerController>().GetPlayer();
-            NetworkManager.instance.PutBackpack(player, items);
+            Player player = PlayerManager.Instance.CurrentPlayer.Player;
+            NetworkManager.Instance.PutBackpack(player, items);
 
             noItems = transform.childCount;
         }

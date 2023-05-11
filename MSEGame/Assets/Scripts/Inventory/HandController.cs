@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using TreeEditor;
 using UnityEngine;
 
 public class HandController : Inventory
@@ -26,7 +24,7 @@ public class HandController : Inventory
             {
                 if(child.TryGetComponent<CardController>(out var card))
                 {
-                    items.Add(card.getCard());
+                    items.Add(card.Card);
                 }
             }
 

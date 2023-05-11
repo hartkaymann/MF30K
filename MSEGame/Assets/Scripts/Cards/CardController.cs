@@ -1,33 +1,58 @@
-using TMPro;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class CardController : MonoBehaviour
+public class CardController : Draggable, IPointerDownHandler
 {
     private Card card;
 
-    [SerializeField] private TextMeshProUGUI nameText;
-    [SerializeField] private TextMeshProUGUI typeText;
+    private bool facedUp = false;
 
-    [SerializeField] private Image artworkImage;
+    [SerializeField] private CardRenderer cardRenderer;
 
-    public void Render()
+    [SerializeField] private GameObject frontFace;
+    [SerializeField] private GameObject backFace;
+
+    public Card Card
     {
-        nameText.text = card.title;
-        typeText.text = card.type.ToString().Substring(0, 1);
-
-        artworkImage.sprite = card.artwork;
+        get
+        {
+            return card;
+        }
+        set
+        {
+            if (card != value)
+            {
+                card = value;
+                cardRenderer.Render(card);
+            }
+        }
     }
 
-    public void setCard(Card card)
+    public void Start()
     {
-        this.card = card;
-        Render();
+        raycastImage = cardRenderer.Background;
+
+        backFace.SetActive(true);
+        frontFace.SetActive(false);
     }
 
-    public Card getCard()
+    public IEnumerator Flip()
     {
-        return card;
+        yield return AnimationManager.Instance.RotateFromTo(gameObject.transform, Vector3.zero, new Vector3(0f, 90f, 0f), 0.5f);
+
+        frontFace.SetActive(!facedUp);
+        backFace.SetActive(facedUp);
+
+        yield return AnimationManager.Instance.RotateFromTo(gameObject.transform, new Vector3(0f, 90f, 0f), new Vector3(0f, 0f, 0f), 0.5f);
+
+        facedUp = true;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (!facedUp)
+            StartCoroutine(Flip());
     }
 
 }

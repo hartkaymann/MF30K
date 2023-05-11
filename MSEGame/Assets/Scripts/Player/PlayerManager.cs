@@ -1,0 +1,103 @@
+using TMPro;
+using UnityEngine;
+
+public class PlayerManager : MonoBehaviour
+{
+    public static PlayerManager Instance { get; private set; }
+
+    [SerializeField] private PlayerController currentPlayer;
+    public PlayerController CurrentPlayer { get { return currentPlayer; } }
+
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject playerInfoPrefab;
+    [SerializeField] private TextMeshProUGUI playerGold;
+
+    private GameObject currentPlayerInfo;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
+    public void InstantiatePlayer(Player player)
+    {
+        if (currentPlayer != null)
+        {
+            Destroy(currentPlayer.gameObject);
+        }
+
+        // Instantiate player at specified position
+        GameObject obj = Instantiate(playerPrefab, new Vector3(-2.5f, -1.2f, 0f), Quaternion.identity);
+        if (obj.TryGetComponent<PlayerController>(out var playerController))
+        {
+            playerController.Player = player;
+            currentPlayer = playerController;
+        }
+
+        // Follow new player
+        if (currentPlayerInfo != null)
+        {
+            Destroy(currentPlayerInfo);
+        }
+
+        currentPlayerInfo = Instantiate(playerInfoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
+        if (currentPlayerInfo.TryGetComponent<ObjectFollow>(out var follow))
+        {
+            follow.Follow = obj.transform.Find("Info").transform;
+        }
+
+
+
+        UpdatePlayerInfo(player);
+    }
+
+    public void UpdatePlayerInfo(Player player)
+    {
+        if (currentPlayerInfo.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var infoName))
+        {
+            infoName.text = player.Name;
+        }
+
+        if (currentPlayerInfo.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
+        {
+            infoLevel.text = player.Level.ToString();
+        }
+
+        if (currentPlayerInfo.transform.Find("CombatLevel").TryGetComponent<TextMeshProUGUI>(out var infoCombatLevel))
+        {
+            infoCombatLevel.text = player.CombatLevel.ToString();
+        }
+
+        if (playerGold != null)
+        {
+            playerGold.text = player.Gold.ToString();
+        }
+    }
+
+    //TODO: Hand this to current player controller
+    public void ChangeCurrentPlayerClass()
+    {
+        // Get doorcard and notify UI
+        DoorCard card = RoomManager.Instance.CurrentRoom.Card;
+
+        if (card is ProfessionCard professionCard)
+        {
+            CurrentPlayer.Player.Profession = professionCard.profession;
+        }
+        else if (card is RaceCard raceCard)
+        {
+            CurrentPlayer.Player.Race = raceCard.race;
+        }
+        else
+        {
+            Debug.LogWarning("Cannot apply cange!");
+        }
+    }
+}

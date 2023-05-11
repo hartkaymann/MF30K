@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class RandomNames {
 
-	private Random rand;
+	private Random rand = new Random();
 	
 	private static String[] adjectives = {
 			"Normal",
@@ -24,8 +24,6 @@ public class RandomNames {
 		"Axe",
 		"Dagger",
 		"Halbard",
-		"Khopis",
-		"Chakram",
 		"Stick"
 	};
 	
@@ -68,7 +66,7 @@ public class RandomNames {
 	}
 	
 	public String randomMonsterName() {
-		String name = this.monsterAdjectives[rand.nextInt(monsterAdjectives.length)];
+		String name = monsterAdjectives[rand.nextInt(monsterAdjectives.length)];
 		name += " ";
 		name += monster[rand.nextInt(monster.length)];
 		return name;

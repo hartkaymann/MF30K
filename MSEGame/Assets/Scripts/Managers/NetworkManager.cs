@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
-using static System.Net.WebRequestMethods;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using System.Net;
 
 enum RequestType
 {
@@ -20,18 +18,25 @@ enum RequestType
 
 public class NetworkManager : MonoBehaviour
 {
-    public static NetworkManager instance;
-
-    [SerializeField] private string url;
-    [SerializeField] private string port;
+    public static NetworkManager Instance { get; private set; }
+    
+    private readonly string url = "localhost";
+    private readonly string port = "8080";
 
     private void Awake()
     {
-        instance = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
     [ContextMenu("Send Request")]
-    private async void testRequest()
+    private async void TestRequest()
     {
 
         string apiKey = "0d8dc82ca22ed494ecc0955e0a6187cc";
@@ -65,12 +70,14 @@ public class NetworkManager : MonoBehaviour
 
     private UnityWebRequest CreateRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
-        Debug.Log("path: " + path);
+        //Debug.Log("New Request: " + path);
         var request = new UnityWebRequest(path, type.ToString());
 
         if (data != null)
         {
-            var bodyRaw = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
+            string jsonData = JsonConvert.SerializeObject(data);
+            //Debug.Log($"Request Body: {jsonData}");
+            var bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         }
 
@@ -96,6 +103,7 @@ public class NetworkManager : MonoBehaviour
 
         try
         {
+            Debug.Log($"JSON Respose: {jsonResponse}");
             JObject obj = JObject.Parse(jsonResponse);
             return obj;
         }
@@ -117,98 +125,112 @@ public class NetworkManager : MonoBehaviour
         var response = await SendRequestWithResponse(req);
 
         req.Dispose();
-        //TODO: set assigned player id to new player
     }
 
     /////////
     // GET //
     /////////
-    public async Task<Card> GetCard(CardType type)
+    public async Task<Card> GetCard(CardCategory type)
     {
-        Debug.Log("Get card");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/card?type={type}", RequestType.GET);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/card?type={type.ToString().ToLower()}", RequestType.GET);
+
+        if (req == null)
+            return null;
 
         var obj = await SendRequestWithResponse(req);
-        string cardType = (string)obj.SelectToken("class");
+        if (!obj.HasValues)
+            return null;
+
+        //TODO: Check if key exist before trying to get it
+        string cardType = (string)obj.SelectToken("type");
         string name = (string)obj.SelectToken("name");
+        string id = (string)obj.SelectToken("id");
+
         Card card = null;
 
-        Debug.Log($"Class: {cardType}, Name: {name}");
+        //Debug.Log($"Class: {cardType}, Name: {name}");
         Sprite dummySprite = Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero);
         switch (cardType)
         {
-            default:
+            case "Consumable":
                 {
-                    string equipType = (string)obj.SelectToken("type");
-                    int cost = int.Parse((string)obj.SelectToken("goldValue"));
-                    int stat = int.Parse((string)obj.SelectToken("combatBonus"));
-                    card = new EquipmentCard(name, ParseEnum<EquipmentType>(equipType), dummySprite, cost, stat);
+                    int value = int.Parse((string)obj.SelectToken("goldValue"));
+                    int bonus = int.Parse((string)obj.SelectToken("combatBonus"));
+                    BuffTarget target = ParseEnum<BuffTarget>((string)obj.SelectToken("target"));
+                    card = new ConsumableCard(name, id, dummySprite, value, bonus, target);
                     break;
                 }
-            case "consumable":
-                {
-                    int cost = int.Parse((string)obj.SelectToken("goldValue"));
-                    int stat = int.Parse((string)obj.SelectToken("combatBonus"));
-                    card = new ConsumableCard(name, dummySprite, cost, stat);
-                    break;
-                }
-            case "monster":
+            case "Monster":
                 {
                     int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
                     int treasures = int.Parse((string)obj.SelectToken("treasureAmount"));
-                    card = new MonsterCard(name, dummySprite, combatLvl, treasures);
+                    card = new MonsterCard(name, id, dummySprite, combatLvl, treasures);
                     break;
                 }
-            case "equipment":
+            case "Equipment":
                 {
-                    Debug.LogAssertion($"Warning! No/Unknown class in generated card: {cardType}");
+                    EquipmentType equipType = ParseEnum<EquipmentType>((string)obj.SelectToken("equipType"));
+                    int bonus = int.Parse((string)obj.SelectToken("combatBonus"));
+                    int value = int.Parse((string)obj.SelectToken("goldValue"));
+                    card = new EquipmentCard(name, equipType, id, dummySprite, value, bonus);
+                    break;
+                }
+            case "Profession":
+                {
+                    Profession profession = ParseEnum<Profession>((string)obj.SelectToken("profession"));
+                    card = new ProfessionCard(profession, id, dummySprite);
+                    break;
+                }
+            case "Race":
+                {
+                    Race race = ParseEnum<Race>((string)obj.SelectToken("race"));
+                    card = new RaceCard(race, id, dummySprite);
+                    break;
+                }
+            default:
+                {
+                    Debug.LogAssertion($"Unknown card type: {cardType}");
                     break;
                 }
         }
 
         req.Dispose();
-        
+
         return card;
-        //return new EquipmentCard("Helmet of Coolness", EquipmentType.Helmet, Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero), 10, 5);
     }
 
-    public async Task<Player> GetPlayer(int id)
+    public async Task<Player> GetPlayer(string name)
     {
-        Debug.Log("Get Player");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={id}", RequestType.GET);
-        
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={name}", RequestType.GET);
+
         var obj = await SendRequestWithResponse(req);
-        string name = (string) obj.SelectToken("name");
         string gender = (string)obj.SelectToken("gender");
         string race = (string)obj.SelectToken("race");
         string profession = (string)obj.SelectToken("profession");
         int level = int.Parse((string)obj.SelectToken("playerLevel"));
         int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
 
-        Player p = new Player(id, name)
-        {
-            Gender = ParseEnum<Gender>(gender),
-            Race = ParseEnum<Race>(race),
-            Profession = ParseEnum<Profession>(profession),
-            Level = level,
-            CombatLevel = combatLvl,
-        };
-
         req.Dispose();
 
-        return p;
+        return new Player(
+            name,
+            ParseEnum<Race>(race),
+            ParseEnum<Profession>(profession),
+            ParseEnum<Gender>(gender),
+            level,
+            combatLvl
+        );
     }
 
     public async Task<GameStage> GetStage()
     {
-        Debug.Log("Get Stage");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.GET);
 
         var obj = await SendRequestWithResponse(req);
 
         req.Dispose();
 
-        return ParseEnum<GameStage>((string) obj.SelectToken("GameStage"));
+        return ParseEnum<GameStage>((string)obj.SelectToken("GameStage"));
     }
 
     /////////
@@ -217,8 +239,7 @@ public class NetworkManager : MonoBehaviour
 
     public void PutPlayer(Player player)
     {
-        Debug.Log("Put Player");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.Id}", RequestType.PUT, player);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.Name}", RequestType.PUT, player);
         req.SendWebRequest();
         req.Dispose();
 
@@ -226,7 +247,6 @@ public class NetworkManager : MonoBehaviour
 
     public void PutStage(GameStage stage)
     {
-        Debug.Log("Put Stage");
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.PUT, stage.ToString());
         req.SendWebRequest();
         req.Dispose();
@@ -234,26 +254,24 @@ public class NetworkManager : MonoBehaviour
 
     public void PutBackpack(Player player, List<Card> backpack)
     {
-        Debug.Log("Put Backpack");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Id}/backpack", RequestType.PUT, backpack);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, backpack);
         req.SendWebRequest();
         req.Dispose();
     }
     public void PutEquipment(Player player, Dictionary<EquipmentSlot, EquipmentCard> equipment)
     {
-        Debug.Log("Put Backpack");
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Id}/backpack", RequestType.PUT, equipment);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, equipment);
         req.SendWebRequest();
         req.Dispose();
     }
 
-    ///////////
-    // DELET //
-    ///////////
+    ////////////
+    // DELETE //
+    ////////////
 
-        
+
     public static T ParseEnum<T>(string value)
-    {   
+    {
         return (T)Enum.Parse(typeof(T), value, true);
     }
 }
