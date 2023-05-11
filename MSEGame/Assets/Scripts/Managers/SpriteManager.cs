@@ -14,10 +14,20 @@ public class SpriteManager : MonoBehaviour
         public string name;
         public Sprite sprite;
     }
+
     [SerializeField] private NamedSprite[] namedSprites;
+    [SerializeField] private NamedSprite[] starterSprites;
     [SerializeField] private Sprite[] cardSprites;
+    [SerializeField] private Sprite[] weaponSprites;
+    [SerializeField] private Sprite[] helmetSprites;
+    [SerializeField] private Sprite[] armorSprites;
+    [SerializeField] private Sprite[] bootSprites;
+    [SerializeField] private Sprite[] consumablesSprites;
+    [SerializeField] private Sprite[] raceSprites;
+    [SerializeField] private Sprite[] professionSprites;
 
     private Dictionary<string, Sprite> sprites;
+    private Dictionary<string, Sprite> starters;
 
     private void Awake()
     {
@@ -36,10 +46,13 @@ public class SpriteManager : MonoBehaviour
             NamedSprite ns = namedSprites[i];
             sprites.Add(ns.name, ns.sprite);
         }
-    }
 
-    private void Start()
-    {
+        starters = new Dictionary<string, Sprite>();
+        for (int i = 0; i < starterSprites.Length; i++)
+        {
+            NamedSprite ns = starterSprites[i];
+            starters.Add(ns.name, ns.sprite);
+        }
     }
 
     public Sprite GetSprite(string name)
@@ -47,10 +60,80 @@ public class SpriteManager : MonoBehaviour
         return sprites[name];
     }
 
+    public Sprite GetEquipmentSprite(EquipmentType type)
+    {
+        Sprite sprite;
+        switch (type)
+        {
+            case EquipmentType.Helmet:
+                sprite = GetHelmetSprite();
+                break;
+            case EquipmentType.Armor:
+                sprite = GetArmorSprite();
+                break;
+            case EquipmentType.Boots:
+                sprite = GetBootSprite();
+                break;
+            case EquipmentType.Weapon:
+                sprite = GetWeaponSprite();
+                break;
+            default:
+                return null;
+        }
+        return sprite;
+    }
+
+    public Sprite GetStarterSprite(EquipmentSlot slot)
+    {
+        return starters[slot.ToString()];
+    }
+
     public Sprite GetCardSprite()
     {
         int idx = Random.Range(0, cardSprites.Length);
         return cardSprites[idx];
+    }
+
+    public Sprite GetWeaponSprite()
+    {
+        int idx = Random.Range(0, weaponSprites.Length);
+        return weaponSprites[idx];
+    }
+
+    public Sprite GetHelmetSprite()
+    {
+        int idx = Random.Range(0, helmetSprites.Length);
+        return helmetSprites[idx];
+    }
+
+    public Sprite GetArmorSprite()
+    {
+        int idx = Random.Range(0, armorSprites.Length);
+        return armorSprites[idx];
+    }
+
+    public Sprite GetBootSprite()
+    {
+        int idx = Random.Range(0, bootSprites.Length);
+        return bootSprites[idx];
+    }
+
+    public Sprite GetConsumableSprite()
+    {
+        int idx = Random.Range(0, consumablesSprites.Length);
+        return consumablesSprites[idx];
+    }
+
+    public Sprite GetRaceSprite()
+    {
+        int idx = Random.Range(0, raceSprites.Length);
+        return raceSprites[idx];
+    }
+
+    public Sprite GetProfessionSprite()
+    {
+        int idx = Random.Range(0, professionSprites.Length);
+        return professionSprites[idx];
     }
 
     public Sprite GetDummySprite()

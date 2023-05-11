@@ -35,39 +35,6 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    [ContextMenu("Send Request")]
-    private async void TestRequest()
-    {
-
-        string apiKey = "0d8dc82ca22ed494ecc0955e0a6187cc";
-        float lat = 37.532600f;
-        float lon = 127.024612f;
-        string path = $"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}";
-
-        UnityWebRequest req = CreateRequest(path, RequestType.GET);
-        var operation = req.SendWebRequest();
-
-        while (!operation.isDone)
-            await Task.Yield();
-
-        var jsonResponse = req.downloadHandler.text;
-
-        if (req.result == UnityWebRequest.Result.Success)
-            Debug.Log($"Success: {req.downloadHandler.text}");
-        else
-            Debug.Log($"Failed: {req.error}");
-
-        try
-        {
-            JObject o = JObject.Parse(jsonResponse);
-            Debug.Log($"Response Code: {o.SelectToken("weather[0].main")}");
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Could not parse {jsonResponse}. {ex.Message}");
-        }
-    }
-
     private UnityWebRequest CreateRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
         //Debug.Log("New Request: " + path);
@@ -149,7 +116,6 @@ public class NetworkManager : MonoBehaviour
         Card card = null;
 
         //Debug.Log($"Class: {cardType}, Name: {name}");
-        Sprite dummySprite = Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.zero);
         switch (cardType)
         {
             case "Consumable":
@@ -157,14 +123,16 @@ public class NetworkManager : MonoBehaviour
                     int value = int.Parse((string)obj.SelectToken("goldValue"));
                     int bonus = int.Parse((string)obj.SelectToken("combatBonus"));
                     BuffTarget target = ParseEnum<BuffTarget>((string)obj.SelectToken("target"));
-                    card = new ConsumableCard(name, id, dummySprite, value, bonus, target);
+                    Sprite artwork = SpriteManager.Instance.GetConsumableSprite();
+                    card = new ConsumableCard(name, id, artwork, value, bonus, target);
                     break;
                 }
             case "Monster":
                 {
                     int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
                     int treasures = int.Parse((string)obj.SelectToken("treasureAmount"));
-                    card = new MonsterCard(name, id, dummySprite, combatLvl, treasures);
+                    Sprite artwork = SpriteManager.Instance.GetSprite("Slime");
+                    card = new MonsterCard(name, id, artwork, combatLvl, treasures);
                     break;
                 }
             case "Equipment":
@@ -172,19 +140,22 @@ public class NetworkManager : MonoBehaviour
                     EquipmentType equipType = ParseEnum<EquipmentType>((string)obj.SelectToken("equipType"));
                     int bonus = int.Parse((string)obj.SelectToken("combatBonus"));
                     int value = int.Parse((string)obj.SelectToken("goldValue"));
-                    card = new EquipmentCard(name, equipType, id, dummySprite, value, bonus);
+                    Sprite artwork = SpriteManager.Instance.GetEquipmentSprite(equipType);
+                    card = new EquipmentCard(name, equipType, id, artwork, value, bonus);
                     break;
                 }
             case "Profession":
                 {
                     Profession profession = ParseEnum<Profession>((string)obj.SelectToken("profession"));
-                    card = new ProfessionCard(profession, id, dummySprite);
+                    Sprite artwork = SpriteManager.Instance.GetProfessionSprite();
+                    card = new ProfessionCard(profession, id, artwork);
                     break;
                 }
             case "Race":
                 {
                     Race race = ParseEnum<Race>((string)obj.SelectToken("race"));
-                    card = new RaceCard(race, id, dummySprite);
+                    Sprite artwork = SpriteManager.Instance.GetRaceSprite();
+                    card = new RaceCard(race, id, artwork);
                     break;
                 }
             default:

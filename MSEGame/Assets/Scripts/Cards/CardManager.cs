@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class CardManager : MonoBehaviour
 {
@@ -32,12 +31,17 @@ public class CardManager : MonoBehaviour
     {
         CardController controller = InstantiateCard(card);
 
+        // Flip card  so back is up
+        controller.Flip();
+
+        // Move to appropriate deck position
         Vector3 position = Vector2.zero;
         if (card is DoorCard)
             position = doorStackTransform.position;
         else if (card is TreasureCard)
             position = treasureStackTransform.position;
 
+        // Start animaton
         StartCoroutine(AnimationManager.Instance.MoveFromTo(
                 controller.gameObject.transform,
                 position,

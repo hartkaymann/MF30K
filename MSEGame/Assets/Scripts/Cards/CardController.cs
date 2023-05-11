@@ -11,7 +11,7 @@ public class CardController : Draggable, IPointerDownHandler
     [SerializeField] private GameObject backFace;
 
     // Flipping card
-    private bool facedUp = false;
+    private bool facedUp = true;
     private bool isFlipped = false;
 
     public Card Card
@@ -34,8 +34,8 @@ public class CardController : Draggable, IPointerDownHandler
     {
         raycastImage = cardRenderer.Background;
 
-        backFace.SetActive(true);
-        frontFace.SetActive(false);
+        backFace.SetActive(!facedUp);
+        frontFace.SetActive(facedUp);
     }
 
     public void Flip()
@@ -58,7 +58,7 @@ public class CardController : Draggable, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!isFlipped)
+        if (!facedUp && !isFlipped)
             StartCoroutine(AnimateFlip());
 
         isFlipped = true;

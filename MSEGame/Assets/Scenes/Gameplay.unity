@@ -190,8 +190,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1519,14 +1519,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 75, y: 75}
+  m_CellSize: {x: 65, y: 65}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 1
@@ -2119,8 +2119,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2777,10 +2777,10 @@ RectTransform:
   m_Father: {fileID: 1093860175}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 140}
-  m_SizeDelta: {x: 1140, y: 280}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 5, y: 0}
+  m_SizeDelta: {x: -60, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &566842944
 MonoBehaviour:
@@ -2802,7 +2802,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 200, y: 260}
+  m_CellSize: {x: 165, y: 250}
   m_Spacing: {x: 10, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -3311,14 +3311,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 75, y: 75}
+  m_CellSize: {x: 65, y: 65}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 1
@@ -4057,8 +4057,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294704127
-  m_fontColor: {r: 1, g: 0.98490566, b: 0.98490566, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -4448,14 +4448,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 75, y: 75}
+  m_CellSize: {x: 65, y: 65}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 1
@@ -4763,8 +4763,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5198,8 +5198,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5616,8 +5616,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5751,8 +5751,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6015,14 +6015,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 75, y: 75}
+  m_CellSize: {x: 65, y: 65}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 1
@@ -6163,14 +6163,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 75, y: 75}
+  m_CellSize: {x: 65, y: 65}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 1
@@ -6313,7 +6313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.015165519, g: 0.6698113, b: 0.25594425, a: 1}
+  m_Color: {r: 0.015686275, g: 0.6431373, b: 0.24313727, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6405,8 +6405,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6829,8 +6829,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293127923
+  m_fontColor: {r: 0.95294124, g: 0.9333334, b: 0.89019614, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7760,10 +7760,61 @@ MonoBehaviour:
     sprite: {fileID: 1375281497, guid: 74086a4b40cc8d543b8e27104bfde6f9, type: 3}
   - name: TreasureCard
     sprite: {fileID: 1954944754, guid: 74086a4b40cc8d543b8e27104bfde6f9, type: 3}
+  starterSprites:
+  - name: Helmet
+    sprite: {fileID: 21300000, guid: ef6f612fdd95acf469e82ff38b9187c2, type: 3}
+  - name: Armor
+    sprite: {fileID: 21300000, guid: c62ed0218908f5c4fb1b4afb22b22dbd, type: 3}
+  - name: Boots
+    sprite: {fileID: 21300000, guid: c7eeec04e5113174b85e5a8536692996, type: 3}
+  - name: WeaponL
+    sprite: {fileID: 21300000, guid: dc62ecb53980b9a46ab8df9789297158, type: 3}
+  - name: WeaponR
+    sprite: {fileID: 21300000, guid: 2dedc079445463f469d55d2f4b77071a, type: 3}
   cardSprites:
   - {fileID: 658147161, guid: 74086a4b40cc8d543b8e27104bfde6f9, type: 3}
   - {fileID: -1964112004, guid: 74086a4b40cc8d543b8e27104bfde6f9, type: 3}
   - {fileID: 1831850824, guid: 74086a4b40cc8d543b8e27104bfde6f9, type: 3}
+  weaponSprites:
+  - {fileID: 21300000, guid: eb4ff62beb42c0141928e48da837a662, type: 3}
+  - {fileID: 21300000, guid: dc62ecb53980b9a46ab8df9789297158, type: 3}
+  - {fileID: 21300000, guid: 38a76de4a50b4b144b468d67b736929b, type: 3}
+  - {fileID: 21300000, guid: 7b26e4a599e08ff42be1904ce547b29d, type: 3}
+  - {fileID: 21300000, guid: fdee8905216ae6241b15411a7c390f60, type: 3}
+  - {fileID: 21300000, guid: e9f285b40078e04469c081354455fefc, type: 3}
+  - {fileID: 21300000, guid: 24b42d096eb1f95438f5f70b83c0ce7d, type: 3}
+  - {fileID: 21300000, guid: 21fd3081f29f90c4cb4ccbb66100aefb, type: 3}
+  - {fileID: 21300000, guid: 0ad69d99c21980c4ea1b2688222b2d53, type: 3}
+  - {fileID: 21300000, guid: 105351d27735e6441b38118988445ac2, type: 3}
+  - {fileID: 21300000, guid: 2dedc079445463f469d55d2f4b77071a, type: 3}
+  - {fileID: 21300000, guid: 4109db0568209954c897d408e5ce2f49, type: 3}
+  - {fileID: 21300000, guid: 300eee30c5761634e8eb7708e1000e6e, type: 3}
+  - {fileID: 21300000, guid: 1a57716aa089b544aadc2e5217af6c26, type: 3}
+  - {fileID: 21300000, guid: 55d8eac0cd0df934a9ea8d9ac743c793, type: 3}
+  helmetSprites:
+  - {fileID: 21300000, guid: 31d355d838153b747b4523a4ee7afd0b, type: 3}
+  - {fileID: 21300000, guid: ef6f612fdd95acf469e82ff38b9187c2, type: 3}
+  - {fileID: 21300000, guid: 7cf8a41cdc78d934b8554bfaf6362ef4, type: 3}
+  - {fileID: 21300000, guid: c1d8e68f36ba45c40b1dbf86aedc4549, type: 3}
+  - {fileID: 21300000, guid: 72e052902cda59743b19d734e1c5fd6b, type: 3}
+  - {fileID: 21300000, guid: 99dcf540a4602eb43891f6be2da9ec25, type: 3}
+  armorSprites:
+  - {fileID: 21300000, guid: 745cc0fff802a724aacf84906076bcde, type: 3}
+  - {fileID: 21300000, guid: c62ed0218908f5c4fb1b4afb22b22dbd, type: 3}
+  bootSprites:
+  - {fileID: 21300000, guid: 35b5a0faa42bf924e96c4fd2c163efbd, type: 3}
+  - {fileID: 21300000, guid: c7eeec04e5113174b85e5a8536692996, type: 3}
+  - {fileID: 21300000, guid: 15812832ecc609847ba386c3b78ef05d, type: 3}
+  - {fileID: 21300000, guid: ea8c3f34699eaea4f8d6f852469c69e2, type: 3}
+  consumablesSprites:
+  - {fileID: 21300000, guid: 95f34001d29d3994496ce57e07cc9b28, type: 3}
+  - {fileID: 21300000, guid: 8f12aea1674870340b880e3d3fa092d5, type: 3}
+  - {fileID: 21300000, guid: d4eb879f0c0ff6c4da62729895507bb3, type: 3}
+  - {fileID: 21300000, guid: 9519620d30a4fb44fbc17b315987e5eb, type: 3}
+  raceSprites:
+  - {fileID: 21300000, guid: 3d98b73d711bb3645b466bafbb610eef, type: 3}
+  professionSprites:
+  - {fileID: 21300000, guid: 3d98b73d711bb3645b466bafbb610eef, type: 3}
 --- !u!1 &2095852754
 GameObject:
   m_ObjectHideFlags: 0

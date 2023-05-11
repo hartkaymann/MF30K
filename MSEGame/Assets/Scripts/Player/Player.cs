@@ -1,5 +1,3 @@
-using Unity.Android.Types;
-
 public enum Gender
 {
     Male,
@@ -127,7 +125,7 @@ public class Player
         this.gold = 0;
     }
 
-    public void HandlePropertyChanged()
+    private void HandlePropertyChanged()
     {
         PlayerManager.Instance.UpdatePlayerInfo(this);
         NetworkManager.Instance.PutPlayer(this);

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Inventory : MonoBehaviour, IDropHandler
+public abstract class Inventory : MonoBehaviour, IDropHandler
 {
     [SerializeField] private int inventorySize;
 

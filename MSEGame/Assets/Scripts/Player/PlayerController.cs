@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour, IDropHandler
 {
+    [SerializeField] private PlayerRenderer playerRenderer;
+
     private Player player;
     public Player Player
     {
@@ -38,31 +40,29 @@ public class PlayerController : MonoBehaviour, IDropHandler
         }
     }
 
-    [SerializeField] PlayerRenderer playerRenderer;
-
     [SerializeField] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     void Start()
     {
         equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
 
-        EquipmentCard starterHelmet = new("Leather Headgear", EquipmentType.Helmet, "0", SpriteManager.Instance.GetDummySprite(), 0, 1);
-        EquipmentCard starterArmor = new("Rusty Armor", EquipmentType.Armor, "0", SpriteManager.Instance.GetDummySprite(), 0, 1);
-        EquipmentCard starterBoots = new("Leather Boots", EquipmentType.Boots, "0", SpriteManager.Instance.GetDummySprite(), 0, 1);
-        EquipmentCard starterWeaponL = new("Rusty Sword", EquipmentType.Weapon, "0", SpriteManager.Instance.GetDummySprite(), 0, 1);
-        EquipmentCard starterWeaponR = new("Wooden Shield", EquipmentType.Weapon, "0", SpriteManager.Instance.GetDummySprite(), 0, 1);
+        EquipmentCard starterWeaponR = new("Wooden Shield", EquipmentType.Weapon, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.WeaponR), 0, 1);
+        EquipmentCard starterWeaponL = new("Rusty Sword", EquipmentType.Weapon, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.WeaponL), 0, 1);
+        EquipmentCard starterHelmet = new("Rusty Helmet", EquipmentType.Helmet, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Helmet), 0, 1);
+        EquipmentCard starterArmor = new("Rusty Armor", EquipmentType.Armor, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Armor), 0, 1);
+        EquipmentCard starterBoots = new("Rusty Boots", EquipmentType.Boots, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Boots), 0, 1);
 
+        CardController ccWeaponR = CardManager.instance.InstantiateCard(starterWeaponR);
+        CardController ccWeaponL = CardManager.instance.InstantiateCard(starterWeaponL);
         CardController ccHelmet = CardManager.instance.InstantiateCard(starterHelmet);
         CardController ccArmor = CardManager.instance.InstantiateCard(starterArmor);
         CardController ccBoots = CardManager.instance.InstantiateCard(starterBoots);
-        CardController ccWeaponL = CardManager.instance.InstantiateCard(starterWeaponL);
-        CardController ccWeaponR = CardManager.instance.InstantiateCard(starterWeaponR);
 
+        EquipToSlot(EquipmentSlot.WeaponR, ccWeaponR);
+        EquipToSlot(EquipmentSlot.WeaponL, ccWeaponL);
         EquipToSlot(EquipmentSlot.Helmet, ccHelmet);
-        EquipToSlot(EquipmentSlot.Armor, ccArmor);
         EquipToSlot(EquipmentSlot.Boots, ccBoots);
-        EquipToSlot(EquipmentSlot.WeaponR, ccWeaponL);
-        EquipToSlot(EquipmentSlot.WeaponL, ccWeaponR);
+        EquipToSlot(EquipmentSlot.Armor, ccArmor);
     }
 
     public void Equip(EquipmentSlot slot, EquipmentCard card)
@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour, IDropHandler
         if (equipmentGo == null)
             return;
 
-        Debug.Log($"Attaching to Slots/{slot}");
+        //Debug.Log($"Attaching to Slots/{slot}");
         GameObject slotGo = equipmentGo.transform.Find($"Slots/{slot}").gameObject;
         if (slotGo == null)
             return;
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour, IDropHandler
         if (slotGo.TryGetComponent<EquipmentController>(out var equipmentController))
         {
             equipmentController.EquipItem(cardController);
-            cardController.transform.parent = slotGo.transform;
+            cardController.transform.SetParent(slotGo.transform);
         }
     }
 
@@ -107,14 +107,14 @@ public class PlayerController : MonoBehaviour, IDropHandler
         foreach (var card in equipment.Values)
         {
             if (card == null)
-                return;
+                continue;
 
             newCombatLevel += card.bonus;
         }
         Player.CombatLevel = newCombatLevel + roundBonus;
     }
 
-    public virtual void OnDrop(PointerEventData eventData)
+    public void OnDrop(PointerEventData eventData)
     {
         if (GameManager.Instance.Stage != GameStage.CombatPreparations)
             return;

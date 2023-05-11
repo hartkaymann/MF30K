@@ -10,7 +10,7 @@ public enum EquipmentType
 
 public class EquipmentCard : TreasureCard
 {
-    public  EquipmentType equipType;
+    public readonly EquipmentType equipType;
 
     public EquipmentCard(string name, EquipmentType equipType, string id, Sprite artwork, int value, int bonus) : base(name, CardType.Equipment, id, artwork, value, bonus)
     {

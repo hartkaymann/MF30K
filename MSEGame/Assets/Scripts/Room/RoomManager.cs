@@ -32,7 +32,7 @@ public class RoomManager : MonoBehaviour
             Destroy(currentRoom.gameObject);
 
         // Create new room
-        GameObject obj = Instantiate(roomPrefab, new Vector3(0, 1, 0), Quaternion.identity);
+        GameObject obj = Instantiate(roomPrefab, new Vector3(0, 1.5f, 0), Quaternion.identity);
         currentRoom = obj.GetComponent<RoomController>();
         currentRoom.Card = card;
 

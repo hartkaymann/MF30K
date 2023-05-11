@@ -30,11 +30,11 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
+        FetchPlayerInformation();
     }
 
     void Start()
     {
-        FetchPlayerInformation();
 
         UpdateGameStage(GameStage.DrawCard);
     }
@@ -199,8 +199,8 @@ public class GameManager : MonoBehaviour
                 UpdateGameStage(GameStage.Combat);
                 break;
             case GameStage.Combat:
-                //UpdateGameStage(combatWasVictory ? GameStage.Victory : GameStage.Defeat);
-                UpdateGameStage(GameStage.Victory);
+                UpdateGameStage(combatWasVictory ? GameStage.Victory : GameStage.Defeat);
+                //UpdateGameStage(GameStage.Victory);
                 break;
             case GameStage.Victory:
                 UpdateGameStage(GameStage.InventoryManagement);

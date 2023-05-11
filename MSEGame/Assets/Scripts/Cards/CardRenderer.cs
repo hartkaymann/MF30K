@@ -17,7 +17,11 @@ public class CardRenderer : MonoBehaviour
 
     public void Render(Card card)
     {
+        // Card text
+        type.text = card.type.ToString();
+        title.text = card.title.ToString();
 
+        // Card sprites
         back.sprite = SpriteManager.Instance.GetSprite((card is DoorCard) ? "DoorCard" : "TreasureCard");
 
         Sprite cardSprite = SpriteManager.Instance.GetCardSprite();
@@ -26,9 +30,11 @@ public class CardRenderer : MonoBehaviour
             background.sprite = cardSprite;
         }
 
-        type.text = card.type.ToString();
-        title.text = card.title.ToString();
+        artwork.preserveAspect = false;
+        artwork.sprite = card.artwork;
+        artwork.preserveAspect = true;
 
+        // Set visible objects active
         if (card is TreasureCard treasureCard)
         {
             value.gameObject.SetActive(true);

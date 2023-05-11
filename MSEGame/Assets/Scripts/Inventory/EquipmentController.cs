@@ -13,8 +13,8 @@ public enum EquipmentSlot
 
 public class EquipmentController : MonoBehaviour, IDropHandler
 {
-    [SerializeField] EquipmentSlot slot;
-    [SerializeField] EquipmentType type;
+    [SerializeField] private EquipmentSlot slot;
+    [SerializeField] private EquipmentType type;
 
     bool isEquipped = false;
 
