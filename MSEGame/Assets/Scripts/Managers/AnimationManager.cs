@@ -26,7 +26,6 @@ public class AnimationManager : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
-            Debug.Log($"Moving to {transform.position}, elapsed: {elapsedTime}");
             yield return null;
         }
     }

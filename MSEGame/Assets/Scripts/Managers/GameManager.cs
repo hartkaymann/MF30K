@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -48,9 +47,6 @@ public class GameManager : MonoBehaviour
         switch (newStage)
         {
             case GameStage.InventoryManagement:
-                // Reset combat bonus at start of round
-                PlayerManager.Instance.CurrentPlayer.RoundBonus = 0;
-
                 break;
             case GameStage.DrawCard:
                 DrawDoorCard();
@@ -110,7 +106,7 @@ public class GameManager : MonoBehaviour
         if (card == null)
             return;
 
-        CardManager.instance.InstantiateCard(card);
+        CardManager.instance.DrawCardFromStack(card);
     }
 
     void Combat()
@@ -203,8 +199,8 @@ public class GameManager : MonoBehaviour
                 UpdateGameStage(GameStage.Combat);
                 break;
             case GameStage.Combat:
-                UpdateGameStage(combatWasVictory ? GameStage.Victory : GameStage.Defeat);
-                //UpdateGameStage(GameStage.Victory);
+                //UpdateGameStage(combatWasVictory ? GameStage.Victory : GameStage.Defeat);
+                UpdateGameStage(GameStage.Victory);
                 break;
             case GameStage.Victory:
                 UpdateGameStage(GameStage.InventoryManagement);

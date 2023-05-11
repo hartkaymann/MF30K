@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject panelChange;
     [SerializeField] private GameObject panelVictory;
     [SerializeField] private GameObject panelDefeat;
-    [SerializeField] private GameObject btnNext;
+    [SerializeField] private GameObject nextStage;
     [SerializeField] private GameObject backpack;
     [SerializeField] private GameObject equipment;
 
@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
         panelChange.SetActive(state == GameStage.ChangeClass);
         panelVictory.SetActive(state == GameStage.Victory);
         panelDefeat.SetActive(state == GameStage.Defeat);
+        nextStage.SetActive(state != GameStage.Combat);
 
         if (state == GameStage.Victory)
             UpdateVictoryPanel();

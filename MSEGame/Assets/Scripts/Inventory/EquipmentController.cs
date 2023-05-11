@@ -11,17 +11,15 @@ public enum EquipmentSlot
     WeaponR
 }
 
-public class EquipmentController : Inventory
+public class EquipmentController : MonoBehaviour, IDropHandler
 {
     [SerializeField] EquipmentSlot slot;
     [SerializeField] EquipmentType type;
 
-    Boolean isEquipped = false;
+    bool isEquipped = false;
 
-    public override void OnDrop(PointerEventData eventData)
+    public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("Equipment OnDrop");
-
         // Check if slot is empty
         if (isEquipped)
             return;
@@ -34,33 +32,54 @@ public class EquipmentController : Inventory
         if (card.type != CardType.Equipment)
             return;
 
-        // Check if card types match
         EquipmentCard equipmentCard = card as EquipmentCard;
-        if (equipmentCard.equipType != type)
+        if (!CanEquip(equipmentCard))
             return;
+
+        Equip(equipmentCard);
 
         // Attach to self
         draggable.parentAfterDrag = transform;
     }
 
-    private void Update()
+    public bool CanEquip(EquipmentCard card)
     {
+        return card.equipType == type;
+    }
+
+    private void Equip(EquipmentCard card)
+    {
+
         PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
-        if (playerController == null) 
+        playerController.Equip(slot, card);
+        isEquipped = true;
+
+        Debug.Log($"Equipped {card.title} to slot {slot}.");
+    }
+
+    public void EquipItem(CardController cardController)
+    {
+        Card card = cardController.Card;
+        if (card.type != CardType.Equipment)
             return;
 
-        if (!isEquipped && transform.childCount > 0)
-        {
-            isEquipped = true;
+        EquipmentCard equipmentCard = card as EquipmentCard;
+        if (!CanEquip(equipmentCard))
+            return;
 
-            CardController cc = transform.GetComponentInChildren<CardController>();
-            if (cc != null)
-            {
-                playerController.Equip(slot, cc.Card as EquipmentCard);
-            }
+        Equip(equipmentCard);
 
-        }
-        else if (isEquipped && transform.childCount == 0)
+        isEquipped = true;
+    }
+
+    void Update()
+    {
+        PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
+        if (playerController == null)
+            return;
+
+        // Unequip item from player if no children
+        if (isEquipped && transform.childCount == 0)
         {
             isEquipped = false;
 

@@ -111,6 +111,7 @@ public class Player
                 gold %= 10;
                 Level += 1;
             }
+            HandlePropertyChanged();
         }
     }
 

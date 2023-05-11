@@ -5,13 +5,14 @@ using UnityEngine.EventSystems;
 public class CardController : Draggable, IPointerDownHandler
 {
     private Card card;
-
-    private bool facedUp = false;
-
     [SerializeField] private CardRenderer cardRenderer;
 
     [SerializeField] private GameObject frontFace;
     [SerializeField] private GameObject backFace;
+
+    // Flipping card
+    private bool facedUp = false;
+    private bool isFlipped = false;
 
     public Card Card
     {
@@ -37,22 +38,30 @@ public class CardController : Draggable, IPointerDownHandler
         frontFace.SetActive(false);
     }
 
-    public IEnumerator Flip()
+    public void Flip()
+    {
+        facedUp = !facedUp;
+
+        frontFace.SetActive(facedUp);
+        backFace.SetActive(!facedUp);
+    }
+
+    public IEnumerator AnimateFlip()
     {
         yield return AnimationManager.Instance.RotateFromTo(gameObject.transform, Vector3.zero, new Vector3(0f, 90f, 0f), 0.5f);
 
-        frontFace.SetActive(!facedUp);
-        backFace.SetActive(facedUp);
+        Flip();  
 
         yield return AnimationManager.Instance.RotateFromTo(gameObject.transform, new Vector3(0f, 90f, 0f), new Vector3(0f, 0f, 0f), 0.5f);
 
-        facedUp = true;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!facedUp)
-            StartCoroutine(Flip());
+        if (!isFlipped)
+            StartCoroutine(AnimateFlip());
+
+        isFlipped = true;
     }
 
 }

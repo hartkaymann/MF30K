@@ -5,9 +5,6 @@ public class DiscardController : MonoBehaviour, IDropHandler
 {
     public virtual void OnDrop(PointerEventData eventData)
     {
-        if (GameManager.Instance.Stage != GameStage.CombatPreparations)
-            return;
-
         GameObject draggedObj = eventData.pointerDrag;
         if (draggedObj.TryGetComponent<CardController>(out var cc))
         {

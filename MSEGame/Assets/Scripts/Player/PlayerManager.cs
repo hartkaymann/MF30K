@@ -24,6 +24,8 @@ public class PlayerManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        GameManager.OnGameStateChange += GameManagerOnGameStageChanged;
     }
 
     public void InstantiatePlayer(Player player)
@@ -34,7 +36,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         // Instantiate player at specified position
-        GameObject obj = Instantiate(playerPrefab, new Vector3(-2.5f, -1.2f, 0f), Quaternion.identity);
+        GameObject obj = Instantiate(playerPrefab, new Vector3(-2.5f, -0.72f, 0f), Quaternion.identity);
         if (obj.TryGetComponent<PlayerController>(out var playerController))
         {
             playerController.Player = player;
@@ -77,7 +79,7 @@ public class PlayerManager : MonoBehaviour
 
         if (playerGold != null)
         {
-            playerGold.text = player.Gold.ToString();
+            playerGold.text = $"{player.Gold}/10";
         }
     }
 
@@ -99,5 +101,13 @@ public class PlayerManager : MonoBehaviour
         {
             Debug.LogWarning("Cannot apply cange!");
         }
+    }
+
+    private void GameManagerOnGameStageChanged(GameStage stage)
+    {
+        // New round start
+        if (stage == GameStage.InventoryManagement)
+            CurrentPlayer.RoundBonus = 0;
+
     }
 }

@@ -29,16 +29,17 @@ public class SpriteManager : MonoBehaviour
         {
             Instance = this;
         }
-    }
 
-    private void Start()
-    {
         sprites = new Dictionary<string, Sprite>();
-        for(int i = 0; i < namedSprites.Length; i++)
+        for (int i = 0; i < namedSprites.Length; i++)
         {
             NamedSprite ns = namedSprites[i];
             sprites.Add(ns.name, ns.sprite);
         }
+    }
+
+    private void Start()
+    {
     }
 
     public Sprite GetSprite(string name)
@@ -50,6 +51,11 @@ public class SpriteManager : MonoBehaviour
     {
         int idx = Random.Range(0, cardSprites.Length);
         return cardSprites[idx];
+    }
+
+    public Sprite GetDummySprite()
+    {
+        return Sprite.Create(Texture2D.whiteTexture, new Rect(1, 1, 1, 1), Vector2.one * 0.5f);
     }
 
 }
