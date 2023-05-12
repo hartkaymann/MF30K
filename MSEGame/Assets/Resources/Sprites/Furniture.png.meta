@@ -117,27 +117,6 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Furniture_11
-      rect:
-        serializedVersion: 2
-        x: 725
-        y: 132
-        width: 7
-        height: 5
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 153f6433904c2c743a4b8b49e005eeeb
-      internalID: -1214047883
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Door_1
       rect:
         serializedVersion: 2
@@ -238,27 +217,6 @@ TextureImporter:
       bones: []
       spriteID: 78938736179c5da488b784c92d35fe53
       internalID: 1351802488
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Door_7
-      rect:
-        serializedVersion: 2
-        x: 640
-        y: 122
-        width: 104
-        height: 75
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d18b4fb6aab8021428e7a3e80e9f88ec
-      internalID: 398384581
       vertices: []
       indices: 
       edges: []
@@ -457,9 +415,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 512
-        y: 124
+        y: 122
         width: 113
-        height: 73
+        height: 75
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -469,6 +427,27 @@ TextureImporter:
       bones: []
       spriteID: 4c4c787c46de7ae4aa4e45d03d9026e0
       internalID: 1867990464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door_7
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 122
+        width: 104
+        height: 75
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ce94873f3ef10e4183302d76729415e
+      internalID: -1307900633
       vertices: []
       indices: 
       edges: []
@@ -490,7 +469,7 @@ TextureImporter:
       Door_4: 908952129
       Door_5: 1351802488
       Door_6: 1867990464
-      Door_7: 398384581
+      Door_7: -1307900633
       Door_8: -1015959749
       Furniture_11: -1214047883
       Furniture_21: -1685117340

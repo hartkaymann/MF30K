@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour, IDropHandler
     [SerializeField] private PlayerRenderer playerRenderer;
 
     private Player player;
+    private int roundBonus = 0;
+
+    private Animator animator;
+    private int isRunningHash;
+
     public Player Player
     {
         get
@@ -23,7 +28,6 @@ public class PlayerController : MonoBehaviour, IDropHandler
         }
     }
 
-    private int roundBonus = 0;
     public int RoundBonus
     {
         get
@@ -44,6 +48,9 @@ public class PlayerController : MonoBehaviour, IDropHandler
 
     void Start()
     {
+        animator = GetComponent<Animator>();
+        isRunningHash = Animator.StringToHash("isRunning");
+
         equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
 
         EquipmentCard starterWeaponR = new("Wooden Shield", EquipmentType.Weapon, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.WeaponR), 0, 1);
@@ -130,5 +137,23 @@ public class PlayerController : MonoBehaviour, IDropHandler
                 Destroy(draggedObj);
             }
         }
+    }
+
+    public void RunForDuration(float duration)
+    {
+        StartRunning();
+        Invoke(nameof(StopRunning), duration);
+    }
+
+    [ContextMenu("Player Run")] 
+    public void StartRunning()
+    {
+        animator.SetBool(isRunningHash, true);
+    }
+
+    [ContextMenu("Player Stop")]
+    public void StopRunning()
+    {
+        animator.SetBool(isRunningHash, false);
     }
 }

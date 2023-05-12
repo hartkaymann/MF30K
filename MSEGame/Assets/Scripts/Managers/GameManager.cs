@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
 
-        UpdateGameStage(GameStage.DrawCard);
+        UpdateGameStage(GameStage.InventoryManagement);
     }
 
     public void UpdateGameStage(GameStage newStage)
@@ -47,9 +47,17 @@ public class GameManager : MonoBehaviour
         switch (newStage)
         {
             case GameStage.InventoryManagement:
+                RoomManager.Instance.CurrentRoom.OpenDoor();
                 break;
             case GameStage.DrawCard:
-                DrawDoorCard();
+                PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
+                Vector3 doorPosition = RoomManager.Instance.CurrentRoom.transform.Find("Door").gameObject.transform.position;
+
+                UIManager.instance.ToggleBlackScreen();
+                StartCoroutine(UIManager.instance.FadeToBlack(1f));
+                StartCoroutine(AnimationManager.Instance.MoveFromTo(playerController.transform, playerController.transform.position, doorPosition, .9f));
+
+                Invoke(nameof(DrawDoorCard), 1f);
                 break;
             case GameStage.CombatPreparations:
                 break;
@@ -98,6 +106,9 @@ public class GameManager : MonoBehaviour
             return;
 
         RoomManager.Instance.InstantiateRoom(card);
+
+        UIManager.instance.ToggleBlackScreen();
+
     }
 
     async void DrawTreasureCard()
@@ -120,14 +131,25 @@ public class GameManager : MonoBehaviour
 
         combatWasVictory = PlayerManager.Instance.CurrentPlayer.Player.CombatLevel > monsterCard.level;
 
-        Transform playerTransform = PlayerManager.Instance.CurrentPlayer.gameObject.transform;
+        PlayerController currentPlayer = PlayerManager.Instance.CurrentPlayer;
+        Transform playerTransform = currentPlayer.gameObject.transform;
         Transform npcTransform = RoomManager.Instance.CurrentRoom.gameObject.transform.Find("NPC");
 
         //TODO: Move there, if kill, destroy monster, if defeat, lie on ground or sth
+        currentPlayer.RunForDuration(2f);
         StartCoroutine(AnimationManager.Instance.MoveAndBack(playerTransform, npcTransform.position, 2f));
-        
+
+        //TODO: stop invoking everything ffs
+        if (combatWasVictory)
+            Invoke(nameof(HideMonster), 1f);
+
         //TODO: Very hardcoded, not a fan. Meh!
         Invoke(nameof(NextStage), 2f);
+    }
+
+    void HideMonster()
+    {
+        RoomManager.Instance.CurrentRoom.Renderer.ToggleNpc();
     }
 
     private void Victory()
@@ -151,7 +173,7 @@ public class GameManager : MonoBehaviour
         if (card.type is CardType.Monster)
             return;
 
-            OnChangeClass?.Invoke(card);
+        OnChangeClass?.Invoke(card);
     }
 
 

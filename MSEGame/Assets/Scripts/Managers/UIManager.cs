@@ -1,14 +1,19 @@
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    [SerializeField] private GameObject panelHand;
     [SerializeField] private GameObject panelChange;
     [SerializeField] private GameObject panelVictory;
     [SerializeField] private GameObject panelDefeat;
+    [SerializeField] private GameObject panelBlack;
+
+    [SerializeField] private GameObject panelHand;
     [SerializeField] private GameObject nextStage;
     [SerializeField] private GameObject backpack;
     [SerializeField] private GameObject equipment;
@@ -94,5 +99,23 @@ public class UIManager : MonoBehaviour
         {
             newLevel.text = player.Level.ToString();
         }
+    }
+
+    public IEnumerator FadeToBlack(float duration)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(0f, 1f, elapsedTime / duration);
+            panelBlack.GetComponent<Image>().color = Color.black.WithAlpha(alpha);
+            yield return null;
+        }
+    }
+
+    public void ToggleBlackScreen()
+    {
+        panelBlack.SetActive(!panelBlack.activeInHierarchy);
     }
 }

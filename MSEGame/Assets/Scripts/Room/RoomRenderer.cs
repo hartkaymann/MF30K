@@ -22,4 +22,9 @@ public class RoomRenderer : MonoBehaviour
         else
             treasure.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GetSprite("TreasureOpen");
     }
+
+    public void ToggleNpc()
+    {
+        npc.SetActive(!npc.activeInHierarchy);
+    }
 }

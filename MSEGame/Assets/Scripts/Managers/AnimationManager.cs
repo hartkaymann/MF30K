@@ -35,7 +35,9 @@ public class AnimationManager : MonoBehaviour
         Vector3 start = transform.position;
 
         yield return MoveFromTo(transform, start, targetPos, duration / 2f);
+        transform.Rotate(Vector2.up, 180f);
         yield return MoveFromTo(transform, targetPos, start, duration / 2f);
+        transform.Rotate(Vector2.up, -180f);
     }
 
     public IEnumerator RotateFromTo(Transform transform, Vector3 startAngle, Vector3 targetAngle, float duration)

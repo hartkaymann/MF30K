@@ -36,6 +36,7 @@ public class RoomManager : MonoBehaviour
         currentRoom = obj.GetComponent<RoomController>();
         currentRoom.Card = card;
 
+
         // Create NPC info
         if (currentNpcInfo != null)
             Destroy(currentNpcInfo);

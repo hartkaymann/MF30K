@@ -55,8 +55,6 @@ public class PlayerManager : MonoBehaviour
             follow.Follow = obj.transform.Find("Info").transform;
         }
 
-
-
         UpdatePlayerInfo(player);
     }
 
