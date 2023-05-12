@@ -29,6 +29,11 @@ public class FrontController {
 	private PlayerManager player_mgr;
 	
 	private GameStage stage;
+	private int stageChanges = 0;
+	
+	public int getStageChanges() {
+		return this.stageChanges;
+	}
 	
 	
 	@PostMapping(value = "/player", consumes = "application/json")
@@ -51,7 +56,7 @@ public class FrontController {
 	public Card drawCard(@RequestParam(name="type") String type) {
 		if (type.equals("door")) {
 			System.out.println("DoorCard requested.");
-			Card card = crd_mgr.createDoorCard();
+			Card card = crd_mgr.createDoorCard(stageChanges);
 			System.out.println(crd_mgr.getCards());
 			return card;
 			
@@ -100,6 +105,7 @@ public class FrontController {
 			consumes = "application/json")
 	public void updateStage(@RequestBody GameStage stage) {
 		this.stage = stage;
+		stageChanges++;
 	}
 	
 	@GetMapping(value = "/stage")

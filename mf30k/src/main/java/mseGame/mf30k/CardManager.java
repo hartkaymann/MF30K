@@ -75,7 +75,7 @@ public class CardManager {
 			break;
 		case 3:
 			_type = equipmentType.Weapon;
-			_name += randNames.randomWeapon();
+			_name +=  " " + randNames.randomWeapon();
 			break;
 		}
 		Equipment equipment = new Equipment(_name, _gold, _combat, _type, _id);
@@ -102,16 +102,17 @@ public class CardManager {
 	}
 	
 	// Create Random DoorCard
-	public Card createDoorCard()
+	public Card createDoorCard(int gameProgression)
 	{
-		if (rand.nextBoolean()) {
-			return createMonster();
+		double chance = rand.nextDouble();
+		if (chance < 0.8) {
+			return createMonster(gameProgression);
+		} else if(chance >= 0.8 && chance < 0.9) {
+			return createProfession();
+		} else if (chance >= 0.9 && chance < 1) {
+			return createRace();
 		} else {
-			if (rand.nextBoolean()) {
-				return createProfession();
-			} else {
-				return createRace();
-			}
+			return createMonster(gameProgression);
 		}
 	}
 	//Create ProfessionCard
@@ -140,11 +141,23 @@ public class CardManager {
 	}
 	
 	// Create Monster
-	public Monster createMonster() {
+	public Monster createMonster(int gameProgression) {
 		UUID id = UUID.randomUUID();
 		String _name = randNames.randomMonsterName();
-		int _combatLevel = rand.nextInt(25);
-		int _treasureAmount = rand.nextInt(2) + 1;
+		
+		//gameProgression is the changes of Stages so far. Per turn there should be around 3-4 changes
+		//monster level (for single player) should then be derived from this
+		//TODO for future use: Make it dependent on the player level
+		int _combatLevel = rand.nextInt(gameProgression/3 + 5);
+		int _treasureAmount = 1;
+		if (_combatLevel <=0) {
+			_combatLevel = 1;
+		}
+		if (_combatLevel > 5) {
+			_treasureAmount = 2;
+		} else if (_combatLevel > 10) {
+			_treasureAmount = 3;
+		}
 		
 		Monster monster = new Monster(id, _name, _combatLevel, _treasureAmount);
 		this.cards.put(id, monster);
