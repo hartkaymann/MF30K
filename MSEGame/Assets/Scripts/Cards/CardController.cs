@@ -1,33 +1,67 @@
-using TMPro;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class CardController : MonoBehaviour
+public class CardController : Draggable, IPointerDownHandler
 {
     private Card card;
+    [SerializeField] private CardRenderer cardRenderer;
 
-    [SerializeField] private TextMeshProUGUI nameText;
-    [SerializeField] private TextMeshProUGUI typeText;
+    [SerializeField] private GameObject frontFace;
+    [SerializeField] private GameObject backFace;
 
-    [SerializeField] private Image artworkImage;
+    // Flipping card
+    private bool facedUp = true;
+    private bool isFlipped = false;
 
-    public void Render()
+    public Card Card
     {
-        nameText.text = card.title;
-        typeText.text = card.type.ToString().Substring(0, 1);
-
-        artworkImage.sprite = card.artwork;
+        get
+        {
+            return card;
+        }
+        set
+        {
+            if (card != value)
+            {
+                card = value;
+                cardRenderer.Render(card);
+            }
+        }
     }
 
-    public void setCard(Card card)
+    public void Start()
     {
-        this.card = card;
-        Render();
+        raycastImage = cardRenderer.Background;
+
+        backFace.SetActive(!facedUp);
+        frontFace.SetActive(facedUp);
     }
 
-    public Card getCard()
+    public void Flip()
     {
-        return card;
+        facedUp = !facedUp;
+
+        frontFace.SetActive(facedUp);
+        backFace.SetActive(!facedUp);
+    }
+
+    public IEnumerator AnimateFlip()
+    {
+        yield return AnimationManager.Instance.RotateFromTo(gameObject.transform, Vector3.zero, new Vector3(0f, 90f, 0f), 0.5f);
+
+        Flip();  
+
+        yield return AnimationManager.Instance.RotateFromTo(gameObject.transform, new Vector3(0f, 90f, 0f), new Vector3(0f, 0f, 0f), 0.5f);
+
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (!facedUp && !isFlipped)
+            StartCoroutine(AnimateFlip());
+
+        isFlipped = true;
     }
 
 }

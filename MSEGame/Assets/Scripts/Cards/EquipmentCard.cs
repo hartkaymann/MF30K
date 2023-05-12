@@ -10,14 +10,10 @@ public enum EquipmentType
 
 public class EquipmentCard : TreasureCard
 {
-    public  EquipmentType equipType;
-    public int value;
-    public int bonus;
+    public readonly EquipmentType equipType;
 
-    public EquipmentCard(string name, EquipmentType equipType, Sprite artwork, int value, int bonus) : base(name, CardType.Equipment, artwork)
+    public EquipmentCard(string name, EquipmentType equipType, string id, Sprite artwork, int value, int bonus) : base(name, CardType.Equipment, id, artwork, value, bonus)
     {
         this.equipType = equipType;
-        this.value = value;
-        this.bonus = bonus;
     }
 }
