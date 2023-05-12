@@ -2,7 +2,13 @@ using UnityEngine;
 
 public abstract class TreasureCard : Card
 {
-    public TreasureCard(string name, CardType type, Sprite artwork) : base(name, type, artwork)
+
+    public int value;
+    public int bonus;
+
+    public TreasureCard(string name, CardType type, string id, Sprite artwork, int value, int bonus) : base(name, type, id, artwork)
     {
+        this.value = value;
+        this.bonus = bonus;
     }
 }

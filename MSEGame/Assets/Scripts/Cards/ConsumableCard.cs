@@ -1,12 +1,17 @@
 using UnityEngine;
 
+public enum BuffTarget
+{
+    Monster,
+    Player,
+    Both
+}
+
 public class ConsumableCard : TreasureCard
 {
-    public int value;
-    public int bonus;
+    public readonly BuffTarget target;
 
-    public ConsumableCard(string name, Sprite artwork, int value, int bonus) : base(name, CardType.Consumable, artwork){
-        this.value = value;
-        this.bonus = bonus;
+    public ConsumableCard(string name, string id, Sprite artwork, int value, int bonus, BuffTarget target) : base(name, CardType.Consumable, id, artwork, value, bonus){
+        this.target = target;
     }
 }
