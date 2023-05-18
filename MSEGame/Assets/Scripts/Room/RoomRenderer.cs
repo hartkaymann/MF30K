@@ -8,11 +8,15 @@ public class RoomRenderer : MonoBehaviour
     public void Render(DoorCard card)
     {
         if (card is MonsterCard)
+        {
+            npc.GetComponent<Animator>().enabled = true;
+            npc.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GetSprite("Slime");
             treasure.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GetSprite("TreasureClosed");
-
-        // Switch card type here later
-        npc.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GetSprite("Slime");
-
+        }
+        else
+        {
+            npc.GetComponent<Animator>().enabled = false;
+        }
     }
 
     public void OpenTreasure(bool isEmpty)

@@ -54,7 +54,7 @@ public class EquipmentController : MonoBehaviour, IDropHandler
         playerController.Equip(slot, card);
         isEquipped = true;
 
-        Debug.Log($"Equipped {card.title} to slot {slot}.");
+        //Debug.Log($"Equipped {card.title} to slot {slot}.");
     }
 
     public void EquipItem(CardController cardController)

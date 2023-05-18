@@ -8093,13 +8093,17 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.46
       objectReference: {fileID: 0}
+    - target: {fileID: 4176752525339278359, guid: bc7187be3f0eed34f8327ed17c73bb39, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4897053708023727649, guid: bc7187be3f0eed34f8327ed17c73bb39, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1559001058, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 4897053708023727649, guid: bc7187be3f0eed34f8327ed17c73bb39, type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8521776712303882098, guid: bc7187be3f0eed34f8327ed17c73bb39, type: 3}
       propertyPath: m_Name
