@@ -153,7 +153,7 @@ public class FrontController {
 		return;
 	}
 	
-	@DeleteMapping(value="/card")
+	@DeleteMapping(value="/discard")
 	public void discardCard(@RequestParam(name="cardId")String id_string) {
 		try {
 			UUID id = UUID.fromString(id_string);
@@ -162,6 +162,18 @@ public class FrontController {
 			System.out.println(e);
 		}		
 		return;
+	}
+	
+	@DeleteMapping(value="/sell")
+	public int sell(@RequestParam(name="cardID")String id_string) {
+		try {
+			UUID id = UUID.fromString(id_string);
+			int gold = crd_mgr.sellCard(id);
+			return gold;
+		} catch (Exception e) {
+			System.out.println(e);
+			return -1;
+		}	
 	}
 	
 

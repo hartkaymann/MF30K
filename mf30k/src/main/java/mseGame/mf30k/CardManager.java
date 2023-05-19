@@ -25,6 +25,19 @@ public class CardManager {
 		return cards.get(id);
 	}
 	
+	//Sell Card (discard, but return gold value)
+	public int sellCard(UUID id) {
+		Card to_sell = cards.get(id);
+		if(to_sell instanceof Treasure) {
+			int goldValue = ((Treasure) to_sell).getGoldValue();
+			this.discard(id);
+			return goldValue;
+		} else {
+			System.out.println("Card is not a treasure and therefore cannot be sold");
+			return -1;
+		}
+	}
+	
 	//Discard card by ID
 	public void discard(UUID id) {
 		Card to_discard = cards.get(id);
