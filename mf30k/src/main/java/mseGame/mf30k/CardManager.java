@@ -65,8 +65,9 @@ public class CardManager {
 		
 		UUID _id = UUID.randomUUID();
 		String _name = randNames.randomAdjective();
-		int _gold = rand.nextInt(11);
-		int _combat = rand.nextInt(6);
+		
+		int _combat = rand.nextInt(1, 6);
+		int _gold = rand.nextInt(1,_combat);
 		
 		equipmentType _type = null;
 		
@@ -101,8 +102,9 @@ public class CardManager {
 		UUID _id = UUID.randomUUID();
 		String _name = randNames.randomAdjective();
 		_name += " " + randNames.randomConsumable();
-		int _gold = rand.nextInt(11);
-		int _combat = rand.nextInt(6);
+		
+		int _combat = rand.nextInt(1, 6);
+		int _gold = rand.nextInt(1, _combat);
 		
 		BuffTarget targets[] = BuffTarget.values();
 		int index = rand.nextInt(targets.length);

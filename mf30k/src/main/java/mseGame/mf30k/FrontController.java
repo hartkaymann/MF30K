@@ -164,15 +164,14 @@ public class FrontController {
 		return;
 	}
 	
-	@DeleteMapping(value="/sell")
-	public int sell(@RequestParam(name="cardID")String id_string) {
+	@DeleteMapping(value="/player/{player_id}/sell")
+	public void sell(@RequestParam(name="cardId")String id_string, @PathVariable("player_id")String player_id) {
 		try {
 			UUID id = UUID.fromString(id_string);
 			int gold = crd_mgr.sellCard(id);
-			return gold;
+			//TODO: add gold value to the players run in the database
 		} catch (Exception e) {
 			System.out.println(e);
-			return -1;
 		}	
 	}
 	
