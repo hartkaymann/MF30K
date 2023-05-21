@@ -969,10 +969,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5887a922b4e03064594712d6d9e15e7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputName: {fileID: 1323916875}
-  inputRace: {fileID: 182491171}
-  inputProfession: {fileID: 1601220283}
-  inputGender: {fileID: 1636496918}
+  inputName: {fileID: 1323916876}
+  inputRace: {fileID: 182491172}
+  inputProfession: {fileID: 1601220284}
+  inputGender: {fileID: 1636496919}
 --- !u!1 &245753084
 GameObject:
   m_ObjectHideFlags: 0

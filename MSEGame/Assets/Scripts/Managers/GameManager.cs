@@ -30,12 +30,11 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-        FetchPlayerInformation();
     }
 
     void Start()
     {
-
+        FetchPlayerInformation();
         UpdateGameStage(GameStage.InventoryManagement);
     }
 
@@ -61,7 +60,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameStage.CombatPreparations:
                 break;
-            case GameStage.ChangeClass:
+            case GameStage.Selection:
                 ChangeClass();
                 break;
             case GameStage.Combat:
@@ -80,24 +79,25 @@ public class GameManager : MonoBehaviour
         RestartStageTimer();
 
         OnGameStateChange?.Invoke(newStage);
-        NetworkManager.Instance.PutStage(stage);
+        StartCoroutine(NetworkManager.Instance.PutStage(stage));
     }
 
     async void FetchPlayerInformation()
     {
         string playerName = LoadSceneInformation.PlayerName;
-        Player playerInfo;
+        Player player;
 
         if (playerName.Length == 0)
         {
-            playerInfo = Player.GetDummy();
+            Debug.Log("No player, getting Dummy.");
+            player = Player.GetDummy();
         }
         else
         {
-            playerInfo = await NetworkManager.Instance.GetPlayer(playerName);
+            player = await NetworkManager.Instance.GetPlayer(playerName);
         }
 
-        PlayerManager.Instance.InstantiatePlayer(playerInfo);
+        PlayerManager.Instance.InstantiatePlayer(player);
     }
 
     async void DrawDoorCard()
@@ -212,9 +212,9 @@ public class GameManager : MonoBehaviour
                 if (RoomManager.Instance.CurrentRoom.Card.type == CardType.Monster)
                     UpdateGameStage(GameStage.CombatPreparations);
                 else
-                    UpdateGameStage(GameStage.ChangeClass);
+                    UpdateGameStage(GameStage.Selection);
                 break;
-            case GameStage.ChangeClass:
+            case GameStage.Selection:
                 UpdateGameStage(GameStage.InventoryManagement);
                 break;
             case GameStage.CombatPreparations:
@@ -240,7 +240,7 @@ public enum GameStage
 {
     InventoryManagement,
     DrawCard,
-    ChangeClass,
+    Selection,
     CombatPreparations,
     Combat,
     Victory,

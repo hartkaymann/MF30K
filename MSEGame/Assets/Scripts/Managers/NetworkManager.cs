@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
+using System.Collections;
 
 enum RequestType
 {
@@ -19,7 +21,7 @@ enum RequestType
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager Instance { get; private set; }
-    
+
     private readonly string url = "localhost";
     private readonly string port = "8080";
 
@@ -37,13 +39,13 @@ public class NetworkManager : MonoBehaviour
 
     private UnityWebRequest CreateRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
-        //Debug.Log("New Request: " + path);
+        Debug.Log($"New {type} Request: {path}");
         var request = new UnityWebRequest(path, type.ToString());
 
         if (data != null)
         {
             string jsonData = JsonConvert.SerializeObject(data);
-            //Debug.Log($"Request Body: {jsonData}");
+            Debug.Log($"Request Body: {jsonData}");
             var bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         }
@@ -70,7 +72,7 @@ public class NetworkManager : MonoBehaviour
 
         try
         {
-            Debug.Log($"JSON Respose: {jsonResponse}");
+            Debug.Log($"JSON Respose: {jsonResponse.Prettify()}");
             JObject obj = JObject.Parse(jsonResponse);
             return obj;
         }
@@ -85,21 +87,55 @@ public class NetworkManager : MonoBehaviour
     //////////
     // POST //
     //////////
-    public async void PostPlayer(Player player)
+
+    [ContextMenu("Test Post")]
+    private IEnumerator TestPost()
     {
-        UnityWebRequest req = CreateRequest($"{url}:{port}/player", RequestType.POST, player);
+        string path = $"http://{url}:{port}/test";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST);
+        yield return req.SendWebRequest();
+        while(!req.isDone)
+        {
+            yield return null;
+        }
+        req.Dispose();
+    }
 
-        var response = await SendRequestWithResponse(req);
+    [ContextMenu("Post Dummy Player")]
+    private void PostDummyPlayer()
+    {
+        StartCoroutine(PostPlayer(Player.GetDummy()));
+    }
 
+    public IEnumerator PostPlayer(Player player)
+    {
+        string path = $"http://{url}:{port}/player";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
+        yield return req.SendWebRequest();
+        while (!req.isDone)
+        {
+            Debug.Log("Not done here");
+            yield return null;
+        }
         req.Dispose();
     }
 
     /////////
     // GET //
     /////////
+
+    [ContextMenu("Get Door Card Test")]
+    private async void GetDoorCard()
+    {
+        Card card = await GetCard(CardCategory.Door);
+        Debug.Log("Card: " + card);
+    }
+
     public async Task<Card> GetCard(CardCategory type)
     {
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/card?type={type.ToString().ToLower()}", RequestType.GET);
+        string path = $"http://{url}:{port}/card?type={type.ToString().ToLower()}";
+        Debug.Log("Get Card: " + path);
+        UnityWebRequest req = CreateRequest(path, RequestType.GET);
 
         if (req == null)
             return null;
@@ -172,9 +208,17 @@ public class NetworkManager : MonoBehaviour
 
     public async Task<Player> GetPlayer(string name)
     {
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={name}", RequestType.GET);
+        string path = $"http://{url}:{port}/player/{name}";
+        Debug.Log("Get Player: " + path);
+        UnityWebRequest req = CreateRequest(path, RequestType.GET);
 
         var obj = await SendRequestWithResponse(req);
+        if (obj == null)
+        {
+            Debug.LogWarning("Couldnt get Player, was null. Proceeding with dummy...");
+            return Player.GetDummy();
+        }
+
         string gender = (string)obj.SelectToken("gender");
         string race = (string)obj.SelectToken("race");
         string profession = (string)obj.SelectToken("profession");
@@ -208,31 +252,31 @@ public class NetworkManager : MonoBehaviour
     // PUT //
     /////////
 
-    public void PutPlayer(Player player)
+    public IEnumerator PutPlayer(Player player)
     {
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player?id={player.Name}", RequestType.PUT, player);
-        req.SendWebRequest();
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}", RequestType.PUT, player);
+        yield return req.SendWebRequest();
         req.Dispose();
 
     }
 
-    public void PutStage(GameStage stage)
+    public IEnumerator PutStage(GameStage stage)
     {
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.PUT, stage.ToString());
-        req.SendWebRequest();
+        yield return req.SendWebRequest();
         req.Dispose();
     }
 
-    public void PutBackpack(Player player, List<Card> backpack)
+    public IEnumerator PutBackpack(Player player, List<Card> backpack)
     {
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, backpack);
-        req.SendWebRequest();
+        yield return req.SendWebRequest();
         req.Dispose();
     }
-    public void PutEquipment(Player player, Dictionary<EquipmentSlot, EquipmentCard> equipment)
+    public IEnumerator PutEquipment(Player player, Dictionary<EquipmentSlot, EquipmentCard> equipment)
     {
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/backpack", RequestType.PUT, equipment);
-        req.SendWebRequest();
+        yield return req.SendWebRequest();
         req.Dispose();
     }
 
@@ -240,7 +284,19 @@ public class NetworkManager : MonoBehaviour
     // DELETE //
     ////////////
 
+    public IEnumerator DiscardCard(Player player, Card card)
+    {
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/discard?cardId={card.id}", RequestType.DELETE);
+        yield return req.SendWebRequest();
+        req.Dispose();
+    }
 
+    public IEnumerator SellCard(Player player, TreasureCard card)
+    {
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/player/{player.Name}/sell?cardId={card.id}", RequestType.PUT);
+        yield return req.SendWebRequest();
+        req.Dispose();
+    }
     public static T ParseEnum<T>(string value)
     {
         return (T)Enum.Parse(typeof(T), value, true);

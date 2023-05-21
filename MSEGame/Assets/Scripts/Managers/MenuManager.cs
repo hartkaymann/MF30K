@@ -1,15 +1,17 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class MenuManager : MonoBehaviour
 {
 
-    [SerializeField] private Transform inputName;
-    [SerializeField] private Transform inputRace;
-    [SerializeField] private Transform inputProfession;
-    [SerializeField] private Transform inputGender;
+    [SerializeField] private TMP_InputField inputName;
+    [SerializeField] private TMP_Dropdown inputRace;
+    [SerializeField] private TMP_Dropdown inputProfession;
+    [SerializeField] private TMP_Dropdown inputGender;
 
     public static MenuManager Instance { get; private set; }
     private void Awake()
@@ -26,35 +28,17 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        // Shouldn't be setting default values here
-        string name = "";
-        Race race = Race.Human;
-        Profession profession = Profession.Barbarian;
-        Gender gender = Gender.Male;
+        string name = inputName.text;
+        if (name.Length == 0)
+            return;
 
-        if (inputName.TryGetComponent<InputField>(out var fieldName))
-        {
-            name = fieldName.text;
-        }
+        Race race = ParseEnum<Race>(inputRace.options[inputRace.value].text);
+        Profession profession = ParseEnum<Profession>(inputProfession.options[inputProfession.value].text);
+        Gender gender = ParseEnum<Gender>(inputGender.options[inputGender.value].text);
 
-        if (inputRace.TryGetComponent<Dropdown>(out var fieldRace))
-        {
-            race = ParseEnum<Race>(fieldRace.options[fieldRace.value].text);
-        }
-
-        if (inputRace.TryGetComponent<Dropdown>(out var fieldProfession))
-        {
-            profession = ParseEnum<Profession>(fieldProfession.options[fieldProfession.value].text);
-        }
-
-        if (inputRace.TryGetComponent<Dropdown>(out var fieldGender))
-        {
-            gender = ParseEnum<Gender>(fieldGender.options[fieldGender.value].text);
-        }
-
-
-        NetworkManager.Instance.PostPlayer(new Player(name, race, profession, gender, 1, 1));
-
+        Player player = new(name, race, profession, gender, 1, 0);
+        StartCoroutine(NetworkManager.Instance.PostPlayer(player));
+        LoadSceneInformation.PlayerName = name;
         SceneManager.LoadScene(1);
     }
 

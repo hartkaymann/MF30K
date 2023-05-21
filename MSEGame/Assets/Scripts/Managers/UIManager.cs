@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
     private void GameManagerOnGameStateChanged(GameStage state)
     {
         textStage.text = state.ToString();
-        panelChange.SetActive(state == GameStage.ChangeClass);
+        panelChange.SetActive(state == GameStage.Selection);
         panelVictory.SetActive(state == GameStage.Victory);
         panelDefeat.SetActive(state == GameStage.Defeat);
         nextStage.SetActive(state != GameStage.Combat);

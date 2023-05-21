@@ -41,6 +41,8 @@ public class PlayerManager : MonoBehaviour
         {
             playerController.Player = player;
             currentPlayer = playerController;
+
+            playerController.EquipStarterGear();
         }
 
         // Follow new player
@@ -55,11 +57,16 @@ public class PlayerManager : MonoBehaviour
             follow.Follow = obj.transform.Find("Info").transform;
         }
 
-        UpdatePlayerInfo(player);
+        UpdatePlayer(player);
     }
 
-    public void UpdatePlayerInfo(Player player)
+    public void UpdatePlayer(Player player)
     {
+        StartCoroutine(NetworkManager.Instance.PutPlayer(player));
+
+        if (currentPlayerInfo == null)
+            return;
+
         if (currentPlayerInfo.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var infoName))
         {
             infoName.text = player.Name;
@@ -105,7 +112,11 @@ public class PlayerManager : MonoBehaviour
     {
         // New round start
         if (stage == GameStage.InventoryManagement)
-            CurrentPlayer.RoundBonus = 0;
-
+        {
+            if (CurrentPlayer.Player != null)
+            {
+                CurrentPlayer.Player.RoundBonus = 0;
+            }
+        }
     }
 }

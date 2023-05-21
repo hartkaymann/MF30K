@@ -28,7 +28,7 @@ public class BackpackController : Inventory
             }
 
             Player player = PlayerManager.Instance.CurrentPlayer.Player;
-            NetworkManager.Instance.PutBackpack(player, items);
+            StartCoroutine(NetworkManager.Instance.PutBackpack(player, items));
 
             noItems = transform.childCount;
         }
