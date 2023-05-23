@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager Instance { get; private set; }
-
+    
     // State management
     private GameStage stage;
     private bool combatWasVictory = false;
@@ -253,4 +253,10 @@ public enum GameStage
 public static class LoadSceneInformation
 {
     public static string PlayerName { get; set; } = "";
+}
+
+public static class GameColor
+{
+    public static Color Red { get; private set; } = new Color(0.754717f, 0.2897656f, 0.2520469f);
+    public static Color Green { get; private set; } = new Color(0.01568628f, 0.6431373f, 0.2431373f);
 }
