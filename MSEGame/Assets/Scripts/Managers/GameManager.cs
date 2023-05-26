@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Slider timeSlider;
     private Coroutine stageTimerCoroutine;
 
+    [SerializeField] private CombatWheelController combatWheel;
 
     private void Awake()
     {
@@ -120,7 +123,7 @@ public class GameManager : MonoBehaviour
         CardManager.instance.DrawCardFromStack(card);
     }
 
-    void Combat()
+    async void Combat()
     {
         RoomController rc = RoomManager.Instance.CurrentRoom;
         if (rc.Card is not MonsterCard monsterCard)
@@ -129,7 +132,17 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        combatWasVictory = PlayerManager.Instance.CurrentPlayer.Player.CombatLevel > monsterCard.level;
+        int playerLvl = PlayerManager.Instance.CurrentPlayer.Player.CombatLevel;
+        float enemyLvl = monsterCard.level;
+
+        // Prepare combat wheel and wait until it finishes
+        combatWheel.Reset();
+        combatWheel.SetRatio(playerLvl / (playerLvl + enemyLvl));
+        while(!combatWheel.IsFinished)
+        {
+            await Task.Delay(500);
+        }
+        combatWasVictory = combatWheel.GetResult();
 
         PlayerController currentPlayer = PlayerManager.Instance.CurrentPlayer;
         Transform playerTransform = currentPlayer.gameObject.transform;

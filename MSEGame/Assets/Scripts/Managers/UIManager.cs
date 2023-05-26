@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject panelVictory;
     [SerializeField] private GameObject panelDefeat;
     [SerializeField] private GameObject panelBlack;
+    [SerializeField] private GameObject panelCombat;
 
     [SerializeField] private GameObject panelHand;
     [SerializeField] private GameObject nextStage;
@@ -40,9 +41,15 @@ public class UIManager : MonoBehaviour
         panelVictory.SetActive(state == GameStage.Victory);
         panelDefeat.SetActive(state == GameStage.Defeat);
         nextStage.SetActive(state != GameStage.Combat);
+        panelCombat.SetActive(state == GameStage.Combat);
 
         if (state == GameStage.Victory)
             UpdateVictoryPanel();
+
+        if(state == GameStage.Combat)
+        {
+            
+        }
     }
 
     public void HandleToggleEquipment()
