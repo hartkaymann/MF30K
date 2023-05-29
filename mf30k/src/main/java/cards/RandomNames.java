@@ -48,9 +48,7 @@ public class RandomNames {
 	
 	private static String[] monster = {
 			"Slime",
-			"Oger",
-			"Demon",
-			"Zombie"
+			"Ghost"
 	};
 	
 	public String randomConsumable() {

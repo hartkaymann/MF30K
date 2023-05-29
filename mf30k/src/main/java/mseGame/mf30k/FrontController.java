@@ -33,6 +33,11 @@ public class FrontController {
 		return this.stageChanges;
 	}
 	
+	@GetMapping(value="/")
+	public boolean connectionTest() {
+		return true;
+	}
+	
 	
 	@PostMapping(value = "/player", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
@@ -153,7 +158,7 @@ public class FrontController {
 		return;
 	}
 	
-	@DeleteMapping(value="/card")
+	@DeleteMapping(value="/discard")
 	public void discardCard(@RequestParam(name="cardId")String id_string) {
 		try {
 			UUID id = UUID.fromString(id_string);
@@ -162,6 +167,17 @@ public class FrontController {
 			System.out.println(e);
 		}		
 		return;
+	}
+	
+	@DeleteMapping(value="/player/{player_id}/sell")
+	public void sell(@RequestParam(name="cardId")String id_string, @PathVariable("player_id")String player_id) {
+		try {
+			UUID id = UUID.fromString(id_string);
+			int gold = crd_mgr.sellCard(id);
+			//TODO: add gold value to the players run in the database
+		} catch (Exception e) {
+			System.out.println(e);
+		}	
 	}
 	
 

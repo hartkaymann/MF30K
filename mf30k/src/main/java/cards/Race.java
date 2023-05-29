@@ -1,8 +1,7 @@
 package cards;
 
 public enum Race {
-	Orc,
+	Human,
 	Elf,
-	Dwarf,
-	Human
+	Orc
 }
