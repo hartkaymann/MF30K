@@ -13,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 
 public interface RunDataRepository extends JpaRepository<RunData, Long>{
-	
+	//TODO add queries for stats
 }

@@ -2,7 +2,7 @@ package data;
 
 import jakarta.persistence.*;
 import jakarta.persistence.TemporalType;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Table(name = "users")
@@ -14,6 +14,7 @@ public class UserData {
 	@Column(name="user_id")
 	private Long id;
 	
+	@Column(unique=true)
 	private String username;
 	
 	private int wins;
@@ -44,6 +45,20 @@ public class UserData {
 		
 	}
 	
+
+	
+	public List<RunData> getRuns() {
+		return runs;
+	}
+
+	public void setRuns(List<RunData> runs) {
+		this.runs = runs;
+	}
+	
+	public void addRun(RunData run) {
+		this.runs.add(run);
+	}
+
 	public Long getId() {
 		return id;
 	}

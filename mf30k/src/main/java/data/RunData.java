@@ -19,7 +19,6 @@ public class RunData {
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private UserData user_owner;
 	
-	private String nickname;
 	private int combatLevel;
 	private int playerLevel;
 	private int goldsold;
@@ -31,18 +30,17 @@ public class RunData {
 	private List<CombatData> combats;
 	
 	
-	public RunData(Long id, UserData user_owner, String nickname, int combatLevel, int playerLevel, int goldsold,
+	public RunData(Long id, UserData user_owner, int combatLevel, int playerLevel, int goldsold,
 			Profession profession, Race race) {
-		this(user_owner, nickname, combatLevel, playerLevel, goldsold,
+		this(user_owner, combatLevel, playerLevel, goldsold,
 			profession, race);
 		this.id = id;
 	}
 	
-	public RunData(UserData user_owner, String nickname, int combatLevel, int playerLevel, int goldsold,
+	public RunData(UserData user_owner, int combatLevel, int playerLevel, int goldsold,
 			Profession profession, Race race) {
 		super();
 		this.user_owner = user_owner;
-		this.nickname = nickname;
 		this.combatLevel = combatLevel;
 		this.playerLevel = playerLevel;
 		this.goldsold = goldsold;
@@ -54,23 +52,33 @@ public class RunData {
 		
 	}
 	
+	
+	
+	public UserData getUser_owner() {
+		return user_owner;
+	}
+
+	public void setUser_owner(UserData user_owner) {
+		this.user_owner = user_owner;
+	}
+
+	public List<CombatData> getCombats() {
+		return combats;
+	}
+
+	public void setCombats(List<CombatData> combats) {
+		this.combats = combats;
+	}
+	
+	public void addCombat(CombatData combat) {
+		this.combats.add(combat);
+	}
+	
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public UserData getuser_owner() {
-		return user_owner;
-	}
-	public void setuser_owner(UserData user_owner) {
-		this.user_owner = user_owner;
-	}
-	public String getNickname() {
-		return nickname;
-	}
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
 	}
 	public int getCombatLevel() {
 		return combatLevel;

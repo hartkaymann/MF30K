@@ -3,6 +3,10 @@ package mseGame.mf30k;
 import player.Player;
 
 import cards.*;
+import data.*;
+
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +30,22 @@ public class FrontController {
 	@Autowired 
 	private PlayerManager player_mgr;
 	
+	@Autowired 
+	private UserDataRepository repo;
+	
+	@Autowired
+	private RunDataRepository runRepo;
+	
+	//Objects for the current game play
 	private GameStage stage;
 	private int stageChanges = 0;
+	private UserData currentUser;
+	private RunData currentRun;
 	
 	public int getStageChanges() {
 		return this.stageChanges;
 	}
-	
-	@GetMapping(value="/")
-	public boolean connectionTest() {
-		return true;
-	}
-	
+		
 	
 	@PostMapping(value = "/player", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
@@ -51,6 +59,46 @@ public class FrontController {
 		return;
 	}
 	
+	@PostMapping(value = "/new/{user_name}")
+	public boolean addUser(@PathVariable(name="user_name")String userName) {
+		long millis=System.currentTimeMillis();  
+	    // creating a new object of the class Date  
+	    java.sql.Date date = new java.sql.Date(millis);  
+		UserData newUser = new UserData(userName, 0, 0, date);
+		try {
+			UserData result = repo.save(newUser);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
+
+	}
+	
+	//login for user
+	//return the userData if login was successful, return null if not.
+	//sets the current user object to the logged in user.
+	@PostMapping(value = "/login/{user_name}")
+	public UserData userLogin(@PathVariable(name="user_name")String userName) {
+		Optional<UserData> result = repo.findFirstByUsername(userName);
+		if(!result.isPresent()) {
+			UserData user = result.get();
+			this.currentUser = user;
+			return user;
+		}
+		return null;
+	}
+	
+	@GetMapping(value = "/stats/{user_name}")
+	public UserData getUserData(@PathVariable(name="user_name")String user_name) {
+		Optional<UserData> result = repo.findFirstByUsername(user_name);
+		return result.orElse(null);
+	}
+	
+	@GetMapping(value="/")
+	public boolean connectionTest() {
+		return true;
+	}
 	
 	// Draw a Card from Treasures or Door Stack:
 	// Return a random card from either Equipment or Consumable.
@@ -75,6 +123,48 @@ public class FrontController {
 			return null;
 		}
 		//Treasure dummy = new Equipment("test", 1, 2, equipmentType.ARMOR, UUID.randomUUID());
+	}
+	
+	@PostMapping(value="/player/{player_id}/combat")
+	public void addCombatToRun(@PathVariable(name="player_id")String player_id, @RequestBody CombatData data) {
+		this.currentRun.addCombat(data);
+		runRepo.save(currentRun);
+	}
+	
+	@PostMapping(value="/player/{player_id}/run")
+	public boolean createNewRun(@PathVariable(name="player_id") String player_id) {
+		Optional<UserData> result = repo.findFirstByUsername(player_id);
+		if(result.isPresent()) {
+			UserData user = result.get();
+			RunData current = new RunData(user, 0, 0, 0, null, null);
+			this.currentRun = runRepo.save(current);
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	@PutMapping(value="/player/{player_id}/run")
+	public void saveRun(@PathVariable(name="player_id")String player_id, @RequestBody RunData data) {
+		Optional<UserData> result = repo.findFirstByUsername(player_id);
+		UserData user = null;
+		if(result.isPresent()) {
+			 user = result.get();
+		} 
+		
+		currentRun.setCombatLevel(data.getCombatLevel());
+		currentRun.setGoldsold(data.getGoldsold());
+		currentRun.setPlayerLevel(data.getPlayerLevel());
+		currentRun.setProfession(data.getProfession());
+		currentRun.setRace(data.getRace());
+		currentRun = runRepo.save(currentRun);
+		//List<CombatData> combats = currentRun.getCombats();
+		//data.setUser_owner(currentUser);
+		//data.setCombats(combats);
+		//user.addRun(data);
+		user.addRun(currentRun);
+		repo.save(user);
 	}
 	
 	@GetMapping(value = "/player/{playerID}")

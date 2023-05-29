@@ -13,5 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 
 public interface UserDataRepository extends JpaRepository<UserData, Long> {
-	
+	//TODO add API queries for stats
+	Optional<UserData> findFirstByUsername(String type);
 }
