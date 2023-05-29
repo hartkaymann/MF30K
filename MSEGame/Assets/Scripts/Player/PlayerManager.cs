@@ -86,6 +86,12 @@ public class PlayerManager : MonoBehaviour
         {
             playerGold.text = $"{player.Gold}/10";
         }
+
+        // Player level maxed, end of game
+        if( player.Level == 10)
+        {
+            GameManager.Instance.EndOfGame(player);
+        }
     }
 
     //TODO: Hand this to current player controller

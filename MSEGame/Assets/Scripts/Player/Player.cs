@@ -198,7 +198,7 @@ public class Player
 
     public static Player GetDummy()
     {
-        return new("Kay", Race.Human, Profession.Barbarian, Gender.Male, 1, 0);
+        return new("Kay", Race.Human, Profession.Knight, Gender.Male, 1, 0);
     }
 
 }

@@ -120,6 +120,19 @@ public class NetworkManager : MonoBehaviour
         req.Dispose();
     }
 
+    public IEnumerator PostEndRun(Player player)
+    {
+        string path = $"http://{url}:{port}/endrun";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
+        yield return req.SendWebRequest();
+        while (!req.isDone)
+        {
+            Debug.Log("Not done here");
+            yield return null;
+        }
+        req.Dispose();
+    }
+
     /////////
     // GET //
     /////////

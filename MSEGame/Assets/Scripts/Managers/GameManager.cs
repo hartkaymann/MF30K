@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -187,6 +187,21 @@ public class GameManager : MonoBehaviour
             return;
 
         OnChangeClass?.Invoke(card);
+    }
+
+    public void EndOfGame(Player player)
+    {
+        // Show victory screen?
+        Debug.Log($"Victory");
+
+        StartCoroutine(NetworkManager.Instance.PostEndRun(player));
+
+        Invoke(nameof(Exit), 3);
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene(0);
     }
 
 
