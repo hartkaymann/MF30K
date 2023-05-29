@@ -33,6 +33,11 @@ public class FrontController {
 		return this.stageChanges;
 	}
 	
+	@GetMapping(value="/")
+	public boolean connectionTest() {
+		return true;
+	}
+	
 	
 	@PostMapping(value = "/player", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
