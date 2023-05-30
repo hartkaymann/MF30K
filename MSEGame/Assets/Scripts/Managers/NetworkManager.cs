@@ -92,21 +92,53 @@ public class NetworkManager : Manager<NetworkManager>
         string path = $"http://{url}:{port}/signin/{username}";
         UnityWebRequest req = CreateRequest(path, RequestType.POST);
 
-        var obj = await SendRequestWithResponse(req);
+        var operation = req.SendWebRequest();
+
+        while (!operation.isDone)
+            await Task.Yield();
+
+        if (req.result != UnityWebRequest.Result.Success)
+            return false;
+
+        var jsonResponse = req.downloadHandler.text;
+
+        if (req.result != UnityWebRequest.Result.Success)
+            return false;
 
         req.Dispose();
-        return obj != null;
+     
+        try
+        {
+            JObject obj = JObject.Parse(jsonResponse);
+            Debug.Log($"Sign In Response: {obj}");
+            return obj != null;
+
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Could not parse {jsonResponse.Prettify()}. {ex.Message}");
+            return false;
+        }
     }
+
     public async Task<bool> PostSignUp(string username)
     {
         string path = $"http://{url}:{port}/signup/{username}";
         UnityWebRequest req = CreateRequest(path, RequestType.POST);
 
-        // very sure it doesnt work like that...
-        bool obj = (bool) await SendRequestWithResponse(req);
+        var operation = req.SendWebRequest();
 
+        while (!operation.isDone)
+            await Task.Yield();
+
+        if (req.result != UnityWebRequest.Result.Success)
+            return false;
+
+        var jsonResponse = req.downloadHandler.text;
+
+        Debug.Log($"Sign Up Response: {jsonResponse}");
         req.Dispose();
-        return obj;
+        return jsonResponse == "true";
     }
 
     public IEnumerator PostPlayer(Player player)
@@ -154,6 +186,21 @@ public class NetworkManager : Manager<NetworkManager>
     {
         Card card = await GetCard(CardCategory.Door);
         Debug.Log("Card: " + card);
+    }
+
+    public async Task<bool> GetConnection()
+    {
+        string path = $"http://{url}:{port}/";
+        UnityWebRequest req = CreateRequest(path, RequestType.GET);
+        var operation = req.SendWebRequest();
+
+        while (!operation.isDone)
+            await Task.Yield();
+
+        if (req.result == UnityWebRequest.Result.Success)
+            return true;
+        else
+            return false;
     }
 
     public async Task<Card> GetCard(CardCategory type)
