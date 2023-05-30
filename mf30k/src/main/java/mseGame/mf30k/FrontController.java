@@ -79,11 +79,13 @@ public class FrontController {
 	@PostMapping(value = "/signin/{user_name}")
 	public UserData userLogin(@PathVariable(name="user_name")String userName) {
 		Optional<UserData> result = repo.findFirstByUsername(userName);
-		if(!result.isPresent()) {
+		if(result.isPresent()) {
 			UserData user = result.get();
 			this.currentUser = user;
+			System.out.println(user);
 			return user;
 		}
+		System.out.println("No User with name: "+userName+" found");
 		return null;
 	}
 	

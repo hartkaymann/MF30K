@@ -16,5 +16,5 @@ import org.springframework.stereotype.Repository;
 
 public interface UserDataRepositoryJpa extends JpaRepository<UserData, Long> {
 	//TODO add API queries for stats
-	Optional<UserData> findFirstByUsername(String type);
+	Optional<UserData> findFirstByUsername(String username);
 }
