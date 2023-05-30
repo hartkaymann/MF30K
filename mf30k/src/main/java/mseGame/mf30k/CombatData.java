@@ -1,7 +1,9 @@
-package data;
+package mseGame.mf30k;
 
 import jakarta.persistence.*;
 
+@Table(name = "combat")
+@Entity
 public class CombatData {
 	
 	@Id

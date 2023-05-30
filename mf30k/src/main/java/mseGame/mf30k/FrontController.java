@@ -3,9 +3,7 @@ package mseGame.mf30k;
 import player.Player;
 
 import cards.*;
-import data.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,10 +29,10 @@ public class FrontController {
 	private PlayerManager player_mgr;
 	
 	@Autowired 
-	private UserDataRepository repo;
+	private UserDataRepositoryJpa repo;
 	
 	@Autowired
-	private RunDataRepository runRepo;
+	private RunDataRepositoryJpa runRepo;
 	
 	//Objects for the current game play
 	private GameStage stage;
