@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SpriteManager : MonoBehaviour
+public class SpriteManager : Manager<SpriteManager>
 {
-    public static SpriteManager Instance { get; private set; }
-
-
     [Serializable]
     public struct NamedSprite
     {
@@ -31,15 +28,6 @@ public class SpriteManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-
         sprites = new Dictionary<string, Sprite>();
         for (int i = 0; i < namedSprites.Length; i++)
         {

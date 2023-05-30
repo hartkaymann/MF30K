@@ -4,10 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Manager<UIManager> 
 {
-    public static UIManager instance;
-
     [SerializeField] private GameObject panelChange;
     [SerializeField] private GameObject panelVictory;
     [SerializeField] private GameObject panelDefeat;
@@ -24,7 +22,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
         GameManager.OnGameStateChange += GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
     }

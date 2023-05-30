@@ -48,12 +48,12 @@ public class CombatWheelController : MonoBehaviour
         while (currTime < spinTime)
         {
             currTime += Time.deltaTime;
-            float angle = Mathf.Lerp(spinSpeed, 0f, currTime / spinTime);
+            float angle = Impulse(10, currTime / spinTime);
             wheel.Rotate(Vector3.forward, angle);
 
-            if (wheel.rotation.z < 0f) 
+            if (wheel.rotation.z < 0f)
                 wheel.Rotate(0, 0, 360); ;
-            
+
             yield return null;
         }
         IsFinished = true;
@@ -70,6 +70,12 @@ public class CombatWheelController : MonoBehaviour
     public void OnEnable()
     {
         buttonStart.enabled = true;
+    }
+
+    private static float Impulse(float k, float x)
+    {
+        float h = k * x;
+        return h * Mathf.Exp(1.0f - h);
     }
 }
 

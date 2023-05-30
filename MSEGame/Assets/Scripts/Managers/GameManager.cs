@@ -1,16 +1,13 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Manager<GameManager>
 {
-    public static GameManager Instance { get; private set; }
-
     // State management
     private GameStage stage;
     private Combat currentCombat;
@@ -23,18 +20,6 @@ public class GameManager : MonoBehaviour
     private Coroutine stageTimerCoroutine;
 
     [SerializeField] private CombatWheelController combatWheel;
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
 
     void Start()
     {
@@ -56,8 +41,8 @@ public class GameManager : MonoBehaviour
                 PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
                 Vector3 doorPosition = RoomManager.Instance.CurrentRoom.transform.Find("Door").gameObject.transform.position;
 
-                UIManager.instance.ToggleBlackScreen();
-                StartCoroutine(UIManager.instance.FadeToBlack(1f));
+                UIManager.Instance.ToggleBlackScreen();
+                StartCoroutine(UIManager.Instance.FadeToBlack(1f));
                 StartCoroutine(AnimationManager.Instance.MoveFromTo(playerController.transform, playerController.transform.position, doorPosition, .9f));
 
                 Invoke(nameof(DrawDoorCard), 1f);
@@ -88,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     async void FetchPlayerInformation()
     {
-        string playerName = LoadSceneInformation.PlayerName;
+        string playerName = SessionData.Username;
         Player player;
 
         if (playerName.Length == 0)
@@ -111,7 +96,7 @@ public class GameManager : MonoBehaviour
 
         RoomManager.Instance.InstantiateRoom(card);
 
-        UIManager.instance.ToggleBlackScreen();
+        UIManager.Instance.ToggleBlackScreen();
 
     }
 
@@ -354,9 +339,9 @@ public enum GameStage
 /// <summary>
 /// Utility class to pass information between scenes.
 /// </summary>
-public static class LoadSceneInformation
+public static class SessionData
 {
-    public static string PlayerName { get; set; } = "";
+    public static string Username { get; set; } = "";
 }
 
 public static class GameColor

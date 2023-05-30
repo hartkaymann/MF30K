@@ -2,29 +2,14 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
-public class MenuManager : MonoBehaviour
+public class MenuManager : Manager<NetworkManager>
 {
 
     [SerializeField] private TMP_InputField inputName;
     [SerializeField] private TMP_Dropdown inputRace;
     [SerializeField] private TMP_Dropdown inputProfession;
     [SerializeField] private TMP_Dropdown inputGender;
-
-    public static MenuManager Instance { get; private set; }
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
 
     public void StartGame()
     {
@@ -38,8 +23,8 @@ public class MenuManager : MonoBehaviour
 
         Player player = new(name, race, profession, gender, 1, 0);
         StartCoroutine(NetworkManager.Instance.PostPlayer(player));
-        LoadSceneInformation.PlayerName = name;
-        SceneManager.LoadScene(1);
+        SessionData.Username = name;
+        SceneManager.LoadScene("Gameplay");
     }
 
     public void QuitGame()

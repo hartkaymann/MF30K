@@ -18,24 +18,10 @@ enum RequestType
     DELETE
 }
 
-public class NetworkManager : MonoBehaviour
+public class NetworkManager : Manager<NetworkManager>
 {
-    public static NetworkManager Instance { get; private set; }
-
     private readonly string url = "localhost";
     private readonly string port = "8080";
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
 
     private UnityWebRequest CreateRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
@@ -72,7 +58,7 @@ public class NetworkManager : MonoBehaviour
 
         try
         {
-           // Debug.Log($"JSON Respose: {jsonResponse.Prettify()}");
+            // Debug.Log($"JSON Respose: {jsonResponse.Prettify()}");
             JObject obj = JObject.Parse(jsonResponse);
             return obj;
         }
@@ -94,17 +80,33 @@ public class NetworkManager : MonoBehaviour
         string path = $"http://{url}:{port}/test";
         UnityWebRequest req = CreateRequest(path, RequestType.POST);
         yield return req.SendWebRequest();
-        while(!req.isDone)
+        while (!req.isDone)
         {
             yield return null;
         }
         req.Dispose();
     }
 
-    [ContextMenu("Post Dummy Player")]
-    private void PostDummyPlayer()
+    public async Task<bool> PostSignIn(string username)
     {
-        StartCoroutine(PostPlayer(Player.GetDummy()));
+        string path = $"http://{url}:{port}/signin/{username}";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST);
+
+        var obj = await SendRequestWithResponse(req);
+
+        req.Dispose();
+        return obj != null;
+    }
+    public async Task<bool> PostSignUp(string username)
+    {
+        string path = $"http://{url}:{port}/signup/{username}";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST);
+
+        // very sure it doesnt work like that...
+        bool obj = (bool) await SendRequestWithResponse(req);
+
+        req.Dispose();
+        return obj;
     }
 
     public IEnumerator PostPlayer(Player player)
