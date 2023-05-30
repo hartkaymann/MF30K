@@ -36,17 +36,28 @@ public class PlayerController : MonoBehaviour, IDropHandler
     {
         GameObject equipmentGo = GameObject.Find("Equipment");
         if (equipmentGo == null)
+        {
+            Debug.LogWarning($"Could not find Equipment GameObject");
             return;
+        }
 
-        //Debug.Log($"Attaching to Slots/{slot}");
-        GameObject slotGo = equipmentGo.transform.Find($"Slots/{slot}").gameObject;
+        Debug.Log($"Attaching {cardController.name} to Slots/{slot}");
+        GameObject slotGo = equipmentGo.transform.Find($"Slots/{slot}/Slot").gameObject;
         if (slotGo == null)
+        {
+            Debug.LogWarning($"Could not find Slots/{slot} GameObject");
             return;
+        }
+
 
         if (slotGo.TryGetComponent<EquipmentController>(out var equipmentController))
         {
             equipmentController.EquipItem(cardController);
             cardController.transform.SetParent(slotGo.transform);
+        }
+        else
+        {
+            Debug.LogWarning($"Could not find EquipmentController Component");
         }
     }
 

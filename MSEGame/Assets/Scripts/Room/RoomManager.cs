@@ -11,6 +11,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private GameObject roomPrefab;
 
     [SerializeField] private GameObject npcInfoPrefab;
+    [SerializeField] private GameObject enemyInfoPrefab;
     private GameObject currentNpcInfo;
 
     private void Awake()
@@ -41,7 +42,20 @@ public class RoomManager : MonoBehaviour
         if (currentNpcInfo != null)
             Destroy(currentNpcInfo);
 
-        currentNpcInfo = Instantiate(npcInfoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
+        if (card is MonsterCard monsterCard)
+        {
+            currentNpcInfo = Instantiate(enemyInfoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
+
+            if (currentNpcInfo.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
+            {
+                infoLevel.text = monsterCard.level.ToString();
+            }
+        }
+        else
+        {
+            currentNpcInfo = Instantiate(npcInfoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
+        }
+
         Transform npc = obj.transform.Find("NPC");
         if (currentNpcInfo.TryGetComponent<ObjectFollow>(out var follow))
         {
@@ -51,19 +65,6 @@ public class RoomManager : MonoBehaviour
         if (currentNpcInfo.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var infoName))
         {
             infoName.text = card.title;
-        }
-
-        if (currentNpcInfo.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
-        {
-            if (card is MonsterCard monsterCard)
-            {
-                infoLevel.gameObject.SetActive(true);
-                infoLevel.text = monsterCard.level.ToString();
-            }
-            else
-            {
-                infoLevel.gameObject.SetActive(false);
-            }
         }
     }
 }

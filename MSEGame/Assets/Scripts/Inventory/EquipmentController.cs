@@ -19,13 +19,18 @@ public class EquipmentController : MonoBehaviour, IDropHandler
     bool isEquipped = false;
     private TextMeshProUGUI textEquipStat;
 
-    void Start()
+    void Awake()
     {
         Transform value = transform.parent.transform.Find("Value");
         if (value != null)
         {
-            value.TryGetComponent<TextMeshProUGUI>(out textEquipStat);
+            value.TryGetComponent(out textEquipStat);
         }
+    }
+
+    void Start()
+    {
+        
     }
 
     public void OnDrop(PointerEventData eventData)

@@ -45,7 +45,7 @@ public class NetworkManager : MonoBehaviour
         if (data != null)
         {
             string jsonData = JsonConvert.SerializeObject(data);
-            Debug.Log($"Request Body: {jsonData}");
+            //Debug.Log($"Request Body: {jsonData}");
             var bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         }
@@ -72,7 +72,7 @@ public class NetworkManager : MonoBehaviour
 
         try
         {
-            Debug.Log($"JSON Respose: {jsonResponse.Prettify()}");
+           // Debug.Log($"JSON Respose: {jsonResponse.Prettify()}");
             JObject obj = JObject.Parse(jsonResponse);
             return obj;
         }
@@ -114,7 +114,6 @@ public class NetworkManager : MonoBehaviour
         yield return req.SendWebRequest();
         while (!req.isDone)
         {
-            Debug.Log("Not done here");
             yield return null;
         }
         req.Dispose();
@@ -127,7 +126,18 @@ public class NetworkManager : MonoBehaviour
         yield return req.SendWebRequest();
         while (!req.isDone)
         {
-            Debug.Log("Not done here");
+            yield return null;
+        }
+        req.Dispose();
+    }
+
+    public IEnumerator PostCombat(Player player, Combat combat)
+    {
+        string path = $"http://{url}:{port}/{player.Name}/combat";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST, combat);
+        yield return req.SendWebRequest();
+        while (!req.isDone)
+        {
             yield return null;
         }
         req.Dispose();
@@ -147,7 +157,6 @@ public class NetworkManager : MonoBehaviour
     public async Task<Card> GetCard(CardCategory type)
     {
         string path = $"http://{url}:{port}/card?type={type.ToString().ToLower()}";
-        Debug.Log("Get Card: " + path);
         UnityWebRequest req = CreateRequest(path, RequestType.GET);
 
         if (req == null)
@@ -222,7 +231,6 @@ public class NetworkManager : MonoBehaviour
     public async Task<Player> GetPlayer(string name)
     {
         string path = $"http://{url}:{port}/player/{name}";
-        Debug.Log("Get Player: " + path);
         UnityWebRequest req = CreateRequest(path, RequestType.GET);
 
         var obj = await SendRequestWithResponse(req);

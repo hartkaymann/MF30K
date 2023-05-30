@@ -1,18 +1,19 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
-
     public static GameManager Instance { get; private set; }
-    
+
     // State management
     private GameStage stage;
-    private bool combatWasVictory = false;
+    private Combat currentCombat;
     public GameStage Stage { get { return stage; } }
 
     public static event Action<GameStage> OnGameStateChange;
@@ -133,16 +134,23 @@ public class GameManager : MonoBehaviour
         }
 
         int playerLvl = PlayerManager.Instance.CurrentPlayer.Player.CombatLevel;
-        float enemyLvl = monsterCard.level;
+        int enemyLvl = monsterCard.level;
+
+        currentCombat = new Combat()
+        {
+            PlayerLevel = playerLvl,
+            MonsterLevel = enemyLvl
+        };
 
         // Prepare combat wheel and wait until it finishes
         combatWheel.Reset();
-        combatWheel.SetRatio(playerLvl / (playerLvl + enemyLvl));
-        while(!combatWheel.IsFinished)
+        Debug.Log($"Setting ratio {playerLvl} : {enemyLvl}");
+        combatWheel.SetRatio(playerLvl / (float)(playerLvl + enemyLvl));
+        while (!combatWheel.IsFinished)
         {
             await Task.Delay(500);
         }
-        combatWasVictory = combatWheel.GetResult();
+        currentCombat.Victory = combatWheel.GetResult();
 
         PlayerController currentPlayer = PlayerManager.Instance.CurrentPlayer;
         Transform playerTransform = currentPlayer.gameObject.transform;
@@ -152,8 +160,8 @@ public class GameManager : MonoBehaviour
         currentPlayer.RunForDuration(2f);
         StartCoroutine(AnimationManager.Instance.MoveAndBack(playerTransform, npcTransform.position, 2f));
 
-        //TODO: stop invoking everything ffs
-        if (combatWasVictory)
+        //TODO: stop invoking everything
+        if (currentCombat.Victory)
             Invoke(nameof(HideMonster), 1f);
 
         //TODO: Very hardcoded, not a fan. Meh!
@@ -167,6 +175,9 @@ public class GameManager : MonoBehaviour
 
     private void Victory()
     {
+        currentCombat.Consequence = 0;
+        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.CurrentPlayer.Player, currentCombat));
+
         PlayerManager.Instance.CurrentPlayer.Player.Level += 1;
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(false);
         DrawTreasureCard();
@@ -174,9 +185,75 @@ public class GameManager : MonoBehaviour
 
     private void Defeat()
     {
-        // Run aways
-
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(true);
+    }
+
+    public void ConsequenceChosen(int consequence)
+    {
+        currentCombat.Consequence = consequence;
+        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.CurrentPlayer.Player, currentCombat));
+
+        // Apply consequence effect
+        switch (consequence)
+        {
+            case 0:
+                // Nothing happened
+                break;
+            case 1:
+                {
+                    // Lose Eqipment Card
+                    PlayerController pc = PlayerManager.Instance.CurrentPlayer;
+
+                    Array values = Enum.GetValues(typeof(EquipmentSlot));
+
+
+                    // Invoke("PrayThisWorks")
+                    bool slotNotEmpty = false;
+                    int tries = 0;
+                    while (!slotNotEmpty && tries < values.Length)
+                    {
+                        tries++;
+
+                        // Chose random slot
+                        EquipmentSlot randSlot = (EquipmentSlot)values.GetValue(Random.Range(0, values.Length));
+                        Transform cardGo = GameObject.Find($"Equipment/Slots/{randSlot}/Slot").transform.GetChild(0);
+                        if (cardGo != null)
+                        {
+                            Debug.Log($"Found card in slot {randSlot}");
+                            slotNotEmpty = true;
+                            if (cardGo.TryGetComponent<CardController>(out var ctrl))
+                            {
+                                Debug.Log("Discarding...");
+                                ctrl.Discard();
+                            }
+                        }
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    GameObject hand = GameObject.Find($"Hand/Grid");
+                    int idx = Random.Range(0, hand.transform.childCount);
+
+                    if (idx > 0 && hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
+                    {
+                        ctrl.Discard();
+                        Debug.Log($"Discarding {idx}th hand card...");
+                    }
+                    break;
+                }
+            case 3:
+                {
+                    // Lose Level
+                    PlayerManager.Instance.CurrentPlayer.Player.Level -= 1;
+                    break;
+                }
+            default:
+                Debug.LogAssertion("Consequence index out of Range: " + consequence);
+                break;
+        }
+
+        Invoke(nameof(NextStage), 2);
     }
 
     private void ChangeClass()
@@ -249,8 +326,7 @@ public class GameManager : MonoBehaviour
                 UpdateGameStage(GameStage.Combat);
                 break;
             case GameStage.Combat:
-                UpdateGameStage(combatWasVictory ? GameStage.Victory : GameStage.Defeat);
-                //UpdateGameStage(GameStage.Victory);
+                UpdateGameStage(currentCombat.Victory ? GameStage.Victory : GameStage.Defeat);
                 break;
             case GameStage.Victory:
                 UpdateGameStage(GameStage.InventoryManagement);

@@ -1,6 +1,4 @@
-using JetBrains.Annotations;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +6,7 @@ public class CombatWheelController : MonoBehaviour
 {
     [SerializeField] private Transform wheel;
     [SerializeField] private Image playerSlice;
+    [SerializeField] private Button buttonStart;
 
     [SerializeField] private float spinTime = 5f;
     [SerializeField] private float spinSpeed = 90f;
@@ -66,6 +65,11 @@ public class CombatWheelController : MonoBehaviour
         float rad = Mathf.Deg2Rad * wheel.eulerAngles.z;
         float currAngle = (rad) / (2 * Mathf.PI);
         return currAngle < ratio;
+    }
+
+    public void OnEnable()
+    {
+        buttonStart.enabled = true;
     }
 }
 

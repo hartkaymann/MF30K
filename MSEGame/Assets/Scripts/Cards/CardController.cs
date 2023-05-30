@@ -34,11 +34,11 @@ public class CardController : Draggable, IPointerDownHandler
     {
         raycastImage = cardRenderer.Background;
 
+        facedUp = frontFace.activeInHierarchy;
         backFace.SetActive(!facedUp);
-        frontFace.SetActive(facedUp);
     }
 
-    public void Flip()
+    public virtual void Flip()
     {
         facedUp = !facedUp;
 
@@ -64,4 +64,10 @@ public class CardController : Draggable, IPointerDownHandler
         isFlipped = true;
     }
 
+    public void Discard()
+    {
+        StartCoroutine(NetworkManager.Instance.DiscardCard(PlayerManager.Instance.CurrentPlayer.Player, Card));
+
+        Destroy(gameObject);
+    }
 }

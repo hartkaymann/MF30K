@@ -45,11 +45,6 @@ public class UIManager : MonoBehaviour
 
         if (state == GameStage.Victory)
             UpdateVictoryPanel();
-
-        if(state == GameStage.Combat)
-        {
-            
-        }
     }
 
     public void HandleToggleEquipment()
