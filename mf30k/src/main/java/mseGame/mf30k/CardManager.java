@@ -25,6 +25,19 @@ public class CardManager {
 		return cards.get(id);
 	}
 	
+	//Sell Card (discard, but return gold value)
+	public int sellCard(UUID id) {
+		Card to_sell = cards.get(id);
+		if(to_sell instanceof Treasure) {
+			int goldValue = ((Treasure) to_sell).getGoldValue();
+			this.discard(id);
+			return goldValue;
+		} else {
+			System.out.println("Card is not a treasure and therefore cannot be sold");
+			return -1;
+		}
+	}
+	
 	//Discard card by ID
 	public void discard(UUID id) {
 		Card to_discard = cards.get(id);
@@ -52,8 +65,9 @@ public class CardManager {
 		
 		UUID _id = UUID.randomUUID();
 		String _name = randNames.randomAdjective();
-		int _gold = rand.nextInt(11);
-		int _combat = rand.nextInt(6);
+		
+		int _combat = rand.nextInt(1, 6);
+		int _gold = rand.nextInt(1,_combat);
 		
 		equipmentType _type = null;
 		
@@ -88,8 +102,9 @@ public class CardManager {
 		UUID _id = UUID.randomUUID();
 		String _name = randNames.randomAdjective();
 		_name += " " + randNames.randomConsumable();
-		int _gold = rand.nextInt(11);
-		int _combat = rand.nextInt(6);
+		
+		int _combat = rand.nextInt(1, 6);
+		int _gold = rand.nextInt(1, _combat);
 		
 		BuffTarget targets[] = BuffTarget.values();
 		int index = rand.nextInt(targets.length);
