@@ -1,8 +1,7 @@
 package cards;
 
 public enum Profession {
+	Knight,
 	Wizard,
-	Rogue,
-	Barbarian,
-	Cleric
+	Rogue
 }
