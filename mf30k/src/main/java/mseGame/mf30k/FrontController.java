@@ -3,9 +3,7 @@ package mseGame.mf30k;
 import player.Player;
 
 import cards.*;
-import data.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,10 +29,10 @@ public class FrontController {
 	private PlayerManager player_mgr;
 	
 	@Autowired 
-	private UserDataRepository repo;
+	private UserDataRepositoryJpa repo;
 	
 	@Autowired
-	private RunDataRepository runRepo;
+	private RunDataRepositoryJpa runRepo;
 	
 	//Objects for the current game play
 	private GameStage stage;
@@ -59,7 +57,7 @@ public class FrontController {
 		return;
 	}
 	
-	@PostMapping(value = "/new/{user_name}")
+	@PostMapping(value = "/signup/{user_name}")
 	public boolean addUser(@PathVariable(name="user_name")String userName) {
 		long millis=System.currentTimeMillis();  
 	    // creating a new object of the class Date  
@@ -78,7 +76,7 @@ public class FrontController {
 	//login for user
 	//return the userData if login was successful, return null if not.
 	//sets the current user object to the logged in user.
-	@PostMapping(value = "/login/{user_name}")
+	@PostMapping(value = "/signin/{user_name}")
 	public UserData userLogin(@PathVariable(name="user_name")String userName) {
 		Optional<UserData> result = repo.findFirstByUsername(userName);
 		if(!result.isPresent()) {

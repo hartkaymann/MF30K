@@ -1,4 +1,4 @@
-package data;
+package mseGame.mf30k;
 
 import jakarta.persistence.*;
 

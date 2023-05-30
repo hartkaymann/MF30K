@@ -1,7 +1,8 @@
-package data;
+package mseGame.mf30k;
 
 import jakarta.persistence.*;
 import jakarta.persistence.TemporalType;
+
 import java.sql.Date;
 import java.util.List;
 

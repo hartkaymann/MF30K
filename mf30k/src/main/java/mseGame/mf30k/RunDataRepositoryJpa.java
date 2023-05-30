@@ -1,4 +1,4 @@
-package data;
+package mseGame.mf30k;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
+import org.springframework.stereotype.Repository;
 
-public interface RunDataRepository extends JpaRepository<RunData, Long>{
+public interface RunDataRepositoryJpa extends JpaRepository<RunData, Long>{
 	//TODO add queries for stats
 }
