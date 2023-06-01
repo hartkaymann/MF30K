@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IDropHandler
 {
     [SerializeField] private PlayerRenderer playerRenderer;
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour, IDropHandler
 
     private Animator animator;
     private int isRunningHash;
+    private int isAttackingHash;
 
     public Player Player
     {
@@ -21,7 +23,7 @@ public class PlayerController : MonoBehaviour, IDropHandler
             if (player != value)
             {
                 player = value;
-                playerRenderer.Render();
+                playerRenderer.Render(player);
             }
         }
     }
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour, IDropHandler
     {
         animator = GetComponent<Animator>();
         isRunningHash = Animator.StringToHash("isRunning");
+        isAttackingHash = Animator.StringToHash("Attack");
     }
 
     public void EquipToSlot(EquipmentSlot slot, CardController cardController)
@@ -101,11 +104,11 @@ public class PlayerController : MonoBehaviour, IDropHandler
         EquipmentCard starterArmor = new("Rusty Armor", EquipmentType.Armor, null, SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Armor), 0, 1);
         EquipmentCard starterBoots = new("Rusty Boots", EquipmentType.Boots, null, SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Boots), 0, 1);
 
-        CardController ccWeaponR = CardManager.instance.InstantiateCard(starterWeaponR);
-        CardController ccWeaponL = CardManager.instance.InstantiateCard(starterWeaponL);
-        CardController ccHelmet = CardManager.instance.InstantiateCard(starterHelmet);
-        CardController ccArmor = CardManager.instance.InstantiateCard(starterArmor);
-        CardController ccBoots = CardManager.instance.InstantiateCard(starterBoots);
+        CardController ccWeaponR = CardManager.Instance.InstantiateCard(starterWeaponR);
+        CardController ccWeaponL = CardManager.Instance.InstantiateCard(starterWeaponL);
+        CardController ccHelmet = CardManager.Instance.InstantiateCard(starterHelmet);
+        CardController ccArmor = CardManager.Instance.InstantiateCard(starterArmor);
+        CardController ccBoots = CardManager.Instance.InstantiateCard(starterBoots);
 
         EquipToSlot(EquipmentSlot.WeaponR, ccWeaponR);
         EquipToSlot(EquipmentSlot.WeaponL, ccWeaponL);
@@ -130,5 +133,11 @@ public class PlayerController : MonoBehaviour, IDropHandler
     public void StopRunning()
     {
         animator.SetBool(isRunningHash, false);
+    }
+
+    [ContextMenu("Player Attack")]
+    public void Attack()
+    {
+        animator.SetTrigger(isAttackingHash);
     }
 }

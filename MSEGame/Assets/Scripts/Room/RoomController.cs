@@ -7,6 +7,9 @@ public class RoomController : MonoBehaviour
     [SerializeField] private RoomRenderer roomRenderer;
     public RoomRenderer Renderer { get { return roomRenderer; } }
 
+    private NpcController npc;
+    public NpcController NPC { get { return npc; } set { npc = value; } }
+
     // Door controlls
     private Animator doorAnimator;
     private int isDoorOpenHash;
@@ -41,7 +44,7 @@ public class RoomController : MonoBehaviour
 
     private void Start()
     {
-        PlayerManager.Instance.CurrentPlayer.gameObject.transform.position = playerPosition.position;
+        PlayerManager.Instance.PlayerController.gameObject.transform.position = playerPosition.position;
     }
 
     [ContextMenu("Open Door")]

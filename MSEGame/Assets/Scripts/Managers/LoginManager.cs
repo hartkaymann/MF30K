@@ -12,17 +12,18 @@ public class LoginManager : Manager<LoginManager>
     private Image connectoinIcon;
 
     [SerializeField] TMP_InputField inputUsername;
+    [SerializeField] GameObject textError;
     private Outline outline;
 
     public void Start()
     {
-        if(!inputUsername.TryGetComponent(out outline))
+        if (!inputUsername.TryGetComponent(out outline))
         {
             Debug.LogWarning("Couldn't get Outline component of Username Input");
         }
         outline.enabled = false;
-   
-        if(!connection.Find("Status").TryGetComponent(out connectionStatus))
+
+        if (!connection.Find("Status").TryGetComponent(out connectionStatus))
         {
             Debug.LogWarning("Couldn't get Text component in Connection GameObject");
         }
@@ -56,19 +57,18 @@ public class LoginManager : Manager<LoginManager>
         SetInputValid(true);
         string username = inputUsername.text.ToLower();
 
-        if(username.Length == 0)
+        if (username.Length == 0)
         {
             SetInputValid(false);
             return;
         }
 
         bool isValid = await NetworkManager.Instance.PostSignIn(username);
-        if(!isValid)
+        if (!isValid)
         {
-            if(inputUsername.TryGetComponent<Outline>(out var outline))
-            {
-                SetInputValid(false);
-            }
+            SetInputValid(false);
+            DisplayErrorMessage($"Sign In failed. User '{username}' doesn't exist.");
+            
             return;
         }
 
@@ -84,16 +84,16 @@ public class LoginManager : Manager<LoginManager>
         if (username.Length == 0)
         {
             SetInputValid(false);
+            DisplayErrorMessage($"Please enter a name.");
             return;
         }
 
         bool isValid = await NetworkManager.Instance.PostSignUp(username);
         if (!isValid)
         {
-            if (inputUsername.TryGetComponent<Outline>(out var outline))
-            {
-                SetInputValid(false);
-            }
+            SetInputValid(false);
+            DisplayErrorMessage($"Sign Up failed. User '{username}' already exists.");
+
             return;
         }
 
@@ -101,8 +101,22 @@ public class LoginManager : Manager<LoginManager>
         SceneManager.LoadScene("MainMenu");
     }
 
+    private void DisplayErrorMessage(string errorMsg)
+    {
+        textError.SetActive(true);
+        if (TryGetComponent<TextMeshProUGUI>(out var textComponent))
+        {
+            textComponent.text = errorMsg;
+        }
+    }
+
     private void SetInputValid(bool valid)
     {
         outline.enabled = !valid;
+
+        if (valid)
+        {
+            textError.SetActive(false);
+        }
     }
 }

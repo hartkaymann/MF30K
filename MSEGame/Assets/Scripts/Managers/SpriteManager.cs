@@ -26,7 +26,7 @@ public class SpriteManager : Manager<SpriteManager>
     private Dictionary<string, Sprite> sprites;
     private Dictionary<string, Sprite> starters;
 
-    private void Awake()
+    protected override void Init()
     {
         sprites = new Dictionary<string, Sprite>();
         for (int i = 0; i < namedSprites.Length; i++)

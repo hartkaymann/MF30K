@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using System.Runtime.CompilerServices;
 using System.Collections;
 
 enum RequestType
@@ -25,7 +24,7 @@ public class NetworkManager : Manager<NetworkManager>
 
     private UnityWebRequest CreateRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
-        Debug.Log($"New {type} Request: {path}");
+        //Debug.Log($"New {type} Request: {path}");
         var request = new UnityWebRequest(path, type.ToString());
 
         if (data != null)
@@ -106,7 +105,12 @@ public class NetworkManager : Manager<NetworkManager>
             return false;
 
         req.Dispose();
-     
+
+        if (jsonResponse == null || jsonResponse.Length == 0)
+        {
+            return false;
+        }
+
         try
         {
             JObject obj = JObject.Parse(jsonResponse);

@@ -66,7 +66,7 @@ public class CardController : Draggable, IPointerDownHandler
 
     public void Discard()
     {
-        StartCoroutine(NetworkManager.Instance.DiscardCard(PlayerManager.Instance.CurrentPlayer.Player, Card));
+        StartCoroutine(NetworkManager.Instance.DiscardCard(PlayerManager.Instance.PlayerController.Player, Card));
 
         Destroy(gameObject);
     }

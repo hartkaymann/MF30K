@@ -1,48 +1,45 @@
 using TMPro;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : Manager<PlayerManager>
 {
-    public static PlayerManager Instance { get; private set; }
+    public PlayerController PlayerController { get; private set; }
 
-    [SerializeField] private PlayerController currentPlayer;
-    public PlayerController CurrentPlayer { get { return currentPlayer; } }
-
-    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject humanPrefab;
+    [SerializeField] private GameObject elfPrefab;
     [SerializeField] private GameObject playerInfoPrefab;
     [SerializeField] private TextMeshProUGUI playerGold;
 
     private GameObject currentPlayerInfo;
 
-    private void Awake()
+    protected override void Init()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-
         GameManager.OnGameStateChange += GameManagerOnGameStageChanged;
+
+        // Destroy initial player
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if(player != null)
+        {
+            Destroy(player);
+        }
     }
 
     public void InstantiatePlayer(Player player)
     {
-        if (currentPlayer != null)
+        if (PlayerController != null)
         {
-            Destroy(currentPlayer.gameObject);
+            Destroy(PlayerController.gameObject);
         }
 
         // Instantiate player at specified position
-        GameObject obj = Instantiate(playerPrefab, new Vector3(-2.5f, -0.72f, 0f), Quaternion.identity);
-        if (obj.TryGetComponent<PlayerController>(out var playerController))
+        GameObject prefab = player.Race == Race.Human? humanPrefab : elfPrefab;
+        GameObject obj = Instantiate(prefab, new Vector3(-2.5f, -0.72f, 0f), Quaternion.identity);
+        if (obj.TryGetComponent<PlayerController>(out var pc))
         {
-            playerController.Player = player;
-            currentPlayer = playerController;
+            pc.Player = player;
+            PlayerController = pc;
 
-            playerController.EquipStarterGear();
+            PlayerController.EquipStarterGear();
         }
 
         // Follow new player
@@ -57,11 +54,17 @@ public class PlayerManager : MonoBehaviour
             follow.Follow = obj.transform.Find("Info").transform;
         }
 
-        UpdatePlayer(player);
+        player.OnPropertyChanged += UpdatePlayer;
+
+        UpdatePlayer();
     }
 
-    public void UpdatePlayer(Player player)
+    public void UpdatePlayer()
     {
+        Player player = PlayerController.Player;
+        if (player == null)
+            return;
+
         StartCoroutine(NetworkManager.Instance.PutPlayer(player));
 
         if (currentPlayerInfo == null)
@@ -72,14 +75,21 @@ public class PlayerManager : MonoBehaviour
             infoName.text = player.Name;
         }
 
-        if (currentPlayerInfo.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
+        if (currentPlayerInfo.transform.Find("Level").Find("Value").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
         {
             infoLevel.text = player.Level.ToString();
         }
 
-        if (currentPlayerInfo.transform.Find("CombatLevel").TryGetComponent<TextMeshProUGUI>(out var infoCombatLevel))
+        if (currentPlayerInfo.transform.Find("CombatLevel").Find("Value").TryGetComponent<TextMeshProUGUI>(out var infoCombatLevel))
         {
             infoCombatLevel.text = player.CombatLevel.ToString();
+
+            if (player.RaceEffect < 0)
+                infoCombatLevel.color = GameColor.Red;
+            else if (player.RaceEffect > 0)
+                infoCombatLevel.color = GameColor.Green;
+            else
+                infoCombatLevel.color = GameColor.White;
         }
 
         if (playerGold != null)
@@ -88,7 +98,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         // Player level maxed, end of game
-        if( player.Level == 10)
+        if (player.Level == 10)
         {
             GameManager.Instance.EndOfGame(player);
         }
@@ -102,11 +112,11 @@ public class PlayerManager : MonoBehaviour
 
         if (card is ProfessionCard professionCard)
         {
-            CurrentPlayer.Player.Profession = professionCard.profession;
+            PlayerController.Player.Profession = professionCard.profession;
         }
         else if (card is RaceCard raceCard)
         {
-            CurrentPlayer.Player.Race = raceCard.race;
+            PlayerController.Player.Race = raceCard.race;
         }
         else
         {
@@ -116,13 +126,43 @@ public class PlayerManager : MonoBehaviour
 
     private void GameManagerOnGameStageChanged(GameStage stage)
     {
+        if (PlayerController.Player == null)
+        {
+            Debug.Log("No player, returning and not updating");
+            return;
+        }
+
+        Player player = PlayerController.Player;
+
         // New round start
         if (stage == GameStage.InventoryManagement)
         {
-            if (CurrentPlayer.Player != null)
+            player.RoundBonus = 0;
+        }
+
+        if (stage == GameStage.CombatPreparations)
+        {
+            // WE CHANGE IT HERE BECAUSE I DONT HAVE TIME TO MAKE PRETTY CODE RIGHT NOW SO MAYBE CHANGE THIS LATER IF YOU CAN BECAUSE ITS MAKING MY EYES BLEED
+            if (player.Race == Race.Orc)
             {
-                CurrentPlayer.Player.RoundBonus = 0;
+                if (RoomManager.Instance.CurrentRoom.Card.title.ToLower().EndsWith("slime"))
+                    player.RaceEffect = 1; // Orc & Slime = +1
+                else if (RoomManager.Instance.CurrentRoom.Card.title.ToLower().EndsWith("ghost"))
+                    player.RaceEffect = -1; // Orc & Slime = -1
             }
+            else if (player.Race == Race.Elf)
+            {
+                if (RoomManager.Instance.CurrentRoom.Card.title.ToLower().EndsWith("ghost"))
+                    player.RaceEffect = 1; // Elf & Ghost = +1
+                else if (RoomManager.Instance.CurrentRoom.Card.title.ToLower().EndsWith("slime"))
+                    player.RaceEffect = -1; // Elf & Slime = -1
+            }
+            else
+            {
+                player.RaceEffect = 0; // Human = 0
+            }
+
+            Debug.Log($"Applying Race Effect: {player.Race}");
         }
     }
 }

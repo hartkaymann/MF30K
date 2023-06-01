@@ -38,7 +38,7 @@ public class GameManager : Manager<GameManager>
                 RoomManager.Instance.CurrentRoom.OpenDoor();
                 break;
             case GameStage.DrawCard:
-                PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
+                PlayerController playerController = PlayerManager.Instance.PlayerController;
                 Vector3 doorPosition = RoomManager.Instance.CurrentRoom.transform.Find("Door").gameObject.transform.position;
 
                 UIManager.Instance.ToggleBlackScreen();
@@ -73,17 +73,16 @@ public class GameManager : Manager<GameManager>
 
     async void FetchPlayerInformation()
     {
-        string playerName = SessionData.Username;
         Player player;
 
-        if (playerName.Length == 0)
+        if (SessionData.Username.Length == 0)
         {
             Debug.Log("No player, getting Dummy.");
             player = Player.GetDummy();
         }
         else
         {
-            player = await NetworkManager.Instance.GetPlayer(playerName);
+            player = await NetworkManager.Instance.GetPlayer(SessionData.Username);
         }
 
         PlayerManager.Instance.InstantiatePlayer(player);
@@ -97,7 +96,7 @@ public class GameManager : Manager<GameManager>
         RoomManager.Instance.InstantiateRoom(card);
 
         UIManager.Instance.ToggleBlackScreen();
-
+        NextStage();
     }
 
     async void DrawTreasureCard()
@@ -106,7 +105,7 @@ public class GameManager : Manager<GameManager>
         if (card == null)
             return;
 
-        CardManager.instance.DrawCardFromStack(card);
+        CardManager.Instance.DrawCardFromStack(card);
     }
 
     async void Combat()
@@ -118,7 +117,7 @@ public class GameManager : Manager<GameManager>
             return;
         }
 
-        int playerLvl = PlayerManager.Instance.CurrentPlayer.Player.CombatLevel;
+        int playerLvl = PlayerManager.Instance.PlayerController.Player.CombatLevel;
         int enemyLvl = monsterCard.level;
 
         currentCombat = new Combat()
@@ -137,7 +136,7 @@ public class GameManager : Manager<GameManager>
         }
         currentCombat.Victory = combatWheel.GetResult();
 
-        PlayerController currentPlayer = PlayerManager.Instance.CurrentPlayer;
+        PlayerController currentPlayer = PlayerManager.Instance.PlayerController;
         Transform playerTransform = currentPlayer.gameObject.transform;
         Transform npcTransform = RoomManager.Instance.CurrentRoom.gameObject.transform.Find("NPC");
 
@@ -147,23 +146,18 @@ public class GameManager : Manager<GameManager>
 
         //TODO: stop invoking everything
         if (currentCombat.Victory)
-            Invoke(nameof(HideMonster), 1f);
+            // Kill monster
 
         //TODO: Very hardcoded, not a fan. Meh!
         Invoke(nameof(NextStage), 2f);
     }
 
-    void HideMonster()
-    {
-        RoomManager.Instance.CurrentRoom.Renderer.ToggleNpc();
-    }
-
     private void Victory()
     {
         currentCombat.Consequence = 0;
-        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.CurrentPlayer.Player, currentCombat));
+        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.PlayerController.Player, currentCombat));
 
-        PlayerManager.Instance.CurrentPlayer.Player.Level += 1;
+        PlayerManager.Instance.PlayerController.Player.Level += 1;
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(false);
         DrawTreasureCard();
     }
@@ -176,7 +170,7 @@ public class GameManager : Manager<GameManager>
     public void ConsequenceChosen(int consequence)
     {
         currentCombat.Consequence = consequence;
-        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.CurrentPlayer.Player, currentCombat));
+        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.PlayerController.Player, currentCombat));
 
         // Apply consequence effect
         switch (consequence)
@@ -187,7 +181,7 @@ public class GameManager : Manager<GameManager>
             case 1:
                 {
                     // Lose Eqipment Card
-                    PlayerController pc = PlayerManager.Instance.CurrentPlayer;
+                    PlayerController pc = PlayerManager.Instance.PlayerController;
 
                     Array values = Enum.GetValues(typeof(EquipmentSlot));
 
@@ -230,7 +224,7 @@ public class GameManager : Manager<GameManager>
             case 3:
                 {
                     // Lose Level
-                    PlayerManager.Instance.CurrentPlayer.Player.Level -= 1;
+                    PlayerManager.Instance.PlayerController.Player.Level -= 1;
                     break;
                 }
             default:
@@ -336,9 +330,6 @@ public enum GameStage
     Defeat
 }
 
-/// <summary>
-/// Utility class to pass information between scenes.
-/// </summary>
 public static class SessionData
 {
     public static string Username { get; set; } = "";
@@ -348,4 +339,5 @@ public static class GameColor
 {
     public static Color Red { get; private set; } = new Color(0.754717f, 0.2897656f, 0.2520469f);
     public static Color Green { get; private set; } = new Color(0.01568628f, 0.6431373f, 0.2431373f);
+    public static Color White{ get; private set; } = new Color(0.9529412f, 0.9333334f, 0.8901961f);
 }

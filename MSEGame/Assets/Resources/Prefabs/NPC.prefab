@@ -41,7 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7534806363865152850}
   - component: {fileID: 7534806363865152851}
-  - component: {fileID: 1338158820598957925}
+  - component: {fileID: 3730276105654520977}
+  - component: {fileID: -753468564141454979}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -58,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 7534806363865152877}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 826538327663740990}
@@ -106,9 +107,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1559001058, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
+  m_Sprite: {fileID: -2000102094, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.5625, y: 1.21875}
@@ -117,7 +118,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &1338158820598957925
+--- !u!95 &3730276105654520977
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -127,7 +128,7 @@ Animator:
   m_GameObject: {fileID: 7534806363865152877}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 69103ab13f771544ea501a3906ce7295, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -138,3 +139,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-753468564141454979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7534806363865152877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd8f30a329dc7fe4e9fb693a3baac01c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infoPrefab: {fileID: 5114163060380485515, guid: 4443bbee3c974e540867b5d0df1568a1, type: 3}

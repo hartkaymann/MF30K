@@ -2005,8 +2005,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 218e6b31f82241c4ea738ef15c649ea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPlayer: {fileID: 976388105}
-  playerPrefab: {fileID: 5182654055869055672, guid: e80994fdf15ab564986650836a6ddff2, type: 3}
+  humanPrefab: {fileID: 5182654055869055672, guid: e80994fdf15ab564986650836a6ddff2, type: 3}
+  elfPrefab: {fileID: 5182654055869055672, guid: 1f7b50c01b4011445a2dd58519713939, type: 3}
   playerInfoPrefab: {fileID: 7154530170410024049, guid: 01a548e0e79b5d0408a97d149e16f72c, type: 3}
   playerGold: {fileID: 418339772}
 --- !u!1 &356877785
@@ -2306,8 +2306,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentRoom: {fileID: 1903597958}
   roomPrefab: {fileID: 1603086300886058768, guid: bc7187be3f0eed34f8327ed17c73bb39, type: 3}
-  npcInfoPrefab: {fileID: 5114163060380485515, guid: 4443bbee3c974e540867b5d0df1568a1, type: 3}
-  enemyInfoPrefab: {fileID: 5114163060380485515, guid: 091bca9796fe01d4aa8592837daf82f5, type: 3}
+  npcPrefab: {fileID: 7534806363865152877, guid: 9d5758ca0ba4d314db72ef71bc6ffda8, type: 3}
+  slimePrefab: {fileID: 7534806363865152877, guid: 379f7e4d45ee3194dbc0ea6b5e550ead, type: 3}
+  ghostPrefab: {fileID: 7534806363865152877, guid: 6efb04bf19129ea4a882b9f20247e519, type: 3}
 --- !u!1 &410276314
 GameObject:
   m_ObjectHideFlags: 0
@@ -4280,17 +4281,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 965411816}
   m_CullTransparentMesh: 1
---- !u!114 &976388105 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5182654055869055655, guid: e80994fdf15ab564986650836a6ddff2, type: 3}
-  m_PrefabInstance: {fileID: 63833592}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdb0ffe0f865b3549b5e04ae3a840dd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &976388110 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8884606977560350043, guid: e80994fdf15ab564986650836a6ddff2, type: 3}
@@ -8713,8 +8703,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   namedSprites:
-  - name: Knight
+  - name: Human
     sprite: {fileID: -2000102094, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
+  - name: Elf
+    sprite: {fileID: -1349661235, guid: b3e8644f8f8327041b8ea5a35c47c11c, type: 3}
+  - name: Orc
+    sprite: {fileID: 1402966543, guid: b3e8644f8f8327041b8ea5a35c47c11c, type: 3}
   - name: Slime
     sprite: {fileID: -1559001058, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
   - name: Background

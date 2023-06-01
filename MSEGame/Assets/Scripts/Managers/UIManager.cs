@@ -20,7 +20,7 @@ public class UIManager : Manager<UIManager>
 
     [SerializeField] private TextMeshProUGUI textStage;
 
-    private void Awake()
+    protected override void Init()
     {
         GameManager.OnGameStateChange += GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
@@ -31,16 +31,16 @@ public class UIManager : Manager<UIManager>
         GameManager.OnGameStateChange -= GameManagerOnGameStateChanged;
     }
 
-    private void GameManagerOnGameStateChanged(GameStage state)
+    private void GameManagerOnGameStateChanged(GameStage stage)
     {
-        textStage.text = state.ToString();
-        panelChange.SetActive(state == GameStage.Selection);
-        panelVictory.SetActive(state == GameStage.Victory);
-        panelDefeat.SetActive(state == GameStage.Defeat);
-        nextStage.SetActive(state != GameStage.Combat);
-        panelCombat.SetActive(state == GameStage.Combat);
+        textStage.text = stage.ToString();
+        panelChange.SetActive(stage == GameStage.Selection);
+        panelVictory.SetActive(stage == GameStage.Victory);
+        panelDefeat.SetActive(stage == GameStage.Defeat);
+        nextStage.SetActive(!(stage == GameStage.Combat || stage == GameStage.DrawCard));
+        panelCombat.SetActive(stage == GameStage.Combat);
 
-        if (state == GameStage.Victory)
+        if (stage == GameStage.Victory)
             UpdateVictoryPanel();
     }
 
@@ -68,12 +68,12 @@ public class UIManager : Manager<UIManager>
 
         if (card is ProfessionCard professionCard)
         {
-            from = PlayerManager.Instance.CurrentPlayer.Player.Profession.ToString();
+            from = PlayerManager.Instance.PlayerController.Player.Profession.ToString();
             to = professionCard.title;
         }
         else if (card is RaceCard raceCard)
         {
-            from = PlayerManager.Instance.CurrentPlayer.Player.Race.ToString();
+            from = PlayerManager.Instance.PlayerController.Player.Race.ToString();
             to = raceCard.title;
         }
         else
@@ -88,7 +88,7 @@ public class UIManager : Manager<UIManager>
     }
     public void UpdateVictoryPanel()
     {
-        Player player = PlayerManager.Instance.CurrentPlayer.Player;
+        Player player = PlayerManager.Instance.PlayerController.Player;
         if (panelVictory.transform.Find("LevelUp/OldLevel").TryGetComponent<TextMeshProUGUI>(out var oldLevel))
         {
             oldLevel.text = (player.Level - 1).ToString();

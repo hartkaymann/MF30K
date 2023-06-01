@@ -64,7 +64,7 @@ public class EquipmentController : MonoBehaviour, IDropHandler
 
     private void Equip(EquipmentCard card)
     {
-        PlayerController pc = PlayerManager.Instance.CurrentPlayer;
+        PlayerController pc = PlayerManager.Instance.PlayerController;
         pc.Equip(slot, card);
         isEquipped = true;
 
@@ -90,7 +90,7 @@ public class EquipmentController : MonoBehaviour, IDropHandler
 
     void Update()
     {
-        PlayerController pc = PlayerManager.Instance.CurrentPlayer;
+        PlayerController pc = PlayerManager.Instance.PlayerController;
         if (pc == null)
             return;
 
