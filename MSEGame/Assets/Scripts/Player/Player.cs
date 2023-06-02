@@ -107,7 +107,6 @@ public class Player
             {
                 profession = value;
                 OnPropertyChanged?.Invoke();
-                UIManager.Instance.ChangeAbility();
             }
         }
     }
@@ -218,7 +217,7 @@ public class Player
 
     public static Player GetDummy()
     {
-        return new("Kay", Race.Human, Profession.Knight, Gender.Male, 1, 0);
+        return new("Kay", Race.Elf, Profession.Wizard, Gender.Male, 1, 0);
     }
 
 }

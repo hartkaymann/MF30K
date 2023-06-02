@@ -4,12 +4,12 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class NpcController : MonoBehaviour
 {
-    [SerializeField] GameObject infoPrefab;
+    [SerializeField]
+    GameObject infoPrefab;
     private GameObject info;
 
     private Animator animator;
     private int deathHash;
-
 
     private void Awake()
     {
@@ -36,7 +36,14 @@ public class NpcController : MonoBehaviour
         {
             if (RoomManager.Instance.CurrentRoom.Card is MonsterCard card)
             {
-                infoLevel.text = card.level.ToString();
+                infoLevel.text = card.Level.ToString();
+
+                if (card.CombatBuff > 0)
+                    infoLevel.color = GameColor.Green;
+                else if (card.CombatBuff < 0)
+                    infoLevel.color = GameColor.Red;
+                else
+                    infoLevel.color = GameColor.White;
             }
         }
     }

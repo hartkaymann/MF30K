@@ -14,7 +14,7 @@ public class PlayerManager : Manager<PlayerManager>
 
     protected override void Init()
     {
-        GameManager.OnGameStateChange += GameManagerOnGameStageChanged;
+        GameManager.OnGameStageChange += GameManagerOnGameStageChanged;
 
         // Destroy initial player
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -102,8 +102,6 @@ public class PlayerManager : Manager<PlayerManager>
         {
             GameManager.Instance.EndOfGame(player);
         }
-
-        UIManager.Instance.ChangeAbility();
     }
 
     //TODO: Hand this to current player controller

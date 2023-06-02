@@ -14,7 +14,7 @@ public class GameManager : Manager<GameManager>
     private Combat currentCombat;
     public GameStage Stage { get { return stage; } }
 
-    public static event Action<GameStage> OnGameStateChange;
+    public static event Action<GameStage> OnGameStageChange;
     public static event Action OnNewCycle;
     public static event Action<DoorCard> OnChangeClass;
 
@@ -70,7 +70,7 @@ public class GameManager : Manager<GameManager>
 
         RestartStageTimer();
 
-        OnGameStateChange?.Invoke(newStage);
+        OnGameStageChange?.Invoke(newStage);
         StartCoroutine(NetworkManager.Instance.PutStage(stage));
     }
 
@@ -113,33 +113,14 @@ public class GameManager : Manager<GameManager>
 
     async void Combat()
     {
-        RoomController rc = RoomManager.Instance.CurrentRoom;
-        if (rc.Card is not MonsterCard monsterCard)
+        currentCombat.Victory = await TurnCombatWheel();
+
+        // If knight ability is acive, you can go again
+        if(!currentCombat.Victory && PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
         {
-            Debug.LogWarning($"Trying to do combat while not in monster room. Current room: {rc.Card.type}");
-            return;
+            if (knightCtrl.Active)
+                currentCombat.Victory = await TurnCombatWheel();
         }
-
-        int playerLvl = PlayerManager.Instance.PlayerController.Player.CombatLevel;
-        int enemyLvl = monsterCard.level;
-
-        currentCombat = new Combat()
-        {
-            PlayerLevel = playerLvl,
-            MonsterLevel = enemyLvl
-        };
-
-        // Prepare combat wheel and wait until it finishes
-        combatWheel.Reset();
-        UIManager.Instance.ToggleCombatPanel();
-        Debug.Log($"Setting ratio {playerLvl} : {enemyLvl}");
-        combatWheel.SetRatio(playerLvl / (float)(playerLvl + enemyLvl));
-        while (!combatWheel.IsFinished)
-        {
-            await Task.Delay(500);
-        }
-        currentCombat.Victory = combatWheel.GetResult();
-        UIManager.Instance.ToggleCombatPanel();
 
         PlayerController currentPlayer = PlayerManager.Instance.PlayerController;
         Transform playerTransform = currentPlayer.gameObject.transform;
@@ -153,6 +134,37 @@ public class GameManager : Manager<GameManager>
 
         //TODO: Very hardcoded, not a fan. Meh!
         Invoke(nameof(NextStage), 2f);
+    }
+
+    private async Task<bool> TurnCombatWheel()
+    {
+        RoomController rc = RoomManager.Instance.CurrentRoom;
+        if (rc.Card is not MonsterCard monsterCard)
+        {
+            Debug.LogWarning($"Trying to do combat while not in monster room. Current room: {rc.Card.type}");
+            return false;
+        }
+
+        int playerLvl = PlayerManager.Instance.PlayerController.Player.CombatLevel;
+        int enemyLvl = monsterCard.Level;
+
+        currentCombat = new Combat()
+        {
+            PlayerLevel = playerLvl,
+            MonsterLevel = enemyLvl
+        };
+
+        combatWheel.Reset();
+        UIManager.Instance.ToggleCombatPanel();
+        Debug.Log($"Setting ratio {playerLvl} : {enemyLvl}");
+        combatWheel.SetRatio(playerLvl / (float)(playerLvl + enemyLvl));
+        while (!combatWheel.IsFinished)
+        {
+            await Task.Delay(500);
+        }
+        UIManager.Instance.ToggleCombatPanel();
+
+        return combatWheel.GetResult();
     }
 
     private void Victory()

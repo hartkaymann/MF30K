@@ -16,19 +16,19 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private GameObject nextStage;
     [SerializeField] private GameObject backpack;
     [SerializeField] private GameObject equipment;
-    [SerializeField] private GameObject buttonAbility;
+    [SerializeField] private AbilityButton buttonAbility;
 
     [SerializeField] private TextMeshProUGUI textStage;
 
     protected override void Init()
     {
-        GameManager.OnGameStateChange += GameManagerOnGameStateChanged;
+        GameManager.OnGameStageChange += GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
     }
 
     private void OnDestroy()
     {
-        GameManager.OnGameStateChange -= GameManagerOnGameStateChanged;
+        GameManager.OnGameStageChange -= GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
     }
 
@@ -39,13 +39,10 @@ public class UIManager : Manager<UIManager>
         panelVictory.SetActive(stage == GameStage.Victory);
         panelDefeat.SetActive(stage == GameStage.Defeat);
         nextStage.SetActive(!(stage == GameStage.Combat || stage == GameStage.DrawCard));
-        buttonAbility.SetActive(stage == GameStage.CombatPreparation);
 
         if (stage == GameStage.Victory)
             UpdateVictoryPanel();
 
-        if (stage == GameStage.CombatPreparation)
-            UpdateAbility();
     }
 
     public void HandleToggleEquipment()
@@ -91,40 +88,9 @@ public class UIManager : Manager<UIManager>
         }
     }
 
-    public void ChangeAbility()
+    public void ChangeAbility(ProfessionController profCtrl)
     {
-        if (!PlayerManager.Instance.PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
-        {
-            Debug.LogWarning("Couldn't get Profession Controller");
-            return;
-        }
-
-        Debug.Log($"Updazting ability: {profCtrl.AbilityName}");
-        if (buttonAbility.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var textName))
-        {
-            textName.text = profCtrl.AbilityName;
-        }
-
-        if (buttonAbility.transform.Find("Cooldown").TryGetComponent<TextMeshProUGUI>(out var textCd))
-        {
-            textCd.text = profCtrl.Cooldown.ToString();
-        }
-    }
-
-    public void UpdateAbility()
-    {
-        if (PlayerManager.Instance.PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
-        {
-            if (buttonAbility.TryGetComponent<Button>(out var btn))
-            {
-                btn.interactable = (profCtrl.CooldownRemaining == 0);
-            }
-
-            if (buttonAbility.transform.Find("Cooldown").TryGetComponent<TextMeshProUGUI>(out var textCd))
-            {
-                textCd.text = profCtrl.Cooldown.ToString();
-            }
-        }
+        buttonAbility.ProfessionController = profCtrl;
     }
 
     public void UpdateVictoryPanel()
