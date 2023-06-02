@@ -17,6 +17,7 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private GameObject backpack;
     [SerializeField] private GameObject equipment;
 
+    [SerializeField] private Button ability;
 
     [SerializeField] private TextMeshProUGUI textStage;
 
@@ -24,11 +25,14 @@ public class UIManager : Manager<UIManager>
     {
         GameManager.OnGameStateChange += GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
+        GameManager.OnNewCycle += GameManagerOnNewCycle;
     }
 
     private void OnDestroy()
     {
         GameManager.OnGameStateChange -= GameManagerOnGameStateChanged;
+        GameManager.OnChangeClass += GameManagerOnChangeClass;
+        GameManager.OnNewCycle += GameManagerOnNewCycle;
     }
 
     private void GameManagerOnGameStateChanged(GameStage stage)
@@ -38,7 +42,6 @@ public class UIManager : Manager<UIManager>
         panelVictory.SetActive(stage == GameStage.Victory);
         panelDefeat.SetActive(stage == GameStage.Defeat);
         nextStage.SetActive(!(stage == GameStage.Combat || stage == GameStage.DrawCard));
-        panelCombat.SetActive(stage == GameStage.Combat);
 
         if (stage == GameStage.Victory)
             UpdateVictoryPanel();
@@ -86,6 +89,15 @@ public class UIManager : Manager<UIManager>
             textTitle.text = $"Change current {type} from {from} to {to}?";
         }
     }
+
+    public void GameManagerOnNewCycle()
+    {
+        if(RoomManager.Instance.CurrentRoom.NPC.TryGetComponent<ProfessionController>(out var profCtrl))
+        {
+            ability.enabled = (profCtrl.Cooldown == 0);
+        }
+    }
+
     public void UpdateVictoryPanel()
     {
         Player player = PlayerManager.Instance.PlayerController.Player;
@@ -111,6 +123,11 @@ public class UIManager : Manager<UIManager>
             panelBlack.GetComponent<Image>().color = Color.black.WithAlpha(alpha);
             yield return null;
         }
+    }
+
+    public void ToggleCombatPanel()
+    {
+        panelCombat.SetActive(!panelCombat.activeInHierarchy);
     }
 
     public void ToggleBlackScreen()

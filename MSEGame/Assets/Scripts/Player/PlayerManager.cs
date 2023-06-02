@@ -165,4 +165,9 @@ public class PlayerManager : Manager<PlayerManager>
             Debug.Log($"Applying Race Effect: {player.Race}");
         }
     }
+
+    public void UseAbility()
+    {
+        PlayerController.GetComponent<ProfessionController>().UseAbility();
+    }
 }

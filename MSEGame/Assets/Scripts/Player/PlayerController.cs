@@ -24,6 +24,22 @@ public class PlayerController : MonoBehaviour, IDropHandler
             {
                 player = value;
                 playerRenderer.Render(player);
+
+                // Update profession ability
+                switch (player.Profession)
+                {
+                    case Profession.Knight:
+                        gameObject.AddComponent<KnightController>();
+                        break;
+                    case Profession.Wizard:
+                        gameObject.AddComponent<WizardController>();
+                        break;
+                    case Profession.Rogue:
+                        gameObject.AddComponent<RogueController>();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

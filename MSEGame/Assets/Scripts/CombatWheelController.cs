@@ -10,19 +10,21 @@ public class CombatWheelController : MonoBehaviour
 
     [SerializeField] private float spinTime = 5f;
     [SerializeField] private float spinSpeed = 90f;
+    [SerializeField] private float k = 10f;
 
     private float ratio = .3f;
 
     public bool IsFinished { get; private set; } = false;
 
 
-    // Reset the wheel, should be called before wheel is spunu again
+    [ContextMenu("Reset")]
     public void Reset()
     {
         wheel.rotation = Quaternion.identity;
         spinTime = Random.Range(1, 3);
         spinSpeed = Random.Range(90, 180);
         IsFinished = false;
+        buttonStart.enabled = true;
     }
 
     /// <summary>
@@ -38,6 +40,7 @@ public class CombatWheelController : MonoBehaviour
     [ContextMenu("Spin")]
     public void StartSpin()
     {
+        buttonStart.enabled = false;
         StartCoroutine(Spin());
     }
 
@@ -48,8 +51,8 @@ public class CombatWheelController : MonoBehaviour
         while (currTime < spinTime)
         {
             currTime += Time.deltaTime;
-            float angle = Impulse(10, currTime / spinTime);
-            wheel.Rotate(Vector3.forward, angle);
+            float angle = Impulse(2, currTime / spinTime);
+            wheel.Rotate(Vector3.forward, angle * spinSpeed);
 
             if (wheel.rotation.z < 0f)
                 wheel.Rotate(0, 0, 360); ;

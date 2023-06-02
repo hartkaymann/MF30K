@@ -8,7 +8,7 @@ public class NpcController : MonoBehaviour
     private GameObject info;
 
     private Animator animator;
-    private int isDeadHash;
+    private int deathHash;
 
 
     private void Awake()
@@ -21,7 +21,7 @@ public class NpcController : MonoBehaviour
         UpdateInfo();
 
         animator = GetComponent<Animator>();
-        isDeadHash = Animator.StringToHash("isDead");
+        deathHash = Animator.StringToHash("Death");
     }
 
     public void UpdateInfo()
@@ -46,7 +46,7 @@ public class NpcController : MonoBehaviour
     {
         if (animator != null)
         {
-            animator.SetBool(isDeadHash, true);
+            animator.SetTrigger(deathHash);
         }
     }
 }

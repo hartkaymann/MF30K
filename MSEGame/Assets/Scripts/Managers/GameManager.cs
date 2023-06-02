@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,6 +15,7 @@ public class GameManager : Manager<GameManager>
     public GameStage Stage { get { return stage; } }
 
     public static event Action<GameStage> OnGameStateChange;
+    public static event Action OnNewCycle;
     public static event Action<DoorCard> OnChangeClass;
 
     [SerializeField] private Slider timeSlider;
@@ -36,6 +38,7 @@ public class GameManager : Manager<GameManager>
         {
             case GameStage.InventoryManagement:
                 RoomManager.Instance.CurrentRoom.OpenDoor();
+                OnNewCycle?.Invoke();
                 break;
             case GameStage.DrawCard:
                 PlayerController playerController = PlayerManager.Instance.PlayerController;
@@ -128,6 +131,7 @@ public class GameManager : Manager<GameManager>
 
         // Prepare combat wheel and wait until it finishes
         combatWheel.Reset();
+        UIManager.Instance.ToggleCombatPanel();
         Debug.Log($"Setting ratio {playerLvl} : {enemyLvl}");
         combatWheel.SetRatio(playerLvl / (float)(playerLvl + enemyLvl));
         while (!combatWheel.IsFinished)
@@ -135,6 +139,7 @@ public class GameManager : Manager<GameManager>
             await Task.Delay(500);
         }
         currentCombat.Victory = combatWheel.GetResult();
+        UIManager.Instance.ToggleCombatPanel();
 
         PlayerController currentPlayer = PlayerManager.Instance.PlayerController;
         Transform playerTransform = currentPlayer.gameObject.transform;
@@ -144,9 +149,7 @@ public class GameManager : Manager<GameManager>
         currentPlayer.RunForDuration(2f);
         StartCoroutine(AnimationManager.Instance.MoveAndBack(playerTransform, npcTransform.position, 2f));
 
-        //TODO: stop invoking everything
-        if (currentCombat.Victory)
-            // Kill monster
+        // Kill monster
 
         //TODO: Very hardcoded, not a fan. Meh!
         Invoke(nameof(NextStage), 2f);
@@ -184,7 +187,6 @@ public class GameManager : Manager<GameManager>
                     PlayerController pc = PlayerManager.Instance.PlayerController;
 
                     Array values = Enum.GetValues(typeof(EquipmentSlot));
-
 
                     // Invoke("PrayThisWorks")
                     bool slotNotEmpty = false;
@@ -339,5 +341,5 @@ public static class GameColor
 {
     public static Color Red { get; private set; } = new Color(0.754717f, 0.2897656f, 0.2520469f);
     public static Color Green { get; private set; } = new Color(0.01568628f, 0.6431373f, 0.2431373f);
-    public static Color White{ get; private set; } = new Color(0.9529412f, 0.9333334f, 0.8901961f);
+    public static Color White { get; private set; } = new Color(0.9529412f, 0.9333334f, 0.8901961f);
 }
