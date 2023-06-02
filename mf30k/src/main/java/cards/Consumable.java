@@ -1,23 +1,32 @@
 package cards;
 
 import org.springframework.stereotype.Component;
+import java.util.UUID;
 
 @Component
 public class Consumable extends Treasure {
-	private boolean heroSide;
-	private boolean monsterSide;
+	private BuffTarget target;
 	
+	public Consumable() {
+		
+	}
 	
-	public boolean isHeroSide() {
-		return heroSide;
+	public Consumable(UUID _id, String _name, int _gold, int _combat, BuffTarget _target) {
+		super();
+		this.id = _id;
+		this.name = _name;
+		this.goldValue = _gold;
+		this.combatBonus = _combat;
+		this.target = _target;
+		this.type = "Consumable";
 	}
-	public void setHeroSide(boolean heroSide) {
-		this.heroSide = heroSide;
+
+	public BuffTarget getTarget() {
+		return target;
 	}
-	public boolean isMonsterSide() {
-		return monsterSide;
+
+	public void setTarget(BuffTarget target) {
+		this.target = target;
 	}
-	public void setMonsterSide(boolean monsterSide) {
-		this.monsterSide = monsterSide;
-	}
+	
 }

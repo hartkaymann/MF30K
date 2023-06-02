@@ -2,6 +2,7 @@ package player;
 
 import java.util.HashMap;
 import org.springframework.stereotype.Component;
+import java.util.UUID;
 
 import cards.*;
 
@@ -9,18 +10,18 @@ import cards.*;
 public class Player {
 	
 	private String name;
-	private HashMap<Integer, Equipment> equipment;
+	private HashMap<UUID, Equipment> equipment;
 	private Profession profession;
 	private Race race;
 	private Gender gender;
-	private HashMap<Integer, Card> handCards;
-	private HashMap<Integer, Card> backpack;
+	private HashMap<UUID, Card> handCards;
+	private HashMap<UUID, Card> backpack;
 	private int playerLevel;
 	private int combatLevel;
 	
 	
-	public Player(String name, HashMap<Integer, Equipment> equipment, Profession profession, Race race, Gender gender,
-			HashMap<Integer, Card> handCards, HashMap<Integer, Card> backpack, int playerLevel, int combatLevel) {
+	public Player(String name, HashMap<UUID, Equipment> equipment, Profession profession, Race race, Gender gender,
+			HashMap<UUID, Card> handCards, HashMap<UUID, Card> backpack, int playerLevel, int combatLevel) {
 		super();
 		this.name = name;
 		this.equipment = equipment;
@@ -41,15 +42,15 @@ public class Player {
 		this.name = name;
 	}
 	
-	public HashMap<Integer, Equipment> getEquipment() {
+	public HashMap<UUID, Equipment> getEquipment() {
 		return equipment;
 	}
-	public void setAllEquipment(HashMap<Integer, Equipment> equipment) {
+	public void setAllEquipment(HashMap<UUID, Equipment> equipment) {
 		this.equipment = equipment;
 	}
 	
 	//removes one equipment specified by key
-	public boolean removeEquipment(int key) {
+	public boolean removeEquipment(UUID key) {
 		if(this.equipment.containsKey(key)) {
 			this.equipment.remove(key);
 			return true;
@@ -68,7 +69,9 @@ public class Player {
 			return true;
 		}
 	}
-	
+	public void setEquipment(HashMap<UUID, Equipment> equipment) {
+		this.equipment = equipment;
+	}	
 	public Profession getProfession() {
 		return profession;
 	}
@@ -87,7 +90,7 @@ public class Player {
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
-	public HashMap<Integer, Card> getHandCards() {
+	public HashMap<UUID, Card> getHandCards() {
 		return handCards;
 	}
 	public boolean addHandCard(Card newCard) {
@@ -106,7 +109,7 @@ public class Player {
 			return false;
 		}
 	}
-	public HashMap<Integer, Card> getBackpack() {
+	public HashMap<UUID, Card> getBackpack() {
 		return backpack;
 	}
 	public void addCardToBackPack(Card newCard) {
@@ -119,6 +122,9 @@ public class Player {
 		} else {
 			return false;
 		}
+	}
+	public void setBackpack(HashMap<UUID, Card> backpack) {
+		this.backpack = backpack;
 	}
 	public int getPlayerLevel() {
 		return playerLevel;

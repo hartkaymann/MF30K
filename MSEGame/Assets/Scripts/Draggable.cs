@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,14 +5,21 @@ using UnityEngine.UI;
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [HideInInspector] public Transform parentAfterDrag;
-    public Image image;
+    protected Image raycastImage;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
-        image.raycastTarget = false;
+        raycastImage.raycastTarget = false;
+
+        // Increase shadow
+        if (transform.Find("Bounds").TryGetComponent<Shadow>(out var shadow))
+        {
+            shadow.effectDistance = new(6, -10);
+        }
+
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -24,20 +29,19 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        transform.SetParent(parentAfterDrag);
+        HandleEndDrag();
 
-        // Resize dragged object to fit inside grid
-        GridLayoutGroup grid = parentAfterDrag.GetComponent<GridLayoutGroup>();
-        if(grid != null)
+        // Increase shadow
+        if (transform.Find("Bounds").TryGetComponent<Shadow>(out var shadow))
         {
-            float cellHeight = grid.cellSize.y;
-            RectTransform rt = image.GetComponent<RectTransform>();
-            float scaleFactor =  Mathf.Min(cellHeight / rt.rect.height, 1f);
-
-            transform.localScale = Vector2.one * scaleFactor;
+            shadow.effectDistance = new(3, -5);
         }
-
-        image.raycastTarget = true;
     }
 
+    protected virtual void HandleEndDrag()
+    {
+        transform.SetParent(parentAfterDrag);
+
+        raycastImage.raycastTarget = true;
+    }
 }

@@ -4,17 +4,16 @@ public enum Race
 {
     Human,
     Elf,
-    Dwarf,
     Orc
 }
 
 public class RaceCard : DoorCard
 {
-    private string ability;
+    public readonly string ability;
 
-    private Race race;
+    public readonly Race race;
 
-    public RaceCard(Race race, Sprite artwork) : base(race.ToString(), CardType.Race, artwork)
+    public RaceCard(Race race, string id, Sprite artwork) : base(race.ToString(), CardType.Race, id, artwork)
     {
         this.race = race;
     }
