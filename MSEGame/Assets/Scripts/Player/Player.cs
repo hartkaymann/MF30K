@@ -1,3 +1,8 @@
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 public enum Gender
 {
     Male,
@@ -6,16 +11,23 @@ public enum Gender
 
 public class Player
 {
-    private string name;
-    private int level;
-    private int combatLevel;
+    [JsonProperty] private string name;
+    [JsonProperty] private int level;
+    [JsonProperty] private int combatLevel;
 
-    private Gender gender;
-    private Race race;
-    private Profession profession;
+    [JsonProperty] private Gender gender;
+    [JsonProperty] private Race race;
+    [JsonProperty] private Profession profession;
 
-    public int gold;
+    [JsonProperty] public int gold;
+    [JsonIgnore] private int roundBonus;
+    [JsonIgnore] private int raceEffect;
 
+    [JsonProperty] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
+
+    public event Action OnPropertyChanged;
+
+    [JsonIgnore]
     public string Name
     {
         get => name;
@@ -24,11 +36,12 @@ public class Player
             if (value != name)
             {
                 name = value;
-                HandlePropertyChanged();
+                OnPropertyChanged?.Invoke();
             }
         }
     }
 
+    [JsonIgnore]
     public int Level
     {
         get => level;
@@ -37,11 +50,12 @@ public class Player
             if (value != level)
             {
                 level = value;
-                HandlePropertyChanged();
+                OnPropertyChanged?.Invoke();
             }
         }
     }
 
+    [JsonIgnore]
     public int CombatLevel
     {
         get => combatLevel;
@@ -50,11 +64,12 @@ public class Player
             if (value != combatLevel)
             {
                 combatLevel = value;
-                HandlePropertyChanged();
+                OnPropertyChanged?.Invoke();
             }
         }
     }
 
+    [JsonIgnore]
     public Gender Gender
     {
         get => gender;
@@ -63,11 +78,12 @@ public class Player
             if (value != gender)
             {
                 gender = value;
-                HandlePropertyChanged();
+                OnPropertyChanged?.Invoke();
             }
         }
     }
 
+    [JsonIgnore]
     public Race Race
     {
         get => race;
@@ -76,11 +92,12 @@ public class Player
             if (value != race)
             {
                 race = value;
-                HandlePropertyChanged();
+                OnPropertyChanged?.Invoke();
             }
         }
     }
 
+    [JsonIgnore]
     public Profession Profession
     {
         get => profession;
@@ -89,11 +106,12 @@ public class Player
             if (value != profession)
             {
                 profession = value;
-                HandlePropertyChanged();
+                OnPropertyChanged?.Invoke();
             }
         }
     }
 
+    [JsonIgnore]
     public int Gold
     {
         get
@@ -109,12 +127,66 @@ public class Player
                 gold %= 10;
                 Level += 1;
             }
-            HandlePropertyChanged();
+            OnPropertyChanged?.Invoke();
+        }
+    }
+
+    [JsonIgnore]
+    public int RoundBonus
+    {
+        get
+        {
+            return roundBonus;
+        }
+        set
+        {
+            if (roundBonus != value)
+            {
+                roundBonus = value;
+                CalculateCombatLevel();
+                OnPropertyChanged?.Invoke();
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public int RaceEffect
+    {
+        get
+        {
+            return raceEffect;
+        }
+        set
+        {
+            if (raceEffect != value)
+            {
+                raceEffect = value;
+                CalculateCombatLevel();
+                OnPropertyChanged?.Invoke();
+            }
+        }
+    }
+
+    public Dictionary<EquipmentSlot, EquipmentCard> Equipment
+    {
+        get
+        {
+            return equipment;
+        }
+        private set
+        {
+            if (equipment != value)
+            {
+                equipment = value;
+                CalculateCombatLevel();
+                Debug.Log("Equipment setter called private");
+            }
         }
     }
 
     public Player(string name, Race race, Profession profession, Gender gender, int level, int combatLevel)
     {
+        Debug.Log("Creating new player instance: " + name.ToString());
         this.name = name;
         this.race = race;
         this.profession = profession;
@@ -122,18 +194,30 @@ public class Player
         this.level = level;
         this.combatLevel = combatLevel;
 
-        this.gold = 0;
+        gold = 0;
+        roundBonus = 0;
+
+        Debug.Log("Creating player inventory");
+        equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
     }
 
-    private void HandlePropertyChanged()
+    public void CalculateCombatLevel()
     {
-        PlayerManager.Instance.UpdatePlayerInfo(this);
-        NetworkManager.Instance.PutPlayer(this);
+        int newCombatLevel = 0;
+        foreach (var card in equipment.Values)
+        {
+            if (card == null)
+                continue;
+
+            newCombatLevel += card.bonus;
+        }
+        CombatLevel = newCombatLevel + roundBonus + raceEffect;
+        Debug.Log($"Combat level: {CombatLevel} (Base: {newCombatLevel}, Bonus: {roundBonus}, Passive: {raceEffect})");
     }
 
     public static Player GetDummy()
     {
-        return new("Kay", Race.Human, Profession.Barbarian, Gender.Male, 1, 0);
+        return new("Kay", Race.Human, Profession.Knight, Gender.Male, 1, 0);
     }
 
 }

@@ -4,44 +4,46 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Manager<UIManager> 
 {
-    public static UIManager instance;
-
     [SerializeField] private GameObject panelChange;
     [SerializeField] private GameObject panelVictory;
     [SerializeField] private GameObject panelDefeat;
     [SerializeField] private GameObject panelBlack;
+    [SerializeField] private GameObject panelCombat;
 
     [SerializeField] private GameObject panelHand;
     [SerializeField] private GameObject nextStage;
     [SerializeField] private GameObject backpack;
     [SerializeField] private GameObject equipment;
 
+    [SerializeField] private Button ability;
 
     [SerializeField] private TextMeshProUGUI textStage;
 
-    private void Awake()
+    protected override void Init()
     {
-        instance = this;
         GameManager.OnGameStateChange += GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
+        GameManager.OnNewCycle += GameManagerOnNewCycle;
     }
 
     private void OnDestroy()
     {
         GameManager.OnGameStateChange -= GameManagerOnGameStateChanged;
+        GameManager.OnChangeClass += GameManagerOnChangeClass;
+        GameManager.OnNewCycle += GameManagerOnNewCycle;
     }
 
-    private void GameManagerOnGameStateChanged(GameStage state)
+    private void GameManagerOnGameStateChanged(GameStage stage)
     {
-        textStage.text = state.ToString();
-        panelChange.SetActive(state == GameStage.ChangeClass);
-        panelVictory.SetActive(state == GameStage.Victory);
-        panelDefeat.SetActive(state == GameStage.Defeat);
-        nextStage.SetActive(state != GameStage.Combat);
+        textStage.text = stage.ToString();
+        panelChange.SetActive(stage == GameStage.Selection);
+        panelVictory.SetActive(stage == GameStage.Victory);
+        panelDefeat.SetActive(stage == GameStage.Defeat);
+        nextStage.SetActive(!(stage == GameStage.Combat || stage == GameStage.DrawCard));
 
-        if (state == GameStage.Victory)
+        if (stage == GameStage.Victory)
             UpdateVictoryPanel();
     }
 
@@ -69,12 +71,12 @@ public class UIManager : MonoBehaviour
 
         if (card is ProfessionCard professionCard)
         {
-            from = PlayerManager.Instance.CurrentPlayer.Player.Profession.ToString();
+            from = PlayerManager.Instance.PlayerController.Player.Profession.ToString();
             to = professionCard.title;
         }
         else if (card is RaceCard raceCard)
         {
-            from = PlayerManager.Instance.CurrentPlayer.Player.Race.ToString();
+            from = PlayerManager.Instance.PlayerController.Player.Race.ToString();
             to = raceCard.title;
         }
         else
@@ -87,9 +89,18 @@ public class UIManager : MonoBehaviour
             textTitle.text = $"Change current {type} from {from} to {to}?";
         }
     }
+
+    public void GameManagerOnNewCycle()
+    {
+        if(RoomManager.Instance.CurrentRoom.NPC.TryGetComponent<ProfessionController>(out var profCtrl))
+        {
+            ability.enabled = (profCtrl.Cooldown == 0);
+        }
+    }
+
     public void UpdateVictoryPanel()
     {
-        Player player = PlayerManager.Instance.CurrentPlayer.Player;
+        Player player = PlayerManager.Instance.PlayerController.Player;
         if (panelVictory.transform.Find("LevelUp/OldLevel").TryGetComponent<TextMeshProUGUI>(out var oldLevel))
         {
             oldLevel.text = (player.Level - 1).ToString();
@@ -112,6 +123,11 @@ public class UIManager : MonoBehaviour
             panelBlack.GetComponent<Image>().color = Color.black.WithAlpha(alpha);
             yield return null;
         }
+    }
+
+    public void ToggleCombatPanel()
+    {
+        panelCombat.SetActive(!panelCombat.activeInHierarchy);
     }
 
     public void ToggleBlackScreen()

@@ -1,23 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class AnimationManager : MonoBehaviour
+public class AnimationManager : Manager<AnimationManager>
 {
-
-    public static AnimationManager Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-
     public IEnumerator MoveFromTo(Transform transform, Vector3 startPosition, Vector3 targetPosition, float duration)
     {
         float elapsedTime = 0f;

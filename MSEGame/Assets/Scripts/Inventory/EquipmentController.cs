@@ -1,4 +1,4 @@
-using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,6 +17,21 @@ public class EquipmentController : MonoBehaviour, IDropHandler
     [SerializeField] private EquipmentType type;
 
     bool isEquipped = false;
+    private TextMeshProUGUI textEquipStat;
+
+    void Awake()
+    {
+        Transform value = transform.parent.transform.Find("Value");
+        if (value != null)
+        {
+            value.TryGetComponent(out textEquipStat);
+        }
+    }
+
+    void Start()
+    {
+        
+    }
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -49,12 +64,13 @@ public class EquipmentController : MonoBehaviour, IDropHandler
 
     private void Equip(EquipmentCard card)
     {
-
-        PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
-        playerController.Equip(slot, card);
+        PlayerController pc = PlayerManager.Instance.PlayerController;
+        pc.Equip(slot, card);
         isEquipped = true;
 
-        Debug.Log($"Equipped {card.title} to slot {slot}.");
+        textEquipStat.text = card.bonus.ToString();
+
+        //Debug.Log($"Equipped {card.title} to slot {slot}.");
     }
 
     public void EquipItem(CardController cardController)
@@ -74,8 +90,8 @@ public class EquipmentController : MonoBehaviour, IDropHandler
 
     void Update()
     {
-        PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
-        if (playerController == null)
+        PlayerController pc = PlayerManager.Instance.PlayerController;
+        if (pc == null)
             return;
 
         // Unequip item from player if no children
@@ -83,7 +99,9 @@ public class EquipmentController : MonoBehaviour, IDropHandler
         {
             isEquipped = false;
 
-            playerController.Uneqip(slot);
+            pc.Uneqip(slot);
+
+            textEquipStat.text = "0";
         }
     }
 }

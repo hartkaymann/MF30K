@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class CardRenderer : MonoBehaviour
 {
-
     [SerializeField] private Image back;
     [SerializeField] private Image background;
     [SerializeField] private Image artwork;
