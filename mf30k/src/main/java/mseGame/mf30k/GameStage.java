@@ -1,8 +1,11 @@
 package mseGame.mf30k;
 
 public enum GameStage {
-	Combatpreparation,
+	InventoryManagement,
+	DrawCard,
+	Selection, //profession or race selection
+	CombatPreparation,
 	Combat,
-	Manageinventory,
-	Selection //profession or race selection
+	Victory,
+	Defeat
 }

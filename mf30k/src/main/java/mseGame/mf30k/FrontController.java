@@ -43,7 +43,11 @@ public class FrontController {
 	public int getStageChanges() {
 		return this.stageChanges;
 	}
-		
+	
+	@GetMapping(value="/")
+	public boolean connectionTest() {
+		return true;
+	}
 	
 	@PostMapping(value = "/player", consumes = "application/json")
 	public void addPlayer(@RequestBody Player p) {
@@ -93,11 +97,6 @@ public class FrontController {
 	public UserData getUserData(@PathVariable(name="user_name")String user_name) {
 		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(user_name);
 		return result.orElse(null);
-	}
-	
-	@GetMapping(value="/")
-	public boolean connectionTest() {
-		return true;
 	}
 	
 	// Draw a Card from Treasures or Door Stack:
