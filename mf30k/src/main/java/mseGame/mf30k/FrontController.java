@@ -78,7 +78,7 @@ public class FrontController {
 	//sets the current user object to the logged in user.
 	@PostMapping(value = "/signin/{user_name}")
 	public UserData userLogin(@PathVariable(name="user_name")String userName) {
-		Optional<UserData> result = repo.findFirstByUsername(userName);
+		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(userName);
 		if(result.isPresent()) {
 			UserData user = result.get();
 			this.currentUser = user;
@@ -91,7 +91,7 @@ public class FrontController {
 	
 	@GetMapping(value = "/stats/{user_name}")
 	public UserData getUserData(@PathVariable(name="user_name")String user_name) {
-		Optional<UserData> result = repo.findFirstByUsername(user_name);
+		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(user_name);
 		return result.orElse(null);
 	}
 	
@@ -133,7 +133,7 @@ public class FrontController {
 	
 	@PostMapping(value="/player/{player_id}/run")
 	public boolean createNewRun(@PathVariable(name="player_id") String player_id) {
-		Optional<UserData> result = repo.findFirstByUsername(player_id);
+		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(player_id);
 		if(result.isPresent()) {
 			UserData user = result.get();
 			RunData current = new RunData(user, 0, 0, 0, null, null);
@@ -147,7 +147,7 @@ public class FrontController {
 	
 	@PutMapping(value="/player/{player_id}/run")
 	public void saveRun(@PathVariable(name="player_id")String player_id, @RequestBody RunData data) {
-		Optional<UserData> result = repo.findFirstByUsername(player_id);
+		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(player_id);
 		UserData user = null;
 		if(result.isPresent()) {
 			 user = result.get();
