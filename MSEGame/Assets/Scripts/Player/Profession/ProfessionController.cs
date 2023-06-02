@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class ProfessionController : MonoBehaviour
 {
@@ -7,10 +6,14 @@ public abstract class ProfessionController : MonoBehaviour
     public int Cooldown { get; protected set; }
     public int CooldownRemaining { get; protected set; }
 
-    private void Start()
+    private void Awake()
     {
         GameManager.OnNewCycle += HandleNewCycle;
+
+        Init();
     }
+
+    protected virtual void Init() { }
 
     public virtual void UseAbility()
     {

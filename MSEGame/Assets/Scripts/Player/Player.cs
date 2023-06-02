@@ -107,6 +107,7 @@ public class Player
             {
                 profession = value;
                 OnPropertyChanged?.Invoke();
+                UIManager.Instance.ChangeAbility();
             }
         }
     }

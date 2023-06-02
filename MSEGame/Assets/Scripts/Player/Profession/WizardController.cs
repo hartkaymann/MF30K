@@ -1,7 +1,7 @@
 public class WizardController : ProfessionController
 {
 
-    private void Start()
+    protected override void Init()
     {
         AbilityName = "Enchant";
         Cooldown = 3;

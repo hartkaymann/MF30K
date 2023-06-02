@@ -1,7 +1,7 @@
 public class KnightController : ProfessionController
 {
 
-    private void Start()
+    protected override void Init()
     {
         AbilityName = "Something Something Valor";
         Cooldown = 3;

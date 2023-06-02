@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (GameManager.Instance.Stage != GameStage.CombatPreparations)
+        if (GameManager.Instance.Stage != GameStage.CombatPreparation)
             return;
 
         GameObject draggedObj = eventData.pointerDrag;

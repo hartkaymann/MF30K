@@ -18,7 +18,7 @@ public class PlayerManager : Manager<PlayerManager>
 
         // Destroy initial player
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if(player != null)
+        if (player != null)
         {
             Destroy(player);
         }
@@ -32,7 +32,7 @@ public class PlayerManager : Manager<PlayerManager>
         }
 
         // Instantiate player at specified position
-        GameObject prefab = player.Race == Race.Human? humanPrefab : elfPrefab;
+        GameObject prefab = player.Race == Race.Human ? humanPrefab : elfPrefab;
         GameObject obj = Instantiate(prefab, new Vector3(-2.5f, -0.72f, 0f), Quaternion.identity);
         if (obj.TryGetComponent<PlayerController>(out var pc))
         {
@@ -102,6 +102,8 @@ public class PlayerManager : Manager<PlayerManager>
         {
             GameManager.Instance.EndOfGame(player);
         }
+
+        UIManager.Instance.ChangeAbility();
     }
 
     //TODO: Hand this to current player controller
@@ -140,7 +142,7 @@ public class PlayerManager : Manager<PlayerManager>
             player.RoundBonus = 0;
         }
 
-        if (stage == GameStage.CombatPreparations)
+        if (stage == GameStage.CombatPreparation)
         {
             // WE CHANGE IT HERE BECAUSE I DONT HAVE TIME TO MAKE PRETTY CODE RIGHT NOW SO MAYBE CHANGE THIS LATER IF YOU CAN BECAUSE ITS MAKING MY EYES BLEED
             if (player.Race == Race.Orc)
@@ -168,6 +170,10 @@ public class PlayerManager : Manager<PlayerManager>
 
     public void UseAbility()
     {
-        PlayerController.GetComponent<ProfessionController>().UseAbility();
+        Debug.Log("Using ability");
+        if(PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
+        {
+            profCtrl.UseAbility();
+        }
     }
 }

@@ -50,7 +50,7 @@ public class GameManager : Manager<GameManager>
 
                 Invoke(nameof(DrawDoorCard), 1f);
                 break;
-            case GameStage.CombatPreparations:
+            case GameStage.CombatPreparation:
                 break;
             case GameStage.Selection:
                 ChangeClass();
@@ -296,14 +296,14 @@ public class GameManager : Manager<GameManager>
                 break;
             case GameStage.DrawCard:
                 if (RoomManager.Instance.CurrentRoom.Card.type == CardType.Monster)
-                    UpdateGameStage(GameStage.CombatPreparations);
+                    UpdateGameStage(GameStage.CombatPreparation);
                 else
                     UpdateGameStage(GameStage.Selection);
                 break;
             case GameStage.Selection:
                 UpdateGameStage(GameStage.InventoryManagement);
                 break;
-            case GameStage.CombatPreparations:
+            case GameStage.CombatPreparation:
                 UpdateGameStage(GameStage.Combat);
                 break;
             case GameStage.Combat:
@@ -326,7 +326,7 @@ public enum GameStage
     InventoryManagement,
     DrawCard,
     Selection,
-    CombatPreparations,
+    CombatPreparation,
     Combat,
     Victory,
     Defeat

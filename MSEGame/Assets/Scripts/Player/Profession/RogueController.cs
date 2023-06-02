@@ -2,7 +2,7 @@ public class RogueController : ProfessionController
 {
     public bool IsActive { get; private set; }
 
-    private void Start()
+    protected override void Init()
     {
         AbilityName = "Something Gambit";
         Cooldown = 3;
