@@ -27,6 +27,7 @@ public class UserData {
 	
 	@OneToMany (cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="user_owner")
+	@OrderBy("id DESC")
 	private List<RunData> runs;
 
 	public UserData(Long id, String username, int wins, int losses, Date registrationDate) {

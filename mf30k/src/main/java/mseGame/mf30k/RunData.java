@@ -27,6 +27,7 @@ public class RunData {
 	
 	@OneToMany (cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="owner_run")
+	@OrderBy("id DESC")
 	private List<CombatData> combats;
 	
 	
