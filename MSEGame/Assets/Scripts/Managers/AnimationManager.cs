@@ -1,8 +1,37 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class AnimationManager : Manager<AnimationManager>
 {
+    [Serializable]
+    public struct NamedAnimCtrl
+    {
+        public string name;
+        public AnimatorController animator;
+    }
+
+    [SerializeField] private NamedAnimCtrl[] namedAnimators;
+    private Dictionary<string, AnimatorController> animators;
+
+    protected override void Init()
+    {
+        animators = new Dictionary<string, AnimatorController>();
+        for (int i = 0; i < namedAnimators.Length; i++)
+        {
+            NamedAnimCtrl ns = namedAnimators[i];
+            animators.Add(ns.name, ns.animator);
+        }
+    }
+
+    public AnimatorController GetAnimator(string name)
+    {
+        return animators[name];
+    }
+
+
     public IEnumerator MoveFromTo(Transform transform, Vector3 startPosition, Vector3 targetPosition, float duration)
     {
         float elapsedTime = 0f;

@@ -43,7 +43,9 @@ public class RoomController : MonoBehaviour
 
     private void Start()
     {
-        PlayerManager.Instance.PlayerController.gameObject.transform.position = playerPosition.position;
+        PlayerController pc = PlayerManager.Instance.PlayerController;
+        if (pc != null)
+            pc.gameObject.transform.position = playerPosition.position;
     }
 
     [ContextMenu("Open Door")]

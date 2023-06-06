@@ -9,13 +9,23 @@ public class MenuManager : Manager<MenuManager>
     [SerializeField] private TMP_Dropdown inputProfession;
     [SerializeField] private TMP_Dropdown inputGender;
 
+    public void Start()
+    {
+        FillMatchHistory();
+    }
+
+    private void FillMatchHistory()
+    {
+
+    }
+
     public void StartGame()
     {
         Race race = ParseEnum<Race>(inputRace.options[inputRace.value].text);
         Profession profession = ParseEnum<Profession>(inputProfession.options[inputProfession.value].text);
         Gender gender = ParseEnum<Gender>(inputGender.options[inputGender.value].text);
 
-        if(SessionData.Username.Length == 0)
+        if (SessionData.Username.Length == 0)
         {
             SessionData.Username = "Empty";
         }

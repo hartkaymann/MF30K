@@ -24,7 +24,7 @@ public class PlayerManager : Manager<PlayerManager>
         }
     }
 
-    public void InstantiatePlayer(Player player)
+    public void InstantiatePlayer(Player player, bool first = false)
     {
         if (PlayerController != null)
         {
@@ -39,7 +39,8 @@ public class PlayerManager : Manager<PlayerManager>
             pc.Player = player;
             PlayerController = pc;
 
-            PlayerController.EquipStarterGear();
+            if (first)
+                PlayerController.EquipStarterGear();
         }
 
         // Follow new player
@@ -54,12 +55,12 @@ public class PlayerManager : Manager<PlayerManager>
             follow.Follow = obj.transform.Find("Info").transform;
         }
 
-        player.OnPropertyChanged += UpdatePlayer;
+        player.OnPropertyChanged += OnPlayerPropertyChanged;
 
-        UpdatePlayer();
+        OnPlayerPropertyChanged();
     }
 
-    public void UpdatePlayer()
+    public void OnPlayerPropertyChanged()
     {
         Player player = PlayerController.Player;
         if (player == null)
@@ -104,8 +105,7 @@ public class PlayerManager : Manager<PlayerManager>
         }
     }
 
-    //TODO: Hand this to current player controller
-    public void ChangeCurrentPlayerClass()
+    public void ChangePlayerClass()
     {
         // Get doorcard and notify UI
         DoorCard card = RoomManager.Instance.CurrentRoom.Card;
@@ -117,10 +117,6 @@ public class PlayerManager : Manager<PlayerManager>
         else if (card is RaceCard raceCard)
         {
             PlayerController.Player.Race = raceCard.race;
-        }
-        else
-        {
-            Debug.LogWarning("Cannot apply cange!");
         }
     }
 
@@ -169,7 +165,7 @@ public class PlayerManager : Manager<PlayerManager>
     public void UseAbility()
     {
         Debug.Log("Using ability");
-        if(PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
+        if (PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
         {
             profCtrl.UseAbility();
         }

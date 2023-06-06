@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IDropHandler
@@ -23,23 +24,13 @@ public class PlayerController : MonoBehaviour, IDropHandler
             if (player != value)
             {
                 player = value;
-                playerRenderer.Render(player);
 
-                // Update profession ability
-                switch (player.Profession)
-                {
-                    case Profession.Knight:
-                        gameObject.AddComponent<KnightController>();
-                        break;
-                    case Profession.Wizard:
-                        gameObject.AddComponent<WizardController>();
-                        break;
-                    case Profession.Rogue:
-                        gameObject.AddComponent<RogueController>();
-                        break;
-                    default:
-                        break;
-                }
+
+                player.OnProfessionChanged += OnPlayerProfessionChanged;
+                player.OnRaceChanged += OnPlayerRaceChanged;
+
+                OnPlayerProfessionChanged();
+                OnPlayerRaceChanged();
             }
         }
     }
@@ -51,6 +42,44 @@ public class PlayerController : MonoBehaviour, IDropHandler
         isAttackingHash = Animator.StringToHash("Attack");
     }
 
+    private void OnPlayerProfessionChanged()
+    {
+        Debug.Log("Handing On Player Profession changed");
+
+        if (TryGetComponent<ProfessionController>(out var oldProfCtrl))
+            Destroy(oldProfCtrl);
+
+        switch (player.Profession)
+        {
+            case Profession.Knight:
+                gameObject.AddComponent<KnightController>();
+                break;
+            case Profession.Wizard:
+                gameObject.AddComponent<WizardController>();
+                break;
+            case Profession.Rogue:
+                gameObject.AddComponent<RogueController>();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void OnPlayerRaceChanged()
+    {
+
+        Debug.Log("Handing On Player Race changed");
+        if(TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+        {
+            spriteRenderer.sprite = SpriteManager.Instance.GetSprite(Player.Race.ToString());
+        }
+
+        if(TryGetComponent<Animator>(out var animator))
+        {
+            animator.runtimeAnimatorController = AnimationManager.Instance.GetAnimator(Player.Race.ToString());
+        }
+    }
+
     public void EquipToSlot(EquipmentSlot slot, CardController cardController)
     {
         GameObject equipmentGo = GameObject.Find("Equipment");
@@ -60,7 +89,6 @@ public class PlayerController : MonoBehaviour, IDropHandler
             return;
         }
 
-        Debug.Log($"Attaching {cardController.name} to Slots/{slot}");
         GameObject slotGo = equipmentGo.transform.Find($"Slots/{slot}/Slot").gameObject;
         if (slotGo == null)
         {

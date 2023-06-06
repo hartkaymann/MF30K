@@ -37,6 +37,8 @@ public class AbilityButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         textName.text = profCtrl.AbilityName;
         textCooldown.text = profCtrl.Cooldown.ToString();
 
+        Debug.Log("New ability: " + profCtrl.AbilityName);
+
         if (description.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var textDescName))
         {
             textDescName.text = $"{profCtrl.AbilityName}";
@@ -67,18 +69,15 @@ public class AbilityButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             return;
         }
 
-        if (PlayerManager.Instance.PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
+        button.enabled = (profCtrl.CooldownRemaining == 0);
+        cooldownMask.SetActive(profCtrl.CooldownRemaining != 0);
+        if (cooldownMask.transform.Find("Remaining").TryGetComponent<TextMeshProUGUI>(out var textRemaining))
         {
-            button.enabled = (profCtrl.CooldownRemaining == 0);
-
-            cooldownMask.SetActive(profCtrl.CooldownRemaining != 0);
-
-            if (cooldownMask.transform.Find("Remaining").TryGetComponent<TextMeshProUGUI>(out var textRemaining))
-            {
-                textRemaining.text = profCtrl.CooldownRemaining.ToString();
-            }
-
+            textRemaining.text = profCtrl.CooldownRemaining.ToString();
         }
+
+        Debug.Log("Updating CD, Remaining: " + profCtrl.CooldownRemaining);
+
     }
 
     public void OnPointerEnter(PointerEventData eventData)

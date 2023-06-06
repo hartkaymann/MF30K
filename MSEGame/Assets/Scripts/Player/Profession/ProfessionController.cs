@@ -11,14 +11,13 @@ public abstract class ProfessionController : MonoBehaviour
     {
         GameManager.OnNewCycle += HandleNewCycle;
         Init();
-
-        Debug.Log("Changeability called");
     }
 
     protected virtual void Init() { }
 
     private void Start()
     {
+        Debug.Log("New Profession Controller assigned!");
         UIManager.Instance.ChangeAbility(this);
     }
 

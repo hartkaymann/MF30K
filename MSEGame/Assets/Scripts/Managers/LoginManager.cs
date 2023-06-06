@@ -104,7 +104,7 @@ public class LoginManager : Manager<LoginManager>
     private void DisplayErrorMessage(string errorMsg)
     {
         textError.SetActive(true);
-        if (TryGetComponent<TextMeshProUGUI>(out var textComponent))
+        if (textError.TryGetComponent<TextMeshProUGUI>(out var textComponent))
         {
             textComponent.text = errorMsg;
         }

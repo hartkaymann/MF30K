@@ -9,6 +9,15 @@ public class DefeatPanelController : MonoBehaviour
         DestroyCards();
         Shuffle(cards);
         CreateCards();
+
+        if(PlayerManager.Instance.PlayerController.TryGetComponent<RogueController>(out var rogueCtrl))
+        {
+            if(rogueCtrl.IsActive)
+            {
+                Destroy(transform.Find("Cards").transform.Find("RunAwayCard").gameObject);
+                Debug.Log("Destroying Run Away card.");
+            }
+        }
     }
 
     private void DestroyCards()

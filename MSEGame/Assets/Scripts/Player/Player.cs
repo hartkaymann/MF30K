@@ -26,6 +26,8 @@ public class Player
     [JsonProperty] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     public event Action OnPropertyChanged;
+    public event Action OnProfessionChanged;
+    public event Action OnRaceChanged;
 
     [JsonIgnore]
     public string Name
@@ -89,11 +91,9 @@ public class Player
         get => race;
         set
         {
-            if (value != race)
-            {
-                race = value;
-                OnPropertyChanged?.Invoke();
-            }
+            race = value;
+            Debug.Log("Invoking On race Changed");
+            OnRaceChanged?.Invoke();
         }
     }
 
@@ -103,11 +103,9 @@ public class Player
         get => profession;
         set
         {
-            if (value != profession)
-            {
-                profession = value;
-                OnPropertyChanged?.Invoke();
-            }
+            profession = value;
+            Debug.Log("Invoking On Profession Changed");
+            OnProfessionChanged?.Invoke();
         }
     }
 

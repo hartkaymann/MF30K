@@ -3518,7 +3518,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Barbarian
+  m_text: Knight
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e6be8c5bfcffdc4e834bf9b83896207, type: 2}
   m_sharedMaterial: {fileID: 5225837475079488259, guid: 8e6be8c5bfcffdc4e834bf9b83896207, type: 2}
@@ -8457,7 +8457,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1572767196}
   m_Layer: 5
-  m_Name: StatsMenu
+  m_Name: MenuStats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
