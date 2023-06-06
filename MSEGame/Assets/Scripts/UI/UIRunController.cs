@@ -1,29 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIMatchController : MonoBehaviour
+public class UIRunController : MonoBehaviour
 {
-
     [SerializeField] private GameObject details;
 
     [SerializeField] private GameObject combatPrefab;
     [SerializeField] private Transform combatParent;
 
-    private void Start()
+    public void SetData(Run run)
     {
         if (transform.Find("Overview").TryGetComponent<Image>(out var img))
         {
-            img.color = Random.Range(0, 3) > 0 ? GameColor.Green : GameColor.Red;
+            img.color = run.Level == 10 ? GameColor.Green : GameColor.Red;
         }
 
-        // Needs to be replaced by network manager call later
-        Combat[] combats = new Combat[Random.Range(5, 30)];
-        for (int i = 0; i < combats.Length; i++)
-        {
-            combats[i] = new() { MonsterLevel = Random.Range(i + 1, i + 10), PlayerLevel = Random.Range(i + 1, i + 10), Victory = Random.Range(0, 2) != 0 };
-        };
-
-        FillCombatData(combats);
+        FillCombatData(run.Combats);
     }
 
     public void ToggleDetails()
@@ -36,9 +29,9 @@ public class UIMatchController : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent as RectTransform);
     }
 
-    public void FillCombatData(Combat[] combats)
+    public void FillCombatData(List<Combat> combats)
     {
-        for (int i = 0; i < combats.Length; i++)
+        for (int i = 0; i < combats.Count; i++)
         {
             Combat combat = combats[i];
 

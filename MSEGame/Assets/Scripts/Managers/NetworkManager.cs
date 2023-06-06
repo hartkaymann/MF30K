@@ -322,6 +322,70 @@ public class NetworkManager : Manager<NetworkManager>
         return ParseEnum<GameStage>((string)obj.SelectToken("GameStage"));
     }
 
+    public async Task<User> GetUserStats()
+    {
+        string username = SessionData.Username;
+        if (username.Length == 0)
+            return null;
+
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stats/{username}", RequestType.GET);
+
+        var userObj = await SendRequestWithResponse(req);
+
+        // Amen
+        User user = new()
+        {
+            Id = (string)userObj.SelectToken("id"),
+            Username = (string)userObj.SelectToken("username"),
+            Wins = int.Parse((string)userObj.SelectToken("wins")),
+            Losses = int.Parse((string)userObj.SelectToken("losses")),
+            Runs = new Func<List<Run>>(() =>
+            {
+                string[] runsString = userObj.SelectToken("runs")?.ToObject<string[]>();
+                JArray array = JArray.Parse(runsString);
+
+                List<Run> runs = new();
+                foreach (JObject runObj in array.Children<JObject>())
+                {
+                    Run run = new()
+                    {
+                        Id = int.Parse((string)runObj.SelectToken("id")),
+                        Level = int.Parse((string)runObj.SelectToken("level")),
+                        CombatLevel = int.Parse((string)runObj.SelectToken("combatlevel")),
+                        GoldSold = int.Parse((string)runObj.SelectToken("goldsold")),
+                        Profession = ParseEnum<Profession>((string)runObj.SelectToken("profession")),
+                        Race = ParseEnum<Race>((string)runObj.SelectToken("race")),
+                        Combats = new Func<List<Combat>>(() =>
+                        {
+                            string runsString = (string)userObj.SelectToken("runs");
+                            JArray array = JArray.Parse(runsString);
+
+                            List<Combat> combats = new();
+                            foreach (JObject combatObj in array.Children<JObject>())
+                            {
+                                Combat combat = new()
+                                {
+                                    PlayerLevel = int.Parse((string)combatObj.SelectToken("playerlevel")),
+                                    MonsterLevel = int.Parse((string)combatObj.SelectToken("monsterlevel")),
+                                    Victory = bool.Parse((string)combatObj.SelectToken("victory")),
+                                    Consequence = int.Parse((string)combatObj.SelectToken("consequence")),
+                                };
+                                combats.Add(combat);
+                            }
+                            return combats;
+                        })()
+                    };
+                    runs.Add(run);
+                }
+                return runs;
+            })()
+        };
+
+        req.Dispose();
+
+        return null;
+    }
+
     /////////
     // PUT //
     /////////
