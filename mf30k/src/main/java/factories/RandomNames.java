@@ -1,10 +1,10 @@
-package cards;
+package factories;
 
 import java.util.Random;
 
 public class RandomNames {
 
-	private Random rand = new Random();
+	private static Random rand = new Random();
 	
 	private static String[] adjectives = {
 			"Normal",
@@ -51,19 +51,19 @@ public class RandomNames {
 			"Ghost"
 	};
 	
-	public String randomConsumable() {
+	public static String randomConsumable() {
 		return consumable[rand.nextInt(consumable.length)];
 	}
 	
-	public String randomWeapon() {
+	public static String randomWeapon() {
 		return weapons[rand.nextInt(weapons.length)];
 	}
 	
-	public String randomAdjective() {
+	public static String randomAdjective() {
 		return adjectives[rand.nextInt(adjectives.length)];
 	}
 	
-	public String randomMonsterName() {
+	public static String randomMonsterName() {
 		String name = monsterAdjectives[rand.nextInt(monsterAdjectives.length)];
 		name += " ";
 		name += monster[rand.nextInt(monster.length)];

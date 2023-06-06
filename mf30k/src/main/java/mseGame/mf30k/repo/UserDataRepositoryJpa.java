@@ -1,4 +1,4 @@
-package mseGame.mf30k;
+package mseGame.mf30k.repo;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
 
 
 public interface UserDataRepositoryJpa extends JpaRepository<UserData, Long> {
-	//TODO add API queries for stats
+
 	Optional<UserData> findFirstByUsernameOrderByIdDesc(String username);
 }

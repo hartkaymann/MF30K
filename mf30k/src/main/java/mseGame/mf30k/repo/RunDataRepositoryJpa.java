@@ -1,4 +1,4 @@
-package mseGame.mf30k;
+package mseGame.mf30k.repo;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +14,5 @@ import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuer
 import org.springframework.stereotype.Repository;
 
 public interface RunDataRepositoryJpa extends JpaRepository<RunData, Long>{
-	//TODO add queries for stats
+
 }
