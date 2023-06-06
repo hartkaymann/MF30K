@@ -1,12 +1,10 @@
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public enum Race
 {
-    Orc,
+    Human,
     Elf,
-    Dwarf,
-    Human
+    Orc
 }
 
 public class RaceCard : DoorCard

@@ -1,8 +1,12 @@
 package mseGame.mf30k;
 
 import player.Player;
-
 import cards.*;
+import mseGame.mf30k.repo.CombatData;
+import mseGame.mf30k.repo.RunData;
+import mseGame.mf30k.repo.RunDataRepositoryJpa;
+import mseGame.mf30k.repo.UserData;
+import mseGame.mf30k.repo.UserDataRepositoryJpa;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,7 +67,7 @@ public class FrontController {
 		return;
 	}
 	
-	@PostMapping(value = "/signup/{user_name}")
+	@RequestMapping(value = "/signup/{user_name}", method = {RequestMethod.GET, RequestMethod.POST})
 	public boolean addUser(@PathVariable(name="user_name")String userName) {
 		long millis=System.currentTimeMillis();  
 	    // creating a new object of the class Date  
@@ -80,7 +86,7 @@ public class FrontController {
 	//login for user
 	//return the userData if login was successful, return null if not.
 	//sets the current user object to the logged in user.
-	@PostMapping(value = "/signin/{user_name}")
+	@RequestMapping(value = "/signin/{user_name}", method = {RequestMethod.GET, RequestMethod.POST})
 	public UserData userLogin(@PathVariable(name="user_name")String userName) {
 		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(userName);
 		if(result.isPresent()) {
@@ -152,6 +158,10 @@ public class FrontController {
 			 user = result.get();
 		} 
 		
+		if(currentRun == null) {
+			System.out.println("No curren Run available!");
+			currentRun = new RunData();
+		}
 		currentRun.setCombatLevel(data.getCombatLevel());
 		currentRun.setGoldsold(data.getGoldsold());
 		currentRun.setPlayerLevel(data.getPlayerLevel());
@@ -263,7 +273,6 @@ public class FrontController {
 		try {
 			UUID id = UUID.fromString(id_string);
 			int gold = crd_mgr.sellCard(id);
-			//TODO: add gold value to the players run in the database
 		} catch (Exception e) {
 			System.out.println(e);
 		}	

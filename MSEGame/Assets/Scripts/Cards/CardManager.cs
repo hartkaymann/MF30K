@@ -1,19 +1,13 @@
 using UnityEngine;
 
-public class CardManager : MonoBehaviour
+public class CardManager : Manager<CardManager>
 {
-    public static CardManager instance;
-
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private Transform canvas;
 
     [SerializeField] private Transform doorStackTransform;
     [SerializeField] private Transform treasureStackTransform;
 
-    void Awake()
-    {
-        instance = this;
-    }
     public CardController InstantiateCard(Card card)
     {
         GameObject go = Instantiate(cardPrefab, Vector2.zero, Quaternion.identity);

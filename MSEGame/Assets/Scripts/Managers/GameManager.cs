@@ -1,41 +1,31 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Manager<GameManager>
 {
-
-    public static GameManager Instance { get; private set; }
-
     // State management
     private GameStage stage;
-    private bool combatWasVictory = false;
+    private Combat currentCombat;
     public GameStage Stage { get { return stage; } }
 
     public static event Action<GameStage> OnGameStateChange;
+    public static event Action OnNewCycle;
     public static event Action<DoorCard> OnChangeClass;
 
     [SerializeField] private Slider timeSlider;
     private Coroutine stageTimerCoroutine;
 
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-        FetchPlayerInformation();
-    }
+    [SerializeField] private CombatWheelController combatWheel;
 
     void Start()
     {
-
+        FetchPlayerInformation();
         UpdateGameStage(GameStage.InventoryManagement);
     }
 
@@ -48,20 +38,21 @@ public class GameManager : MonoBehaviour
         {
             case GameStage.InventoryManagement:
                 RoomManager.Instance.CurrentRoom.OpenDoor();
+                OnNewCycle?.Invoke();
                 break;
             case GameStage.DrawCard:
-                PlayerController playerController = PlayerManager.Instance.CurrentPlayer;
+                PlayerController playerController = PlayerManager.Instance.PlayerController;
                 Vector3 doorPosition = RoomManager.Instance.CurrentRoom.transform.Find("Door").gameObject.transform.position;
 
-                UIManager.instance.ToggleBlackScreen();
-                StartCoroutine(UIManager.instance.FadeToBlack(1f));
+                UIManager.Instance.ToggleBlackScreen();
+                StartCoroutine(UIManager.Instance.FadeToBlack(1f));
                 StartCoroutine(AnimationManager.Instance.MoveFromTo(playerController.transform, playerController.transform.position, doorPosition, .9f));
 
                 Invoke(nameof(DrawDoorCard), 1f);
                 break;
             case GameStage.CombatPreparations:
                 break;
-            case GameStage.ChangeClass:
+            case GameStage.Selection:
                 ChangeClass();
                 break;
             case GameStage.Combat:
@@ -80,24 +71,24 @@ public class GameManager : MonoBehaviour
         RestartStageTimer();
 
         OnGameStateChange?.Invoke(newStage);
-        NetworkManager.Instance.PutStage(stage);
+        StartCoroutine(NetworkManager.Instance.PutStage(stage));
     }
 
     async void FetchPlayerInformation()
     {
-        string playerName = LoadSceneInformation.PlayerName;
-        Player playerInfo;
+        Player player;
 
-        if (playerName.Length == 0)
+        if (SessionData.Username.Length == 0)
         {
-            playerInfo = Player.GetDummy();
+            Debug.Log("No player, getting Dummy.");
+            player = Player.GetDummy();
         }
         else
         {
-            playerInfo = await NetworkManager.Instance.GetPlayer(playerName);
+            player = await NetworkManager.Instance.GetPlayer(SessionData.Username);
         }
 
-        PlayerManager.Instance.InstantiatePlayer(playerInfo);
+        PlayerManager.Instance.InstantiatePlayer(player);
     }
 
     async void DrawDoorCard()
@@ -107,8 +98,8 @@ public class GameManager : MonoBehaviour
 
         RoomManager.Instance.InstantiateRoom(card);
 
-        UIManager.instance.ToggleBlackScreen();
-
+        UIManager.Instance.ToggleBlackScreen();
+        NextStage();
     }
 
     async void DrawTreasureCard()
@@ -117,10 +108,10 @@ public class GameManager : MonoBehaviour
         if (card == null)
             return;
 
-        CardManager.instance.DrawCardFromStack(card);
+        CardManager.Instance.DrawCardFromStack(card);
     }
 
-    void Combat()
+    async void Combat()
     {
         RoomController rc = RoomManager.Instance.CurrentRoom;
         if (rc.Card is not MonsterCard monsterCard)
@@ -129,9 +120,28 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        combatWasVictory = PlayerManager.Instance.CurrentPlayer.Player.CombatLevel > monsterCard.level;
+        int playerLvl = PlayerManager.Instance.PlayerController.Player.CombatLevel;
+        int enemyLvl = monsterCard.level;
 
-        PlayerController currentPlayer = PlayerManager.Instance.CurrentPlayer;
+        currentCombat = new Combat()
+        {
+            PlayerLevel = playerLvl,
+            MonsterLevel = enemyLvl
+        };
+
+        // Prepare combat wheel and wait until it finishes
+        combatWheel.Reset();
+        UIManager.Instance.ToggleCombatPanel();
+        Debug.Log($"Setting ratio {playerLvl} : {enemyLvl}");
+        combatWheel.SetRatio(playerLvl / (float)(playerLvl + enemyLvl));
+        while (!combatWheel.IsFinished)
+        {
+            await Task.Delay(500);
+        }
+        currentCombat.Victory = combatWheel.GetResult();
+        UIManager.Instance.ToggleCombatPanel();
+
+        PlayerController currentPlayer = PlayerManager.Instance.PlayerController;
         Transform playerTransform = currentPlayer.gameObject.transform;
         Transform npcTransform = RoomManager.Instance.CurrentRoom.gameObject.transform.Find("NPC");
 
@@ -139,31 +149,92 @@ public class GameManager : MonoBehaviour
         currentPlayer.RunForDuration(2f);
         StartCoroutine(AnimationManager.Instance.MoveAndBack(playerTransform, npcTransform.position, 2f));
 
-        //TODO: stop invoking everything ffs
-        if (combatWasVictory)
-            Invoke(nameof(HideMonster), 1f);
+        // Kill monster
 
         //TODO: Very hardcoded, not a fan. Meh!
         Invoke(nameof(NextStage), 2f);
     }
 
-    void HideMonster()
-    {
-        RoomManager.Instance.CurrentRoom.Renderer.ToggleNpc();
-    }
-
     private void Victory()
     {
-        PlayerManager.Instance.CurrentPlayer.Player.Level += 1;
+        currentCombat.Consequence = 0;
+        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.PlayerController.Player, currentCombat));
+
+        PlayerManager.Instance.PlayerController.Player.Level += 1;
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(false);
         DrawTreasureCard();
     }
 
     private void Defeat()
     {
-        // Run aways
-
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(true);
+    }
+
+    public void ConsequenceChosen(int consequence)
+    {
+        currentCombat.Consequence = consequence;
+        StartCoroutine(NetworkManager.Instance.PostCombat(PlayerManager.Instance.PlayerController.Player, currentCombat));
+
+        // Apply consequence effect
+        switch (consequence)
+        {
+            case 0:
+                // Nothing happened
+                break;
+            case 1:
+                {
+                    // Lose Eqipment Card
+                    PlayerController pc = PlayerManager.Instance.PlayerController;
+
+                    Array values = Enum.GetValues(typeof(EquipmentSlot));
+
+                    // Invoke("PrayThisWorks")
+                    bool slotNotEmpty = false;
+                    int tries = 0;
+                    while (!slotNotEmpty && tries < values.Length)
+                    {
+                        tries++;
+
+                        // Chose random slot
+                        EquipmentSlot randSlot = (EquipmentSlot)values.GetValue(Random.Range(0, values.Length));
+                        Transform cardGo = GameObject.Find($"Equipment/Slots/{randSlot}/Slot").transform.GetChild(0);
+                        if (cardGo != null)
+                        {
+                            Debug.Log($"Found card in slot {randSlot}");
+                            slotNotEmpty = true;
+                            if (cardGo.TryGetComponent<CardController>(out var ctrl))
+                            {
+                                Debug.Log("Discarding...");
+                                ctrl.Discard();
+                            }
+                        }
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    GameObject hand = GameObject.Find($"Hand/Grid");
+                    int idx = Random.Range(0, hand.transform.childCount);
+
+                    if (idx > 0 && hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
+                    {
+                        ctrl.Discard();
+                        Debug.Log($"Discarding {idx}th hand card...");
+                    }
+                    break;
+                }
+            case 3:
+                {
+                    // Lose Level
+                    PlayerManager.Instance.PlayerController.Player.Level -= 1;
+                    break;
+                }
+            default:
+                Debug.LogAssertion("Consequence index out of Range: " + consequence);
+                break;
+        }
+
+        Invoke(nameof(NextStage), 2);
     }
 
     private void ChangeClass()
@@ -174,6 +245,21 @@ public class GameManager : MonoBehaviour
             return;
 
         OnChangeClass?.Invoke(card);
+    }
+
+    public void EndOfGame(Player player)
+    {
+        // Show victory screen?
+        Debug.Log($"Victory");
+
+        StartCoroutine(NetworkManager.Instance.PostEndRun(player));
+
+        Invoke(nameof(Exit), 3);
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene(0);
     }
 
 
@@ -212,17 +298,16 @@ public class GameManager : MonoBehaviour
                 if (RoomManager.Instance.CurrentRoom.Card.type == CardType.Monster)
                     UpdateGameStage(GameStage.CombatPreparations);
                 else
-                    UpdateGameStage(GameStage.ChangeClass);
+                    UpdateGameStage(GameStage.Selection);
                 break;
-            case GameStage.ChangeClass:
+            case GameStage.Selection:
                 UpdateGameStage(GameStage.InventoryManagement);
                 break;
             case GameStage.CombatPreparations:
                 UpdateGameStage(GameStage.Combat);
                 break;
             case GameStage.Combat:
-                UpdateGameStage(combatWasVictory ? GameStage.Victory : GameStage.Defeat);
-                //UpdateGameStage(GameStage.Victory);
+                UpdateGameStage(currentCombat.Victory ? GameStage.Victory : GameStage.Defeat);
                 break;
             case GameStage.Victory:
                 UpdateGameStage(GameStage.InventoryManagement);
@@ -240,17 +325,21 @@ public enum GameStage
 {
     InventoryManagement,
     DrawCard,
-    ChangeClass,
+    Selection,
     CombatPreparations,
     Combat,
     Victory,
     Defeat
 }
 
-/// <summary>
-/// Utility class to pass information between scenes.
-/// </summary>
-public static class LoadSceneInformation
+public static class SessionData
 {
-    public static string PlayerName { get; set; } = "";
+    public static string Username { get; set; } = "";
+}
+
+public static class GameColor
+{
+    public static Color Red { get; private set; } = new Color(0.754717f, 0.2897656f, 0.2520469f);
+    public static Color Green { get; private set; } = new Color(0.01568628f, 0.6431373f, 0.2431373f);
+    public static Color White { get; private set; } = new Color(0.9529412f, 0.9333334f, 0.8901961f);
 }
