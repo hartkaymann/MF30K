@@ -1,4 +1,4 @@
-package mseGame.mf30k;
+package mseGame.mf30k.repo;
 
 import jakarta.persistence.*;
 import jakarta.persistence.TemporalType;
