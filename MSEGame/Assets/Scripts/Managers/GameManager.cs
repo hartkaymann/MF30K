@@ -25,7 +25,6 @@ public class GameManager : Manager<GameManager>
     void Start()
     {
         FetchPlayerInformation();
-        StartCoroutine(NetworkManager.Instance.PostRun(PlayerManager.Instance.PlayerController.Player));
     }
 
     public void UpdateGameStage(GameStage newStage)
@@ -93,6 +92,8 @@ public class GameManager : Manager<GameManager>
         }
 
         PlayerManager.Instance.InstantiatePlayer(player, true);
+        StartCoroutine(NetworkManager.Instance.PostRun(PlayerManager.Instance.PlayerController.Player));
+
         UpdateGameStage(GameStage.InventoryManagement);
     }
 

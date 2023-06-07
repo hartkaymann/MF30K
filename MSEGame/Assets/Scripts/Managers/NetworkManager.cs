@@ -185,6 +185,8 @@ public class NetworkManager : Manager<NetworkManager>
     {
         string path = $"http://{url}:{port}/player/{player.Name}/combat";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, combat);
+        Debug.Log($"Combat: {combat}");
+        Debug.Log($"Sending Combat: {req.uploadHandler}");
         yield return req.SendWebRequest();
         while (!req.isDone)
         {
