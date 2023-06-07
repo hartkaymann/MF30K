@@ -152,7 +152,7 @@ public class FrontController {
 	}
 	
 	@PutMapping(value="/player/{player_id}/run")
-	public void saveRun(@PathVariable(name="player_id")String player_id, @RequestBody RunData data) {
+	public void saveRun(@PathVariable(name="player_id")String player_id) {
 		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(player_id);
 		UserData user = null;
 		if(result.isPresent()) {
@@ -160,11 +160,13 @@ public class FrontController {
 		} 
 		
 		if(currentRun == null) {
-			System.out.println("No curren Run available!");
+			System.out.println("No curren"
+					+ " Run available!");
 			currentRun = new RunData();
 		}
+		Player data = player_mgr.getPlayer(player_id);
 		currentRun.setCombatLevel(data.getCombatLevel());
-		currentRun.setGoldsold(data.getGoldsold());
+		//currentRun.setGoldsold(data.getGoldsold());
 		currentRun.setPlayerLevel(data.getPlayerLevel());
 		currentRun.setProfession(data.getProfession());
 		currentRun.setRace(data.getRace());
@@ -274,6 +276,8 @@ public class FrontController {
 		try {
 			UUID id = UUID.fromString(id_string);
 			int gold = crd_mgr.sellCard(id);
+			int currentGold = currentRun.getGoldsold();
+			currentRun.setGoldsold(gold+currentGold);
 		} catch (Exception e) {
 			System.out.println(e);
 		}	
