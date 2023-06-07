@@ -1,13 +1,14 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IDropHandler
+public class PlayerController : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private PlayerRenderer playerRenderer;
 
     private Player player;
+    private GameObject description;
 
     private Animator animator;
     private int isRunningHash;
@@ -25,21 +26,61 @@ public class PlayerController : MonoBehaviour, IDropHandler
             {
                 player = value;
 
-
                 player.OnProfessionChanged += OnPlayerProfessionChanged;
                 player.OnRaceChanged += OnPlayerRaceChanged;
+                player.OnPropertyChanged += OnPlayerPropertyChanged;
 
                 OnPlayerProfessionChanged();
                 OnPlayerRaceChanged();
+                OnPlayerPropertyChanged();
             }
         }
     }
 
-    void Start()
+    void Awake()
     {
+        description = GameObject.Find("PlayerDescription");
         animator = GetComponent<Animator>();
         isRunningHash = Animator.StringToHash("isRunning");
         isAttackingHash = Animator.StringToHash("Attack");
+    }
+
+    void Start()
+    {
+        description.SetActive(false);
+    }
+
+    private void OnPlayerPropertyChanged()
+    {
+        if (description == null)
+            return;
+
+        if (description.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var textDescName))
+        {
+            textDescName.text = $"Name: {Player.Name}";
+        }
+
+        if (description.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var textDescCooldown))
+        {
+            textDescCooldown.text = $"Level: {Player.Level}";
+        }
+
+        if (description.transform.Find("CombatLevel").TryGetComponent<TextMeshProUGUI>(out var textDescCombat))
+        {
+            int buff = Player.RaceEffect + Player.RoundBonus;
+            string buffTxt = $"({buff})";
+            textDescCombat.text = $"Combat:: {Player.CombatLevel} {(buff > 0 ? buffTxt : "")}";
+        }
+
+        if (description.transform.Find("Race").TryGetComponent<TextMeshProUGUI>(out var textDescRace))
+        {
+            textDescRace.text = $"Race: {Player.Race}";
+        }
+
+        if (description.transform.Find("Profession").TryGetComponent<TextMeshProUGUI>(out var textDescRrofession))
+        {
+            textDescRrofession.text = $"Profession: {Player.Profession}";
+        }
     }
 
     private void OnPlayerProfessionChanged()
@@ -67,14 +108,13 @@ public class PlayerController : MonoBehaviour, IDropHandler
 
     private void OnPlayerRaceChanged()
     {
-
         Debug.Log("Handing On Player Race changed");
-        if(TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+        if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
         {
             spriteRenderer.sprite = SpriteManager.Instance.GetSprite(Player.Race.ToString());
         }
 
-        if(TryGetComponent<Animator>(out var animator))
+        if (TryGetComponent<Animator>(out var animator))
         {
             animator.runtimeAnimatorController = AnimationManager.Instance.GetAnimator(Player.Race.ToString());
         }
@@ -183,5 +223,15 @@ public class PlayerController : MonoBehaviour, IDropHandler
     public void Attack()
     {
         animator.SetTrigger(isAttackingHash);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        description.SetActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        description.SetActive(false);
     }
 }

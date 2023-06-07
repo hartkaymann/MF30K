@@ -114,7 +114,6 @@ public class NetworkManager : Manager<NetworkManager>
         try
         {
             JObject obj = JObject.Parse(jsonResponse);
-            Debug.Log($"Sign In Response: {obj}");
             return obj != null;
 
         }
@@ -140,7 +139,6 @@ public class NetworkManager : Manager<NetworkManager>
 
         var jsonResponse = req.downloadHandler.text;
 
-        Debug.Log($"Sign Up Response: {jsonResponse}");
         req.Dispose();
         return jsonResponse == "true";
     }
@@ -171,6 +169,7 @@ public class NetworkManager : Manager<NetworkManager>
 
     public IEnumerator PostEndRun(Player player)
     {
+        Debug.Log("Endrun Called");
         string path = $"http://{url}:{port}/player/{player.Name}/run";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
         yield return req.SendWebRequest();
@@ -185,8 +184,6 @@ public class NetworkManager : Manager<NetworkManager>
     {
         string path = $"http://{url}:{port}/player/{player.Name}/combat";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, combat);
-        Debug.Log($"Combat: {combat}");
-        Debug.Log($"Sending Combat: {req.uploadHandler}");
         yield return req.SendWebRequest();
         while (!req.isDone)
         {

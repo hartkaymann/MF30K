@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public class GameManager : Manager<GameManager>
@@ -142,6 +143,7 @@ public class GameManager : Manager<GameManager>
         {
             if (knightCtrl.Active)
                 currentCombat.Victory = await TurnCombatWheel();
+            knightCtrl.Active = false;
         }
 
         StartCoroutine(SequenceCombat());
@@ -156,17 +158,14 @@ public class GameManager : Manager<GameManager>
         Vector3 startPos = playerTransform.position;
         float playerWidth = currentPlayer.GetComponent<BoxCollider2D>().size.x;
 
-        Debug.Log("Starting to run");
         currentPlayer.StartRunning();
         yield return StartCoroutine(AnimationManager.Instance.MoveFromTo(playerTransform, startPos, npcTransform.position - new Vector3(playerWidth, 0, 0), 1f));
 
-        Debug.Log("Trigger Attacking");
         currentPlayer.Attack();
         yield return new WaitForSeconds(1);
 
         if (currentCombat.Victory)
         {
-            Debug.Log("NPC death animation");
             RoomManager.Instance.CurrentRoom.NPC.Die();
         }
         else
@@ -178,10 +177,10 @@ public class GameManager : Manager<GameManager>
             }
         }
 
-        Debug.Log("Running Back");
+        playerTransform.Rotate(Vector2.up, 180f);
         yield return StartCoroutine(AnimationManager.Instance.MoveFromTo(playerTransform, playerTransform.position, startPos, 1f));
+        playerTransform.Rotate(Vector2.up, 180f);
 
-        Debug.Log("Stopping to run");
         currentPlayer.StopRunning();
 
         Invoke(nameof(NextStage), 1f);
@@ -239,7 +238,6 @@ public class GameManager : Manager<GameManager>
 
                     Array values = Enum.GetValues(typeof(EquipmentSlot));
 
-                    // Invoke("PrayThisWorks")
                     bool slotNotEmpty = false;
                     int tries = 0;
                     while (!slotNotEmpty && tries < values.Length)
@@ -248,14 +246,14 @@ public class GameManager : Manager<GameManager>
 
                         // Chose random slot
                         EquipmentSlot randSlot = (EquipmentSlot)values.GetValue(Random.Range(0, values.Length));
+                        Debug.Log("Searching for spot, current: " + randSlot);
                         Transform cardGo = GameObject.Find($"Equipment/Slots/{randSlot}/Slot").transform.GetChild(0);
                         if (cardGo != null)
                         {
-                            Debug.Log($"Found card in slot {randSlot}");
+                            Debug.Log("Slot found!");
                             slotNotEmpty = true;
                             if (cardGo.TryGetComponent<CardController>(out var ctrl))
                             {
-                                Debug.Log("Discarding...");
                                 ctrl.Discard();
                             }
                         }
@@ -270,7 +268,6 @@ public class GameManager : Manager<GameManager>
                     if (idx > 0 && hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
                     {
                         ctrl.Discard();
-                        Debug.Log($"Discarding {idx}th hand card...");
                     }
                     break;
                 }

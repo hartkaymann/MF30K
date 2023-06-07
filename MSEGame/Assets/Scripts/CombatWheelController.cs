@@ -8,23 +8,35 @@ public class CombatWheelController : MonoBehaviour
     [SerializeField] private Image playerSlice;
     [SerializeField] private Button buttonStart;
 
-    [SerializeField] private float spinTime = 5f;
-    [SerializeField] private float spinSpeed = 90f;
-    [SerializeField] private float k = 10f;
+    [SerializeField] private float force = 5000f;
+    private Rigidbody2D wheelRb;
 
     private float ratio = .3f;
+    private bool startSpin = false;
 
     public bool IsFinished { get; private set; } = false;
 
+    private void Start()
+    {
+        wheelRb = wheel.GetComponent<Rigidbody2D>();
+    }
 
     [ContextMenu("Reset")]
     public void Reset()
     {
         wheel.rotation = Quaternion.identity;
-        spinTime = Random.Range(1, 3);
-        spinSpeed = Random.Range(90, 180);
+        force = Random.Range(1000, 10000);
         IsFinished = false;
         buttonStart.enabled = true;
+    }
+
+    private void FixedUpdate()
+    {
+        if(startSpin)
+        {
+            wheelRb.AddTorque(force);
+            startSpin = false;
+        }
     }
 
     /// <summary>
@@ -41,24 +53,22 @@ public class CombatWheelController : MonoBehaviour
     public void StartSpin()
     {
         buttonStart.enabled = false;
-        StartCoroutine(Spin());
+        IsFinished = false;
+
+        startSpin = true;
+
+        StartCoroutine(WaitForSpin());
     }
 
-    private IEnumerator Spin()
+    private IEnumerator WaitForSpin()
     {
-        float currTime = 0f;
+        yield return new WaitForSeconds(1);
 
-        while (currTime < spinTime)
+        while (wheelRb.angularVelocity > 0)
         {
-            currTime += Time.deltaTime;
-            float angle = Impulse(2, currTime / spinTime);
-            wheel.Rotate(Vector3.forward, angle * spinSpeed);
-
-            if (wheel.rotation.z < 0f)
-                wheel.Rotate(0, 0, 360); ;
-
             yield return null;
         }
+        Debug.Log("Wheel is done.");
         IsFinished = true;
     }
 

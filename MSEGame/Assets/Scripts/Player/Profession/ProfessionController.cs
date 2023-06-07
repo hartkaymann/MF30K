@@ -24,7 +24,6 @@ public abstract class ProfessionController : MonoBehaviour
     public virtual void UseAbility()
     {
         CooldownRemaining = Cooldown;
-        Debug.Log("Ability Cooldown: " + Cooldown);
 
     }
 
@@ -32,7 +31,5 @@ public abstract class ProfessionController : MonoBehaviour
     {
         if (CooldownRemaining > 0)
             CooldownRemaining--;
-
-        Debug.Log("Reducing cooldown: " + CooldownRemaining);
     }
 }

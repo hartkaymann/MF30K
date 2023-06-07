@@ -69,8 +69,6 @@ public class EquipmentController : MonoBehaviour, IDropHandler
         isEquipped = true;
 
         textEquipStat.text = card.bonus.ToString();
-
-        //Debug.Log($"Equipped {card.title} to slot {slot}.");
     }
 
     public void EquipItem(CardController cardController)

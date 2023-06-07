@@ -75,9 +75,6 @@ public class AbilityButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             textRemaining.text = profCtrl.CooldownRemaining.ToString();
         }
-
-        Debug.Log("Updating CD, Remaining: " + profCtrl.CooldownRemaining);
-
     }
 
     public void OnPointerEnter(PointerEventData eventData)

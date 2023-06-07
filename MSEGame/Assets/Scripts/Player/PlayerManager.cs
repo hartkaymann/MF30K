@@ -112,10 +112,12 @@ public class PlayerManager : Manager<PlayerManager>
 
         if (card is ProfessionCard professionCard)
         {
+            Debug.Log("Confirming player profession change, new: " + professionCard.profession);
             PlayerController.Player.Profession = professionCard.profession;
         }
         else if (card is RaceCard raceCard)
         {
+            Debug.Log("Confirming player race change, new: " + raceCard.race);
             PlayerController.Player.Race = raceCard.race;
         }
     }
@@ -124,7 +126,6 @@ public class PlayerManager : Manager<PlayerManager>
     {
         if (PlayerController.Player == null)
         {
-            Debug.Log("No player, returning and not updating");
             return;
         }
 
@@ -157,14 +158,11 @@ public class PlayerManager : Manager<PlayerManager>
             {
                 player.RaceEffect = 0; // Human = 0
             }
-
-            Debug.Log($"Applying Race Effect: {player.Race}");
         }
     }
 
     public void UseAbility()
     {
-        Debug.Log("Using ability");
         if (PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
         {
             profCtrl.UseAbility();
