@@ -15,6 +15,8 @@ public class DiscardController : MonoBehaviour, IDropHandler
 
                 Destroy(draggedObj);
                 Debug.Log($"Sold {treasure.title} for {treasure.value} gold.");
+
+                StartCoroutine(NetworkManager.Instance.SellCard(PlayerManager.Instance.PlayerController.Player, treasure));
             }
         }
     }

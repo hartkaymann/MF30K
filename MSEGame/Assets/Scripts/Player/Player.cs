@@ -92,8 +92,8 @@ public class Player
         set
         {
             race = value;
-            Debug.Log("Invoking On race Changed");
             OnRaceChanged?.Invoke();
+            OnPropertyChanged?.Invoke();
         }
     }
 
@@ -104,8 +104,8 @@ public class Player
         set
         {
             profession = value;
-            Debug.Log("Invoking On Profession Changed");
             OnProfessionChanged?.Invoke();
+            OnPropertyChanged?.Invoke();
         }
     }
 

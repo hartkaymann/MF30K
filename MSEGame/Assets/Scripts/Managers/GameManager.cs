@@ -25,6 +25,7 @@ public class GameManager : Manager<GameManager>
     void Start()
     {
         FetchPlayerInformation();
+        StartCoroutine(NetworkManager.Instance.PostRun(PlayerManager.Instance.PlayerController.Player));
     }
 
     public void UpdateGameStage(GameStage newStage)

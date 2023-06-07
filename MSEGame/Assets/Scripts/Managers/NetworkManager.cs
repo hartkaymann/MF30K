@@ -157,9 +157,21 @@ public class NetworkManager : Manager<NetworkManager>
         req.Dispose();
     }
 
+    public IEnumerator PostRun(Player player)
+    {
+        string path = $"http://{url}:{port}/player/{player.Name}/run";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
+        yield return req.SendWebRequest();
+        while (!req.isDone)
+        {
+            yield return null;
+        }
+        req.Dispose();
+    }
+
     public IEnumerator PostEndRun(Player player)
     {
-        string path = $"http://{url}:{port}/endrun";
+        string path = $"http://{url}:{port}/player/{player.Name}/run";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
         yield return req.SendWebRequest();
         while (!req.isDone)
@@ -171,7 +183,7 @@ public class NetworkManager : Manager<NetworkManager>
 
     public IEnumerator PostCombat(Player player, Combat combat)
     {
-        string path = $"http://{url}:{port}/{player.Name}/combat";
+        string path = $"http://{url}:{port}/player/{player.Name}/combat";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, combat);
         yield return req.SendWebRequest();
         while (!req.isDone)
@@ -311,17 +323,6 @@ public class NetworkManager : Manager<NetworkManager>
         );
     }
 
-    public async Task<GameStage> GetStage()
-    {
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.GET);
-
-        var obj = await SendRequestWithResponse(req);
-
-        req.Dispose();
-
-        return ParseEnum<GameStage>((string)obj.SelectToken("GameStage"));
-    }
-
     public async Task<User> GetUserStats()
     {
         string username = SessionData.Username;
@@ -342,7 +343,7 @@ public class NetworkManager : Manager<NetworkManager>
             Runs = new Func<List<Run>>(() =>
             {
                 string[] runsString = userObj.SelectToken("runs")?.ToObject<string[]>();
-                JArray array = JArray.Parse(runsString);
+                JArray array = JArray.Parse(null);
 
                 List<Run> runs = new();
                 foreach (JObject runObj in array.Children<JObject>())
