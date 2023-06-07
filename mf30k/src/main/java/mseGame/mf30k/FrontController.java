@@ -8,6 +8,8 @@ import mseGame.mf30k.repo.RunDataRepositoryJpa;
 import mseGame.mf30k.repo.UserData;
 import mseGame.mf30k.repo.UserDataRepositoryJpa;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -142,7 +144,9 @@ public class FrontController {
 		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(player_id);
 		if(result.isPresent()) {
 			UserData user = result.get();
+			ArrayList<CombatData> combats = new ArrayList<CombatData>();
 			RunData current = new RunData(user, 0, 0, 0, null, null);
+			current.setCombats(combats);
 			this.currentRun = runRepo.save(current);
 			return true;
 		} else {
