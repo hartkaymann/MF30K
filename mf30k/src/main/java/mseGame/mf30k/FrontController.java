@@ -2,12 +2,15 @@ package mseGame.mf30k;
 
 import player.Player;
 import cards.*;
+import mseGame.mf30k.dataManagers.*;
 import mseGame.mf30k.repo.CombatData;
 import mseGame.mf30k.repo.RunData;
 import mseGame.mf30k.repo.RunDataRepositoryJpa;
 import mseGame.mf30k.repo.UserData;
 import mseGame.mf30k.repo.UserDataRepositoryJpa;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,17 +37,16 @@ public class FrontController {
 	@Autowired 
 	private PlayerManager player_mgr;
 	
-	@Autowired 
-	private UserDataRepositoryJpa repo;
+	@Autowired
+	private RunDataManager run_mgr;
 	
 	@Autowired
-	private RunDataRepositoryJpa runRepo;
+	private UserDataManager user_mgr;
 	
 	//Objects for the current game play
 	private GameStage stage;
 	private int stageChanges = 0;
-	private UserData currentUser;
-	private RunData currentRun;
+	private Long curRunID;
 	
 	public int getStageChanges() {
 		return this.stageChanges;
@@ -69,16 +71,16 @@ public class FrontController {
 	
 	@RequestMapping(value = "/signup/{user_name}", method = {RequestMethod.GET, RequestMethod.POST})
 	public boolean addUser(@PathVariable(name="user_name")String userName) {
-		long millis=System.currentTimeMillis();  
-	    // creating a new object of the class Date  
-	    java.sql.Date date = new java.sql.Date(millis);  
-		UserData newUser = new UserData(userName, 0, 0, date);
-		try {
-			UserData result = repo.save(newUser);
-			return true;
-		} catch (Exception e) {
-			System.out.println(e);
+		UserData user = user_mgr.findByUserName(userName);
+		if(user != null) {
 			return false;
+		} else {
+			long millis=System.currentTimeMillis();  
+		    // creating a new object of the class Date  
+		    java.sql.Date date = new java.sql.Date(millis);  
+			UserData newUser = user_mgr.insertUser(userName, date);
+			System.out.println(newUser);
+			return true;
 		}
 
 	}
@@ -88,21 +90,16 @@ public class FrontController {
 	//sets the current user object to the logged in user.
 	@RequestMapping(value = "/signin/{user_name}", method = {RequestMethod.GET, RequestMethod.POST})
 	public UserData userLogin(@PathVariable(name="user_name")String userName) {
-		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(userName);
-		if(result.isPresent()) {
-			UserData user = result.get();
-			this.currentUser = user;
-			System.out.println(user);
-			return user;
-		}
-		System.out.println("No User with name: "+userName+" found");
-		return null;
+		
+		UserData user = user_mgr.findByUserName(userName);
+		return user;
+
 	}
 	
 	@GetMapping(value = "/stats/{user_name}")
 	public UserData getUserData(@PathVariable(name="user_name")String user_name) {
-		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(user_name);
-		return result.orElse(null);
+		return user_mgr.findByUserName(user_name);
+
 	}
 	
 	// Draw a Card from Treasures or Door Stack:
@@ -132,17 +129,28 @@ public class FrontController {
 	
 	@PostMapping(value="/player/{player_id}/combat")
 	public void addCombatToRun(@PathVariable(name="player_id")String player_id, @RequestBody CombatData data) {
-		this.currentRun.addCombat(data);
-		runRepo.save(currentRun);
+		
+		if(curRunID == null) {
+			System.out.println("No current Run in progress!");
+			return;
+		} else {
+			RunData updated = run_mgr.addCombatToRun(curRunID, data);
+			run_mgr.update(updated);
+			return;
+		}
+
+		//this.currentRun.addCombat(data);
+		//runRepo.save(currentRun);
 	}
 	
 	@PostMapping(value="/player/{player_id}/run")
 	public boolean createNewRun(@PathVariable(name="player_id") String player_id) {
-		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(player_id);
-		if(result.isPresent()) {
-			UserData user = result.get();
+		
+		UserData user = user_mgr.findByUserName(player_id);
+		if(user != null) {
 			RunData current = new RunData(user, 0, 0, 0, null, null);
-			this.currentRun = runRepo.save(current);
+			current = run_mgr.insertRun(current);
+			curRunID = current.getId();
 			return true;
 		} else {
 			return false;
@@ -151,29 +159,21 @@ public class FrontController {
 	}
 	
 	@PutMapping(value="/player/{player_id}/run")
-	public void saveRun(@PathVariable(name="player_id")String player_id, @RequestBody RunData data) {
-		Optional<UserData> result = repo.findFirstByUsernameOrderByIdDesc(player_id);
-		UserData user = null;
-		if(result.isPresent()) {
-			 user = result.get();
-		} 
+	public void saveRun(@PathVariable(name="player_id")String player_id) {
+		RunData currentRun = run_mgr.findOne(curRunID);
 		
-		if(currentRun == null) {
-			System.out.println("No curren Run available!");
-			currentRun = new RunData();
-		}
+		Player data = player_mgr.getPlayer(player_id);
 		currentRun.setCombatLevel(data.getCombatLevel());
-		currentRun.setGoldsold(data.getGoldsold());
 		currentRun.setPlayerLevel(data.getPlayerLevel());
 		currentRun.setProfession(data.getProfession());
 		currentRun.setRace(data.getRace());
-		currentRun = runRepo.save(currentRun);
-		//List<CombatData> combats = currentRun.getCombats();
-		//data.setUser_owner(currentUser);
-		//data.setCombats(combats);
-		//user.addRun(data);
-		user.addRun(currentRun);
-		repo.save(user);
+		
+		UserData user = user_mgr.findByUserName(player_id);	
+		user_mgr.addRunToUser(player_id, currentRun);
+		user_mgr.update(user);
+		
+		this.curRunID = null;
+		this.stageChanges = 0;
 	}
 	
 	@GetMapping(value = "/player/{playerID}")
@@ -181,16 +181,6 @@ public class FrontController {
 		
 		System.out.println(player_mgr.getPlayer(name));
 		return player_mgr.getPlayer(name);
-		
-		/*
-		 * HashMap<Integer, Equipment> equip = new HashMap<Integer, Equipment>();
-		HashMap<Integer, Card> hand = new HashMap<Integer, Card>();
-		HashMap<Integer, Card> backPack = new HashMap<Integer, Card>();
-		Equipment helmet = new Equipment("testHelmet", 1, 2, equipmentType.HELMET, 123);
-		equip.put(helmet.getId(), helmet);
-		Player dummy = new Player("DummyPlayer", equip, Profession.BARBARIAN, Race.DWARF, Gender.FEMALE, hand, backPack, 2, 4 );
-		return dummy;
-		*/
 	}
 	
 	@PutMapping(value = "/player/{playerID}",
@@ -273,6 +263,10 @@ public class FrontController {
 		try {
 			UUID id = UUID.fromString(id_string);
 			int gold = crd_mgr.sellCard(id);
+			RunData currentRun = run_mgr.findOne(curRunID);
+			int currentGold = currentRun.getGoldsold();
+			currentRun.setGoldsold(gold+currentGold);
+			run_mgr.update(currentRun);
 		} catch (Exception e) {
 			System.out.println(e);
 		}	

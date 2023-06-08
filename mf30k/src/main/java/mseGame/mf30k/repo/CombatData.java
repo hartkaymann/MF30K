@@ -1,5 +1,7 @@
 package mseGame.mf30k.repo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Table(name = "combat")
@@ -18,6 +20,7 @@ public class CombatData {
 	private int consequence;
 
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonBackReference
 	private RunData owner_run;
 
 	public CombatData(Long id, int combatLvlPlayer, int combatLvlMonster, boolean win, RunData owner_run) {

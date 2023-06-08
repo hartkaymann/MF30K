@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.ArrayList;
 import cards.Profession;
 import cards.Race;
 
@@ -17,6 +21,7 @@ public class RunData {
 	private Long id;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonBackReference
 	private UserData user_owner;
 	
 	private int combatLevel;
@@ -28,7 +33,8 @@ public class RunData {
 	@OneToMany (cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="owner_run")
 	@OrderBy("id DESC")
-	private List<CombatData> combats;
+	@JsonManagedReference
+	private List<CombatData> combats = new ArrayList<CombatData>();
 	
 	
 	public RunData(Long id, UserData user_owner, int combatLevel, int playerLevel, int goldsold,
@@ -73,6 +79,10 @@ public class RunData {
 	
 	public void addCombat(CombatData combat) {
 		this.combats.add(combat);
+	}
+	
+	public void removeCombat(CombatData combat) {
+		this.combats.remove(combat);
 	}
 	
 	public Long getId() {

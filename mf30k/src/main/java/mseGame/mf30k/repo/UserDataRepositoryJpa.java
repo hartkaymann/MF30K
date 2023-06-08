@@ -16,5 +16,5 @@ import org.springframework.stereotype.Repository;
 
 public interface UserDataRepositoryJpa extends JpaRepository<UserData, Long> {
 
-	Optional<UserData> findFirstByUsernameOrderByIdDesc(String username);
+	Optional<UserData> findFirstByUsername(String username);
 }
