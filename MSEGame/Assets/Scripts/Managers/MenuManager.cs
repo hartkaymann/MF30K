@@ -22,7 +22,7 @@ public class MenuManager : Manager<MenuManager>
 
         Player player = new(SessionData.Username, race, profession, gender, 1, 0);
         StartCoroutine(NetworkManager.Instance.PostPlayer(player));
-        SceneManager.LoadScene("Gameplay");
+        SceneManager.LoadScene("Intro");
     }
 
     public void QuitGame()

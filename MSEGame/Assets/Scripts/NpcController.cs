@@ -11,6 +11,9 @@ public class NpcController : MonoBehaviour
     private Animator animator;
     private int deathHash;
 
+    [SerializeField] private AudioSource soundIdle;
+    [SerializeField] private AudioSource soundDeath;
+
     private void Awake()
     {
         info = Instantiate(infoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
@@ -51,6 +54,11 @@ public class NpcController : MonoBehaviour
     [ContextMenu("Commit Die")]
     public void Die()
     {
+        if (soundIdle != null)
+            soundIdle.Stop();
+        if (soundDeath != null)
+            soundDeath.Play();
+
         if (animator != null)
         {
             animator.SetTrigger(deathHash);

@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour, IDropHandler, IPointerEnterHandle
     private int isRunningHash;
     private int isAttackingHash;
 
+    [SerializeField] private AudioSource soundWalking;
+    [SerializeField] private AudioSource soundAttack;
+
     public Player Player
     {
         get
@@ -210,18 +213,27 @@ public class PlayerController : MonoBehaviour, IDropHandler, IPointerEnterHandle
     [ContextMenu("Player Run")]
     public void StartRunning()
     {
+        if (soundWalking != null)
+            soundWalking.Play();
+
         animator.SetBool(isRunningHash, true);
     }
 
     [ContextMenu("Player Stop")]
     public void StopRunning()
     {
+        if (soundWalking != null)
+            soundWalking.Stop();
+
         animator.SetBool(isRunningHash, false);
     }
 
     [ContextMenu("Player Attack")]
     public void Attack()
     {
+        if(soundAttack != null) 
+            soundAttack.Play();
+        
         animator.SetTrigger(isAttackingHash);
     }
 
