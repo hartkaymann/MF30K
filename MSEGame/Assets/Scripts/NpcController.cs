@@ -16,12 +16,16 @@ public class NpcController : MonoBehaviour
 
     private void Awake()
     {
-        info = Instantiate(infoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
-        if (info.TryGetComponent<ObjectFollow>(out var follow))
+        if (info != null)
         {
-            follow.Follow = transform.Find("Info");
+
+            info = Instantiate(infoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
+            if (info.TryGetComponent<ObjectFollow>(out var follow))
+            {
+                follow.Follow = transform.Find("Info");
+            }
+            UpdateInfo();
         }
-        UpdateInfo();
 
         animator = GetComponent<Animator>();
         deathHash = Animator.StringToHash("Death");

@@ -9,6 +9,10 @@ public class MenuManager : Manager<MenuManager>
     [SerializeField] private TMP_Dropdown inputProfession;
     [SerializeField] private TMP_Dropdown inputGender;
 
+    private void Awake()
+    {
+        AudioListener.volume = 0.0f;
+    }
     public void StartGame()
     {
         Race race = ParseEnum<Race>(inputRace.options[inputRace.value].text);

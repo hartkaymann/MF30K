@@ -7,6 +7,12 @@ public class SoundManager : Manager<SoundManager>
     private bool musicOn = true;
     private bool soundOn = true;
 
+    private void Awake()
+    {
+        MusicOn = true;
+        SoundOn = true;
+    }
+
     public bool MusicOn
     {
         get { return musicOn; }

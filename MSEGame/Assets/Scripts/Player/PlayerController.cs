@@ -50,7 +50,8 @@ public class PlayerController : MonoBehaviour, IDropHandler, IPointerEnterHandle
 
     void Start()
     {
-        description.SetActive(false);
+        if (description != null)
+            description.SetActive(false);
     }
 
     private void OnPlayerPropertyChanged()
@@ -231,9 +232,9 @@ public class PlayerController : MonoBehaviour, IDropHandler, IPointerEnterHandle
     [ContextMenu("Player Attack")]
     public void Attack()
     {
-        if(soundAttack != null) 
+        if (soundAttack != null)
             soundAttack.Play();
-        
+
         animator.SetTrigger(isAttackingHash);
     }
 
