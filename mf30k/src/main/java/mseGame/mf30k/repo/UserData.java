@@ -6,6 +6,10 @@ import jakarta.persistence.TemporalType;
 import java.sql.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.ArrayList;
+
 @Table(name = "users")
 @Entity
 public class UserData {
@@ -28,18 +32,19 @@ public class UserData {
 	@OneToMany (cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="user_owner")
 	@OrderBy("id DESC")
-	private List<RunData> runs;
+	@JsonManagedReference
+	private List<RunData> runs = new ArrayList<RunData>();
 
 	public UserData(Long id, String username, int wins, int losses, Date registrationDate) {
-		this(username, wins, losses, registrationDate);
+		this(username, registrationDate);
 		this.id = id;
 	}
 
-	public UserData(String username, int wins, int losses, Date registrationDate) {
+	public UserData(String username, Date registrationDate) {
 		super();
 		this.username = username;
-		this.wins = wins;
-		this.losses = losses;
+		this.wins = 0;
+		this.losses = 0;
 		this.registrationDate = registrationDate;
 	}
 
@@ -59,6 +64,10 @@ public class UserData {
 	
 	public void addRun(RunData run) {
 		this.runs.add(run);
+	}
+	
+	public void removeRun(RunData run) {
+		runs.remove(run);
 	}
 
 	public Long getId() {
