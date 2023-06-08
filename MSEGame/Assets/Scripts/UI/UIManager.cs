@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : Manager<UIManager> 
+public class UIManager : Manager<UIManager>
 {
     [SerializeField] private GameObject panelChange;
     [SerializeField] private GameObject panelVictory;
@@ -16,23 +16,20 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private GameObject nextStage;
     [SerializeField] private GameObject backpack;
     [SerializeField] private GameObject equipment;
-
-    [SerializeField] private Button ability;
+    [SerializeField] private AbilityButton buttonAbility;
 
     [SerializeField] private TextMeshProUGUI textStage;
 
     protected override void Init()
     {
-        GameManager.OnGameStateChange += GameManagerOnGameStateChanged;
+        GameManager.OnGameStageChange += GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
-        GameManager.OnNewCycle += GameManagerOnNewCycle;
     }
 
     private void OnDestroy()
     {
-        GameManager.OnGameStateChange -= GameManagerOnGameStateChanged;
+        GameManager.OnGameStageChange -= GameManagerOnGameStateChanged;
         GameManager.OnChangeClass += GameManagerOnChangeClass;
-        GameManager.OnNewCycle += GameManagerOnNewCycle;
     }
 
     private void GameManagerOnGameStateChanged(GameStage stage)
@@ -45,6 +42,7 @@ public class UIManager : Manager<UIManager>
 
         if (stage == GameStage.Victory)
             UpdateVictoryPanel();
+
     }
 
     public void HandleToggleEquipment()
@@ -90,12 +88,9 @@ public class UIManager : Manager<UIManager>
         }
     }
 
-    public void GameManagerOnNewCycle()
+    public void ChangeAbility(ProfessionController profCtrl)
     {
-        if(RoomManager.Instance.CurrentRoom.NPC.TryGetComponent<ProfessionController>(out var profCtrl))
-        {
-            ability.enabled = (profCtrl.Cooldown == 0);
-        }
+        buttonAbility.ProfessionController = profCtrl;
     }
 
     public void UpdateVictoryPanel()

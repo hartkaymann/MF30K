@@ -114,7 +114,6 @@ public class NetworkManager : Manager<NetworkManager>
         try
         {
             JObject obj = JObject.Parse(jsonResponse);
-            Debug.Log($"Sign In Response: {obj}");
             return obj != null;
 
         }
@@ -140,7 +139,6 @@ public class NetworkManager : Manager<NetworkManager>
 
         var jsonResponse = req.downloadHandler.text;
 
-        Debug.Log($"Sign Up Response: {jsonResponse}");
         req.Dispose();
         return jsonResponse == "true";
     }
@@ -157,9 +155,22 @@ public class NetworkManager : Manager<NetworkManager>
         req.Dispose();
     }
 
+    public IEnumerator PostRun(Player player)
+    {
+        string path = $"http://{url}:{port}/player/{player.Name}/run";
+        UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
+        yield return req.SendWebRequest();
+        while (!req.isDone)
+        {
+            yield return null;
+        }
+        req.Dispose();
+    }
+
     public IEnumerator PostEndRun(Player player)
     {
-        string path = $"http://{url}:{port}/endrun";
+        Debug.Log("Endrun Called");
+        string path = $"http://{url}:{port}/player/{player.Name}/run";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
         yield return req.SendWebRequest();
         while (!req.isDone)
@@ -171,7 +182,7 @@ public class NetworkManager : Manager<NetworkManager>
 
     public IEnumerator PostCombat(Player player, Combat combat)
     {
-        string path = $"http://{url}:{port}/{player.Name}/combat";
+        string path = $"http://{url}:{port}/player/{player.Name}/combat";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, combat);
         yield return req.SendWebRequest();
         while (!req.isDone)
@@ -311,15 +322,68 @@ public class NetworkManager : Manager<NetworkManager>
         );
     }
 
-    public async Task<GameStage> GetStage()
+    public async Task<User> GetUserStats()
     {
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.GET);
+        string username = SessionData.Username;
+        if (username.Length == 0)
+            return null;
 
-        var obj = await SendRequestWithResponse(req);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stats/{username}", RequestType.GET);
+
+        var userObj = await SendRequestWithResponse(req);
+
+        // Amen
+        User user = new()
+        {
+            Id = (string)userObj.SelectToken("id"),
+            Username = (string)userObj.SelectToken("username"),
+            Wins = int.Parse((string)userObj.SelectToken("wins")),
+            Losses = int.Parse((string)userObj.SelectToken("losses")),
+            Runs = new Func<List<Run>>(() =>
+            {
+                string[] runsString = userObj.SelectToken("runs")?.ToObject<string[]>();
+                JArray array = JArray.Parse(null);
+
+                List<Run> runs = new();
+                foreach (JObject runObj in array.Children<JObject>())
+                {
+                    Run run = new()
+                    {
+                        Id = int.Parse((string)runObj.SelectToken("id")),
+                        Level = int.Parse((string)runObj.SelectToken("level")),
+                        CombatLevel = int.Parse((string)runObj.SelectToken("combatlevel")),
+                        GoldSold = int.Parse((string)runObj.SelectToken("goldsold")),
+                        Profession = ParseEnum<Profession>((string)runObj.SelectToken("profession")),
+                        Race = ParseEnum<Race>((string)runObj.SelectToken("race")),
+                        Combats = new Func<List<Combat>>(() =>
+                        {
+                            string runsString = (string)userObj.SelectToken("runs");
+                            JArray array = JArray.Parse(runsString);
+
+                            List<Combat> combats = new();
+                            foreach (JObject combatObj in array.Children<JObject>())
+                            {
+                                Combat combat = new()
+                                {
+                                    PlayerLevel = int.Parse((string)combatObj.SelectToken("playerlevel")),
+                                    MonsterLevel = int.Parse((string)combatObj.SelectToken("monsterlevel")),
+                                    Victory = bool.Parse((string)combatObj.SelectToken("victory")),
+                                    Consequence = int.Parse((string)combatObj.SelectToken("consequence")),
+                                };
+                                combats.Add(combat);
+                            }
+                            return combats;
+                        })()
+                    };
+                    runs.Add(run);
+                }
+                return runs;
+            })()
+        };
 
         req.Dispose();
 
-        return ParseEnum<GameStage>((string)obj.SelectToken("GameStage"));
+        return null;
     }
 
     /////////

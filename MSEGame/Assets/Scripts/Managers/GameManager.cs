@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public class GameManager : Manager<GameManager>
@@ -14,7 +14,7 @@ public class GameManager : Manager<GameManager>
     private Combat currentCombat;
     public GameStage Stage { get { return stage; } }
 
-    public static event Action<GameStage> OnGameStateChange;
+    public static event Action<GameStage> OnGameStageChange;
     public static event Action OnNewCycle;
     public static event Action<DoorCard> OnChangeClass;
 
@@ -26,7 +26,6 @@ public class GameManager : Manager<GameManager>
     void Start()
     {
         FetchPlayerInformation();
-        UpdateGameStage(GameStage.InventoryManagement);
     }
 
     public void UpdateGameStage(GameStage newStage)
@@ -37,10 +36,12 @@ public class GameManager : Manager<GameManager>
         switch (newStage)
         {
             case GameStage.InventoryManagement:
+                RestartStageTimer(20);
                 RoomManager.Instance.CurrentRoom.OpenDoor();
                 OnNewCycle?.Invoke();
                 break;
             case GameStage.DrawCard:
+                RestartStageTimer(10);
                 PlayerController playerController = PlayerManager.Instance.PlayerController;
                 Vector3 doorPosition = RoomManager.Instance.CurrentRoom.transform.Find("Door").gameObject.transform.position;
 
@@ -50,27 +51,30 @@ public class GameManager : Manager<GameManager>
 
                 Invoke(nameof(DrawDoorCard), 1f);
                 break;
-            case GameStage.CombatPreparations:
+            case GameStage.CombatPreparation:
+                RestartStageTimer(20);
                 break;
             case GameStage.Selection:
+                RestartStageTimer(20);
                 ChangeClass();
                 break;
             case GameStage.Combat:
+                RestartStageTimer(30);
                 Combat();
                 break;
             case GameStage.Victory:
+                RestartStageTimer(20);
                 Victory();
                 break;
             case GameStage.Defeat:
+                RestartStageTimer(20);
                 Defeat();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(newStage), newStage, null);
         }
 
-        RestartStageTimer();
-
-        OnGameStateChange?.Invoke(newStage);
+        OnGameStageChange?.Invoke(newStage);
         StartCoroutine(NetworkManager.Instance.PutStage(stage));
     }
 
@@ -88,7 +92,10 @@ public class GameManager : Manager<GameManager>
             player = await NetworkManager.Instance.GetPlayer(SessionData.Username);
         }
 
-        PlayerManager.Instance.InstantiatePlayer(player);
+        PlayerManager.Instance.InstantiatePlayer(player, true);
+        StartCoroutine(NetworkManager.Instance.PostRun(PlayerManager.Instance.PlayerController.Player));
+
+        UpdateGameStage(GameStage.InventoryManagement);
     }
 
     async void DrawDoorCard()
@@ -121,7 +128,7 @@ public class GameManager : Manager<GameManager>
         }
 
         int playerLvl = PlayerManager.Instance.PlayerController.Player.CombatLevel;
-        int enemyLvl = monsterCard.level;
+        int enemyLvl = monsterCard.Level;
 
         currentCombat = new Combat()
         {
@@ -129,30 +136,69 @@ public class GameManager : Manager<GameManager>
             MonsterLevel = enemyLvl
         };
 
-        // Prepare combat wheel and wait until it finishes
-        combatWheel.Reset();
-        UIManager.Instance.ToggleCombatPanel();
-        Debug.Log($"Setting ratio {playerLvl} : {enemyLvl}");
-        combatWheel.SetRatio(playerLvl / (float)(playerLvl + enemyLvl));
-        while (!combatWheel.IsFinished)
-        {
-            await Task.Delay(500);
-        }
-        currentCombat.Victory = combatWheel.GetResult();
-        UIManager.Instance.ToggleCombatPanel();
+        currentCombat.Victory = await TurnCombatWheel();
 
+        // If knight ability is acive, you can go again
+        if (!currentCombat.Victory && PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
+        {
+            if (knightCtrl.Active)
+                currentCombat.Victory = await TurnCombatWheel();
+            knightCtrl.Active = false;
+        }
+
+        StartCoroutine(SequenceCombat());
+    }
+
+    private IEnumerator SequenceCombat()
+    {
         PlayerController currentPlayer = PlayerManager.Instance.PlayerController;
         Transform playerTransform = currentPlayer.gameObject.transform;
         Transform npcTransform = RoomManager.Instance.CurrentRoom.gameObject.transform.Find("NPC");
 
-        //TODO: Move there, if kill, destroy monster, if defeat, lie on ground or sth
-        currentPlayer.RunForDuration(2f);
-        StartCoroutine(AnimationManager.Instance.MoveAndBack(playerTransform, npcTransform.position, 2f));
+        Vector3 startPos = playerTransform.position;
+        float playerWidth = currentPlayer.GetComponent<BoxCollider2D>().size.x;
 
-        // Kill monster
+        currentPlayer.StartRunning();
+        yield return StartCoroutine(AnimationManager.Instance.MoveFromTo(playerTransform, startPos, npcTransform.position - new Vector3(playerWidth, 0, 0), 1f));
 
-        //TODO: Very hardcoded, not a fan. Meh!
-        Invoke(nameof(NextStage), 2f);
+        currentPlayer.Attack();
+        yield return new WaitForSeconds(0.8f);
+
+        if (currentCombat.Victory)
+        {
+            RoomManager.Instance.CurrentRoom.NPC.Die();
+        }
+        else
+        {
+            if (currentPlayer.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.AddForce(startPos - playerTransform.position + Vector3.up, ForceMode.Impulse);
+                yield return new WaitForSeconds(1);
+            }
+        }
+        yield return new WaitForSeconds(.5f);
+
+        playerTransform.Rotate(Vector2.up, 180f);
+        yield return StartCoroutine(AnimationManager.Instance.MoveFromTo(playerTransform, playerTransform.position, startPos, 1f));
+        playerTransform.Rotate(Vector2.up, 180f);
+
+        currentPlayer.StopRunning();
+
+        Invoke(nameof(NextStage), 1f);
+    }
+
+    private async Task<bool> TurnCombatWheel()
+    {
+        combatWheel.Reset();
+        UIManager.Instance.ToggleCombatPanel();
+        combatWheel.SetRatio(currentCombat.PlayerLevel / (float)(currentCombat.PlayerLevel + currentCombat.MonsterLevel));
+        while (!combatWheel.IsFinished)
+        {
+            await Task.Delay(500);
+        }
+        UIManager.Instance.ToggleCombatPanel();
+
+        return combatWheel.GetResult();
     }
 
     private void Victory()
@@ -163,6 +209,11 @@ public class GameManager : Manager<GameManager>
         PlayerManager.Instance.PlayerController.Player.Level += 1;
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(false);
         DrawTreasureCard();
+
+        if (PlayerManager.Instance.PlayerController.TryGetComponent<RogueController>(out var rogueCtrl) && rogueCtrl.IsActive)
+        {
+            DrawTreasureCard();
+        }
     }
 
     private void Defeat()
@@ -188,7 +239,6 @@ public class GameManager : Manager<GameManager>
 
                     Array values = Enum.GetValues(typeof(EquipmentSlot));
 
-                    // Invoke("PrayThisWorks")
                     bool slotNotEmpty = false;
                     int tries = 0;
                     while (!slotNotEmpty && tries < values.Length)
@@ -197,14 +247,14 @@ public class GameManager : Manager<GameManager>
 
                         // Chose random slot
                         EquipmentSlot randSlot = (EquipmentSlot)values.GetValue(Random.Range(0, values.Length));
+                        Debug.Log("Searching for spot, current: " + randSlot);
                         Transform cardGo = GameObject.Find($"Equipment/Slots/{randSlot}/Slot").transform.GetChild(0);
                         if (cardGo != null)
                         {
-                            Debug.Log($"Found card in slot {randSlot}");
+                            Debug.Log("Slot found!");
                             slotNotEmpty = true;
                             if (cardGo.TryGetComponent<CardController>(out var ctrl))
                             {
-                                Debug.Log("Discarding...");
                                 ctrl.Discard();
                             }
                         }
@@ -219,7 +269,6 @@ public class GameManager : Manager<GameManager>
                     if (idx > 0 && hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
                     {
                         ctrl.Discard();
-                        Debug.Log($"Discarding {idx}th hand card...");
                     }
                     break;
                 }
@@ -259,26 +308,26 @@ public class GameManager : Manager<GameManager>
 
     public void Exit()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Outro");
     }
 
 
-    private void RestartStageTimer()
+    private void RestartStageTimer(float time = 30f)
     {
         if (stageTimerCoroutine != null)
         {
             StopCoroutine(stageTimerCoroutine);
         }
 
-        stageTimerCoroutine = StartCoroutine(StageTimer());
+        stageTimerCoroutine = StartCoroutine(StageTimer(time));
     }
 
-    private IEnumerator StageTimer()
+    private IEnumerator StageTimer(float time)
     {
-        yield return Countdown(30);
+        yield return Countdown(time);
         NextStage();
     }
-    private IEnumerator Countdown(int timeInSeconds)
+    private IEnumerator Countdown(float timeInSeconds)
     {
         for (float remaining = timeInSeconds; remaining >= 0; remaining -= Time.deltaTime)
         {
@@ -296,14 +345,14 @@ public class GameManager : Manager<GameManager>
                 break;
             case GameStage.DrawCard:
                 if (RoomManager.Instance.CurrentRoom.Card.type == CardType.Monster)
-                    UpdateGameStage(GameStage.CombatPreparations);
+                    UpdateGameStage(GameStage.CombatPreparation);
                 else
                     UpdateGameStage(GameStage.Selection);
                 break;
             case GameStage.Selection:
                 UpdateGameStage(GameStage.InventoryManagement);
                 break;
-            case GameStage.CombatPreparations:
+            case GameStage.CombatPreparation:
                 UpdateGameStage(GameStage.Combat);
                 break;
             case GameStage.Combat:
@@ -326,7 +375,7 @@ public enum GameStage
     InventoryManagement,
     DrawCard,
     Selection,
-    CombatPreparations,
+    CombatPreparation,
     Combat,
     Victory,
     Defeat

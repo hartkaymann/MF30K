@@ -470,7 +470,9 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 6213fb4f32150214fbe4292d05c33f5a, type: 3}
+      name: _Emission
     nameFileIdTable:
       ghost_0: -699802557
       ghost_1: 2078399650

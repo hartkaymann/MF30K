@@ -2,10 +2,11 @@ public class RogueController : ProfessionController
 {
     public bool IsActive { get; private set; }
 
-    private void Start()
+    protected override void Init()
     {
-        AbilityName = "Something Gambit";
+        AbilityName = "Death's Gambit";
         Cooldown = 3;
+        Description = "A double edged sword!\nGet double tresures when you win.\nBut lose the chance to escpace when defeated.";
     }
 
     public override void UseAbility()

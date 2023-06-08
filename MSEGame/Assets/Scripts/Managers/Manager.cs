@@ -16,8 +16,6 @@ public abstract class Manager<T> : MonoBehaviour where T : Component
         }
 
         Init();
-
-        Debug.Log($"Instantiated {Instance.name} Instance");
     }
 
     protected virtual void Init() { }

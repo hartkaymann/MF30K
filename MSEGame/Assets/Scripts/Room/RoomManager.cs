@@ -1,7 +1,8 @@
-using TMPro;
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class RoomManager : Manager<RoomManager> 
+public class RoomManager : Manager<RoomManager>
 {
     [SerializeField] private RoomController currentRoom;
     public RoomController CurrentRoom { get { return currentRoom; } }
@@ -27,9 +28,28 @@ public class RoomManager : Manager<RoomManager>
         {
             GameObject prefab = monsterCard.title.ToLower().EndsWith("slime") ? slimePrefab : ghostPrefab;
             currentRoom.NPC = Instantiate(prefab, npcPosition.position, Quaternion.identity, npcPosition).GetComponent<NpcController>();
-        } else
+        }
+        else
         {
             currentRoom.NPC = Instantiate(npcPrefab, npcPosition.position, Quaternion.identity, npcPosition).GetComponent<NpcController>();
+
+            Race race = PlayerManager.Instance.PlayerController.Player.Race;
+            Profession profession = PlayerManager.Instance.PlayerController.Player.Profession;
+
+            if (card is RaceCard raceCard)
+            {
+                race = raceCard.race;
+            }
+            else if (card is ProfessionCard professionCard)
+            {
+                profession = professionCard.profession;
+            }
+
+            SpriteRenderer sr = currentRoom.NPC.GetComponent<SpriteRenderer>();
+            sr.sprite = SpriteManager.Instance.GetNpcSprite(race, profession);
+
+            sr.flipX = (profession == Profession.Knight);
+
         }
     }
 }

@@ -26,6 +26,8 @@ public class Player
     [JsonProperty] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     public event Action OnPropertyChanged;
+    public event Action OnProfessionChanged;
+    public event Action OnRaceChanged;
 
     [JsonIgnore]
     public string Name
@@ -63,6 +65,7 @@ public class Player
         {
             if (value != combatLevel)
             {
+                Debug.Log("Player On Combat level change called");
                 combatLevel = value;
                 OnPropertyChanged?.Invoke();
             }
@@ -89,11 +92,10 @@ public class Player
         get => race;
         set
         {
-            if (value != race)
-            {
-                race = value;
-                OnPropertyChanged?.Invoke();
-            }
+            race = value;
+            Debug.Log("Player On Profession Change called");
+            OnRaceChanged?.Invoke();
+            OnPropertyChanged?.Invoke();
         }
     }
 
@@ -103,11 +105,10 @@ public class Player
         get => profession;
         set
         {
-            if (value != profession)
-            {
-                profession = value;
-                OnPropertyChanged?.Invoke();
-            }
+            Debug.Log("Player On Profession Change called");
+            profession = value;
+            OnProfessionChanged?.Invoke();
+            OnPropertyChanged?.Invoke();
         }
     }
 
@@ -179,14 +180,12 @@ public class Player
             {
                 equipment = value;
                 CalculateCombatLevel();
-                Debug.Log("Equipment setter called private");
             }
         }
     }
 
     public Player(string name, Race race, Profession profession, Gender gender, int level, int combatLevel)
     {
-        Debug.Log("Creating new player instance: " + name.ToString());
         this.name = name;
         this.race = race;
         this.profession = profession;
@@ -197,7 +196,6 @@ public class Player
         gold = 0;
         roundBonus = 0;
 
-        Debug.Log("Creating player inventory");
         equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
     }
 
@@ -212,12 +210,12 @@ public class Player
             newCombatLevel += card.bonus;
         }
         CombatLevel = newCombatLevel + roundBonus + raceEffect;
-        Debug.Log($"Combat level: {CombatLevel} (Base: {newCombatLevel}, Bonus: {roundBonus}, Passive: {raceEffect})");
+        //Debug.Log($"Combat level: {CombatLevel} (Base: {newCombatLevel}, Bonus: {roundBonus}, Passive: {raceEffect})");
     }
 
     public static Player GetDummy()
     {
-        return new("Kay", Race.Human, Profession.Knight, Gender.Male, 1, 0);
+        return new("Kay", Race.Orc, Profession.Wizard, Gender.Male, 1, 0);
     }
 
 }
