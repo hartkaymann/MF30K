@@ -162,7 +162,7 @@ public class GameManager : Manager<GameManager>
         yield return StartCoroutine(AnimationManager.Instance.MoveFromTo(playerTransform, startPos, npcTransform.position - new Vector3(playerWidth, 0, 0), 1f));
 
         currentPlayer.Attack();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.8f);
 
         if (currentCombat.Victory)
         {
@@ -176,6 +176,7 @@ public class GameManager : Manager<GameManager>
                 yield return new WaitForSeconds(1);
             }
         }
+        yield return new WaitForSeconds(.5f);
 
         playerTransform.Rotate(Vector2.up, 180f);
         yield return StartCoroutine(AnimationManager.Instance.MoveFromTo(playerTransform, playerTransform.position, startPos, 1f));
@@ -307,7 +308,7 @@ public class GameManager : Manager<GameManager>
 
     public void Exit()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Outro");
     }
 
 

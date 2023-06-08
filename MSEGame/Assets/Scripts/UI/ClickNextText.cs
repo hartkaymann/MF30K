@@ -3,6 +3,7 @@ using UnityEngine;
 public class ClickNextText : MonoBehaviour
 {
     [SerializeField] private Transform textParent;
+    public int NoTexts {  get; private set; }
 
     private int currentIndex;
     public int CurrentIndex
@@ -14,13 +15,21 @@ public class ClickNextText : MonoBehaviour
         set
         {
             
-            if(value >= textParent.childCount)
+            if(value >= NoTexts)
             {
+                if(IntroManager.Instance != null)
+                {
                 IntroManager.Instance.StartGame();
+
+                } else if(OutroManager.Instance != null)
+                {
+                    OutroManager.Instance.StartSequence();
+                }
+                return;
             }
 
             currentIndex = value;
-            for (int i = 0; i < textParent.childCount; i++)
+            for (int i = 0; i < NoTexts; i++)
             {
                 textParent.GetChild(i).gameObject.SetActive(i == currentIndex);
             }
@@ -29,6 +38,8 @@ public class ClickNextText : MonoBehaviour
 
     private void Start()
     {
+        NoTexts = textParent.childCount;
+
         CurrentIndex = 0;
     }
 

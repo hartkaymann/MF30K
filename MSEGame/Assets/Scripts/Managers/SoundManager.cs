@@ -4,8 +4,8 @@ public class SoundManager : Manager<SoundManager>
 {
     [SerializeField] private AudioSource musicSource;
 
-    private bool musicOn;
-    private bool soundOn;
+    private bool musicOn = true;
+    private bool soundOn = true;
 
     public bool MusicOn
     {
@@ -13,7 +13,10 @@ public class SoundManager : Manager<SoundManager>
         set
         {
             musicOn = value;
-            musicSource.enabled = SoundOn;
+            if (SoundOn)
+                musicSource.UnPause();
+            else
+                musicSource.Pause();
         }
     }
 
@@ -23,10 +26,8 @@ public class SoundManager : Manager<SoundManager>
         set
         {
             soundOn = value;
-            if (Camera.main.TryGetComponent<AudioListener>(out var listener))
-            {
-                listener.enabled = soundOn;
-            }
+            AudioListener.pause = !soundOn;
+            AudioListener.volume = soundOn ? 1 : 0;
         }
     }
 

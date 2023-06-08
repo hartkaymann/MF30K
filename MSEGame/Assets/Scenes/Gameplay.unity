@@ -2540,6 +2540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   humanPrefab: {fileID: 5182654055869055672, guid: e80994fdf15ab564986650836a6ddff2, type: 3}
   elfPrefab: {fileID: 5182654055869055672, guid: 1f7b50c01b4011445a2dd58519713939, type: 3}
+  orcPrefab: {fileID: 5182654055869055672, guid: 32c6ff4e6b8fb344a87c4174520046ea, type: 3}
   playerInfoPrefab: {fileID: 7154530170410024049, guid: 01a548e0e79b5d0408a97d149e16f72c, type: 3}
   playerGold: {fileID: 418339772}
 --- !u!1 &356877785
@@ -5688,7 +5689,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.05
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -9544,9 +9545,9 @@ RectTransform:
   m_Father: {fileID: 722594814}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 480, y: -437}
   m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1415584596
@@ -9700,7 +9701,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1434548610
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9970,7 +9971,7 @@ MonoBehaviour:
   - name: Elf
     animator: {fileID: 9100000, guid: 9e8d0c710f669954e86b06ca1d0c0212, type: 2}
   - name: Orc
-    animator: {fileID: 9100000, guid: 9e8d0c710f669954e86b06ca1d0c0212, type: 2}
+    animator: {fileID: 9100000, guid: 357677ea17d422944969cb90894fa565, type: 2}
 --- !u!1 &1484679360
 GameObject:
   m_ObjectHideFlags: 0
@@ -10083,9 +10084,9 @@ RectTransform:
   m_Father: {fileID: 722594814}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 480, y: -665}
   m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1504589756
@@ -12438,9 +12439,9 @@ RectTransform:
   m_Father: {fileID: 722594814}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 480, y: -204}
   m_SizeDelta: {x: 550, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1954201895
@@ -13346,7 +13347,7 @@ MonoBehaviour:
   - name: Elf
     sprite: {fileID: -1349661235, guid: b3e8644f8f8327041b8ea5a35c47c11c, type: 3}
   - name: Orc
-    sprite: {fileID: 1402966543, guid: b3e8644f8f8327041b8ea5a35c47c11c, type: 3}
+    sprite: {fileID: 754065379, guid: 9df0d5a2805f16a43ac1b7cf13d1e128, type: 3}
   - name: Slime
     sprite: {fileID: -1559001058, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
   - name: Background
@@ -13374,6 +13375,25 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: dc62ecb53980b9a46ab8df9789297158, type: 3}
   - name: WeaponR
     sprite: {fileID: 21300000, guid: 2dedc079445463f469d55d2f4b77071a, type: 3}
+  npcSprites:
+  - name: HumanKnight
+    sprite: {fileID: 530759501, guid: 3e846554e74406246987b5bb4803471b, type: 3}
+  - name: HumanWizard
+    sprite: {fileID: -2108313682, guid: 0c310df5c5a613349a8d256052068359, type: 3}
+  - name: HumanRogue
+    sprite: {fileID: 816488000, guid: 0c310df5c5a613349a8d256052068359, type: 3}
+  - name: ElfKnight
+    sprite: {fileID: -1349661235, guid: b3e8644f8f8327041b8ea5a35c47c11c, type: 3}
+  - name: ElfWizard
+    sprite: {fileID: -104122449, guid: 0c310df5c5a613349a8d256052068359, type: 3}
+  - name: ElfRogue
+    sprite: {fileID: 1126476038, guid: 0c310df5c5a613349a8d256052068359, type: 3}
+  - name: OrcKnight
+    sprite: {fileID: -1448776564, guid: 9df0d5a2805f16a43ac1b7cf13d1e128, type: 3}
+  - name: OrcWizard
+    sprite: {fileID: -1929346345, guid: 0c310df5c5a613349a8d256052068359, type: 3}
+  - name: OrcRogue
+    sprite: {fileID: -1042184813, guid: 0c310df5c5a613349a8d256052068359, type: 3}
   cardSprites:
   - {fileID: 658147161, guid: 74086a4b40cc8d543b8e27104bfde6f9, type: 3}
   - {fileID: -1964112004, guid: 74086a4b40cc8d543b8e27104bfde6f9, type: 3}

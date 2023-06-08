@@ -7,6 +7,7 @@ public class PlayerManager : Manager<PlayerManager>
 
     [SerializeField] private GameObject humanPrefab;
     [SerializeField] private GameObject elfPrefab;
+    [SerializeField] private GameObject orcPrefab;
     [SerializeField] private GameObject playerInfoPrefab;
     [SerializeField] private TextMeshProUGUI playerGold;
 
@@ -31,8 +32,16 @@ public class PlayerManager : Manager<PlayerManager>
             Destroy(PlayerController.gameObject);
         }
 
+        // Get correct prefab
+        GameObject prefab = player.Race switch
+        {
+            Race.Human => humanPrefab,
+            Race.Elf => elfPrefab,
+            Race.Orc => orcPrefab,
+            _ => humanPrefab,
+        };
+
         // Instantiate player at specified position
-        GameObject prefab = player.Race == Race.Human ? humanPrefab : elfPrefab;
         GameObject obj = Instantiate(prefab, new Vector3(-2.5f, -0.72f, 0f), Quaternion.identity);
         if (obj.TryGetComponent<PlayerController>(out var pc))
         {

@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour, IDropHandler, IPointerEnterHandle
         {
             int buff = Player.RaceEffect + Player.RoundBonus;
             string buffTxt = $"({buff})";
-            textDescCombat.text = $"Combat:: {Player.CombatLevel} {(buff > 0 ? buffTxt : "")}";
+            textDescCombat.text = $"Combat: {Player.CombatLevel} {(buff > 0 ? buffTxt : "")}";
         }
 
         if (description.transform.Find("Race").TryGetComponent<TextMeshProUGUI>(out var textDescRace))

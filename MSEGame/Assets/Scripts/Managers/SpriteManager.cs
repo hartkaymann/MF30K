@@ -14,6 +14,7 @@ public class SpriteManager : Manager<SpriteManager>
 
     [SerializeField] private NamedSprite[] namedSprites;
     [SerializeField] private NamedSprite[] starterSprites;
+    [SerializeField] private NamedSprite[] npcSprites;
     [SerializeField] private Sprite[] cardSprites;
     [SerializeField] private Sprite[] weaponSprites;
     [SerializeField] private Sprite[] helmetSprites;
@@ -25,6 +26,7 @@ public class SpriteManager : Manager<SpriteManager>
 
     private Dictionary<string, Sprite> sprites;
     private Dictionary<string, Sprite> starters;
+    private Dictionary<string, Sprite> npcs;
 
     protected override void Init()
     {
@@ -40,6 +42,13 @@ public class SpriteManager : Manager<SpriteManager>
         {
             NamedSprite ns = starterSprites[i];
             starters.Add(ns.name, ns.sprite);
+        }
+
+        npcs = new Dictionary<string, Sprite>();
+        for (int i = 0; i < npcSprites.Length; i++)
+        {
+            NamedSprite ns = npcSprites[i];
+            npcs.Add(ns.name, ns.sprite);
         }
     }
 
@@ -74,6 +83,11 @@ public class SpriteManager : Manager<SpriteManager>
     public Sprite GetStarterSprite(EquipmentSlot slot)
     {
         return starters[slot.ToString()];
+    }
+
+    public Sprite GetNpcSprite(Race race, Profession profession)
+    {
+        return npcs[race.ToString() + profession.ToString()];
     }
 
     public Sprite GetCardSprite()
