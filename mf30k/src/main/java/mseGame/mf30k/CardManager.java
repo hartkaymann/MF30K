@@ -15,9 +15,8 @@ public class CardManager {
 	private HashMap<UUID, Card> cards = new HashMap<UUID, Card>();
 	private HashMap<UUID, Card> discarded = new HashMap<UUID, Card>();
 	
-	private Random rand = new Random();
-	private TreasureFactory treasures = new TreasureFactory(rand);
-	private DoorCardFactory doors = new DoorCardFactory(rand);
+	private TreasureFactory treasures = new TreasureFactory();
+	private DoorCardFactory doors = new DoorCardFactory();
 	
 	public HashMap<UUID, Card> getCards() {
 		return cards;
