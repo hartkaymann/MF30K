@@ -21,16 +21,17 @@ public class UICombatController : MonoBehaviour
 
     public void Render(Combat combat)
     {
-        background.color = combat.Victory ? GameColor.Green : GameColor.Red;
-        fill.color = combat.Victory ? GameColor.Green : GameColor.Red;
+        background.color = combat.Win ? GameColor.Green : GameColor.Red;
+        fill.color = combat.Win ? GameColor.Green : GameColor.Red;
 
-        textPlayer.text = combat.PlayerLevel.ToString();
-        textMonster.text = combat.MonsterLevel.ToString();
+        textPlayer.text = combat.CombatLvlPlayer.ToString();
+        textMonster.text = combat.CombatLvlMonster.ToString();
 
         if (slider == null)
             return;
 
-        slider.maxValue = combat.PlayerLevel + combat.MonsterLevel;
-        slider.value = combat.PlayerLevel;
+        Debug.Log($"Combat: Win: {combat.Win}, PLvl: {combat.CombatLvlPlayer}, MLvl:{combat.CombatLvlMonster}, Consequence: {combat.Consequence}");
+        slider.maxValue = combat.CombatLvlPlayer + combat.CombatLvlMonster;
+        slider.value = combat.CombatLvlPlayer;
     }
 }

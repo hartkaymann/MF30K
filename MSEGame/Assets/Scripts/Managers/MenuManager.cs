@@ -2,9 +2,16 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : Manager<MenuManager>
 {
+    [SerializeField] private Image playerImg;
+    [SerializeField] private Sprite imgHuman;
+    [SerializeField] private Sprite imgElf;
+    [SerializeField] private Sprite imgOrc;
+
+
     [SerializeField] private TMP_Dropdown inputRace;
     [SerializeField] private TMP_Dropdown inputProfession;
     [SerializeField] private TMP_Dropdown inputGender;
@@ -27,6 +34,17 @@ public class MenuManager : Manager<MenuManager>
         Player player = new(SessionData.Username, race, profession, gender, 1, 0);
         StartCoroutine(NetworkManager.Instance.PostPlayer(player));
         SceneManager.LoadScene("Intro");
+    }
+
+    public void UpdatePlayerImage()
+    {
+        playerImg.sprite = ParseEnum<Race>(inputRace.options[inputRace.value].text) switch
+        {
+            Race.Human => imgHuman,
+            Race.Elf => imgElf,
+            Race.Orc => imgOrc,
+            _ => imgHuman,
+        };
     }
 
     public void QuitGame()
