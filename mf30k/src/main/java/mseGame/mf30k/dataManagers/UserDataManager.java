@@ -16,8 +16,6 @@ public class UserDataManager {
 	@Autowired
 	UserDataRepositoryJpa userRepo;
 	
-	@Autowired
-	RunDataRepositoryJpa runRepo;
 	
 	public UserData insertUser(String username, Date registrationDate) {
 		UserData newUser = userRepo.save(new UserData(username, registrationDate));

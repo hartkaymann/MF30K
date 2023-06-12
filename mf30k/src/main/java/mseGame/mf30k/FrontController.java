@@ -172,6 +172,7 @@ public class FrontController {
 		user_mgr.addRunToUser(player_id, currentRun);
 		user_mgr.update(user);
 		
+		//TODO update the wins and losses
 		this.curRunID = null;
 		this.stageChanges = 0;
 	}

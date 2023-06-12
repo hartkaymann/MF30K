@@ -8,8 +8,8 @@ public abstract class CardFactory {
 	
 	protected Random rand = new Random();
 	
-	public CardFactory(Random _rand) {
-		rand = _rand;
+	public CardFactory() {
+
 	}
 	
 	public Random getRand() {

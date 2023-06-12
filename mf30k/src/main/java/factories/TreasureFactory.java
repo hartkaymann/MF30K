@@ -14,8 +14,8 @@ import cards.equipmentType;
 @Service
 public class TreasureFactory extends CardFactory {
 
-	public TreasureFactory(Random _rand) {
-		super(_rand);
+	public TreasureFactory() {
+		super();
 	}
 
 	// Create Random Equipment
