@@ -30,7 +30,7 @@ public class NetworkManager : Manager<NetworkManager>
         if (data != null)
         {
             string jsonData = JsonConvert.SerializeObject(data);
-            //Debug.Log($"Request Body: {jsonData}");
+            Debug.Log($"Request Body: {jsonData}");
             var bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         }
@@ -114,7 +114,6 @@ public class NetworkManager : Manager<NetworkManager>
         try
         {
             JObject obj = JObject.Parse(jsonResponse);
-            Debug.Log($"Sign In Response: {obj}");
             return obj != null;
 
         }
@@ -140,7 +139,6 @@ public class NetworkManager : Manager<NetworkManager>
 
         var jsonResponse = req.downloadHandler.text;
 
-        Debug.Log($"Sign Up Response: {jsonResponse}");
         req.Dispose();
         return jsonResponse == "true";
     }
@@ -157,9 +155,9 @@ public class NetworkManager : Manager<NetworkManager>
         req.Dispose();
     }
 
-    public IEnumerator PostEndRun(Player player)
+    public IEnumerator PostRun(Player player)
     {
-        string path = $"http://{url}:{port}/endrun";
+        string path = $"http://{url}:{port}/player/{player.Name}/run";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
         yield return req.SendWebRequest();
         while (!req.isDone)
@@ -168,10 +166,9 @@ public class NetworkManager : Manager<NetworkManager>
         }
         req.Dispose();
     }
-
     public IEnumerator PostCombat(Player player, Combat combat)
     {
-        string path = $"http://{url}:{port}/{player.Name}/combat";
+        string path = $"http://{url}:{port}/player/{player.Name}/combat";
         UnityWebRequest req = CreateRequest(path, RequestType.POST, combat);
         yield return req.SendWebRequest();
         while (!req.isDone)
@@ -311,15 +308,21 @@ public class NetworkManager : Manager<NetworkManager>
         );
     }
 
-    public async Task<GameStage> GetStage()
+    public async Task<UserData> GetUserStats()
     {
-        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.GET);
+        string username = SessionData.Username;
+        if (username.Length == 0)
+            return null;
 
-        var obj = await SendRequestWithResponse(req);
+        UnityWebRequest req = CreateRequest($"http://{url}:{port}/stats/{username}", RequestType.GET);
 
+        var json = await SendRequestWithResponse(req);
+        Debug.Log(json.ToLineSeparatedString());
+        var user = JsonConvert.DeserializeObject<UserData>(json.ToString());
+        Debug.Log("Username from deserialized: " + user.Username);
         req.Dispose();
 
-        return ParseEnum<GameStage>((string)obj.SelectToken("GameStage"));
+        return user;
     }
 
     /////////
@@ -338,6 +341,18 @@ public class NetworkManager : Manager<NetworkManager>
     {
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.PUT, stage.ToString());
         yield return req.SendWebRequest();
+        req.Dispose();
+    }
+
+    public IEnumerator PutRun(Player player)
+    {
+        string path = $"http://{url}:{port}/player/{player.Name}/run";
+        UnityWebRequest req = CreateRequest(path, RequestType.PUT);
+        yield return req.SendWebRequest();
+        while (!req.isDone)
+        {
+            yield return null;
+        }
         req.Dispose();
     }
 

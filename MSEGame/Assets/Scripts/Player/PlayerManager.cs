@@ -7,6 +7,7 @@ public class PlayerManager : Manager<PlayerManager>
 
     [SerializeField] private GameObject humanPrefab;
     [SerializeField] private GameObject elfPrefab;
+    [SerializeField] private GameObject orcPrefab;
     [SerializeField] private GameObject playerInfoPrefab;
     [SerializeField] private TextMeshProUGUI playerGold;
 
@@ -14,32 +15,41 @@ public class PlayerManager : Manager<PlayerManager>
 
     protected override void Init()
     {
-        GameManager.OnGameStateChange += GameManagerOnGameStageChanged;
+        GameManager.OnGameStageChange += GameManagerOnGameStageChanged;
 
         // Destroy initial player
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if(player != null)
+        if (player != null)
         {
             Destroy(player);
         }
     }
 
-    public void InstantiatePlayer(Player player)
+    public void InstantiatePlayer(Player player, bool first = false)
     {
         if (PlayerController != null)
         {
             Destroy(PlayerController.gameObject);
         }
 
+        // Get correct prefab
+        GameObject prefab = player.Race switch
+        {
+            Race.Human => humanPrefab,
+            Race.Elf => elfPrefab,
+            Race.Orc => orcPrefab,
+            _ => humanPrefab,
+        };
+
         // Instantiate player at specified position
-        GameObject prefab = player.Race == Race.Human? humanPrefab : elfPrefab;
         GameObject obj = Instantiate(prefab, new Vector3(-2.5f, -0.72f, 0f), Quaternion.identity);
         if (obj.TryGetComponent<PlayerController>(out var pc))
         {
             pc.Player = player;
             PlayerController = pc;
 
-            PlayerController.EquipStarterGear();
+            if (first)
+                PlayerController.EquipStarterGear();
         }
 
         // Follow new player
@@ -54,12 +64,12 @@ public class PlayerManager : Manager<PlayerManager>
             follow.Follow = obj.transform.Find("Info").transform;
         }
 
-        player.OnPropertyChanged += UpdatePlayer;
+        player.OnPropertyChanged += OnPlayerPropertyChanged;
 
-        UpdatePlayer();
+        OnPlayerPropertyChanged();
     }
 
-    public void UpdatePlayer()
+    public void OnPlayerPropertyChanged()
     {
         Player player = PlayerController.Player;
         if (player == null)
@@ -104,23 +114,20 @@ public class PlayerManager : Manager<PlayerManager>
         }
     }
 
-    //TODO: Hand this to current player controller
-    public void ChangeCurrentPlayerClass()
+    public void ChangePlayerClass()
     {
         // Get doorcard and notify UI
         DoorCard card = RoomManager.Instance.CurrentRoom.Card;
 
         if (card is ProfessionCard professionCard)
         {
+            Debug.Log("Confirming player profession change, new: " + professionCard.profession);
             PlayerController.Player.Profession = professionCard.profession;
         }
         else if (card is RaceCard raceCard)
         {
+            Debug.Log("Confirming player race change, new: " + raceCard.race);
             PlayerController.Player.Race = raceCard.race;
-        }
-        else
-        {
-            Debug.LogWarning("Cannot apply cange!");
         }
     }
 
@@ -128,7 +135,6 @@ public class PlayerManager : Manager<PlayerManager>
     {
         if (PlayerController.Player == null)
         {
-            Debug.Log("No player, returning and not updating");
             return;
         }
 
@@ -140,7 +146,7 @@ public class PlayerManager : Manager<PlayerManager>
             player.RoundBonus = 0;
         }
 
-        if (stage == GameStage.CombatPreparations)
+        if (stage == GameStage.CombatPreparation)
         {
             // WE CHANGE IT HERE BECAUSE I DONT HAVE TIME TO MAKE PRETTY CODE RIGHT NOW SO MAYBE CHANGE THIS LATER IF YOU CAN BECAUSE ITS MAKING MY EYES BLEED
             if (player.Race == Race.Orc)
@@ -161,13 +167,14 @@ public class PlayerManager : Manager<PlayerManager>
             {
                 player.RaceEffect = 0; // Human = 0
             }
-
-            Debug.Log($"Applying Race Effect: {player.Race}");
         }
     }
 
     public void UseAbility()
     {
-        PlayerController.GetComponent<ProfessionController>().UseAbility();
+        if (PlayerController.TryGetComponent<ProfessionController>(out var profCtrl))
+        {
+            profCtrl.UseAbility();
+        }
     }
 }

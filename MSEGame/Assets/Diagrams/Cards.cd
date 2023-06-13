@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Card" Collapsed="true">
+    <Position X="9.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQQAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\Cards\Card.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CardController" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAUCAIQAIAAAAAAIEABAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\CardController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CardManager" Collapsed="true">
+    <Position X="9.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAACAAAIAACAAAAAAAEAAAQ=</HashCode>
+      <FileName>Assets\Scripts\Cards\CardManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CardRenderer" Collapsed="true">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAQQAAAAAAAAACAAAAAAABACAAABAgAAAAIAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\CardRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConsumableCard" Collapsed="true">
+    <Position X="8" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ConsumableCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DoorCard" Collapsed="true">
+    <Position X="12.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\DoorCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EquipmentCard" Collapsed="true">
+    <Position X="5.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\EquipmentCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonsterCard" Collapsed="true">
+    <Position X="10.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAEAAAABAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\MonsterCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfessionCard" Collapsed="true">
+    <Position X="14.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ProfessionCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RaceCard" Collapsed="true">
+    <Position X="12.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\RaceCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TreasureCard" Collapsed="true">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\TreasureCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="BuffTarget" Collapsed="true">
+    <Position X="8" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAgAAAQAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ConsumableCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EquipmentType" Collapsed="true">
+    <Position X="5.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAEAAAAAAAAAI=</HashCode>
+      <FileName>Assets\Scripts\Cards\EquipmentCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Profession" Collapsed="true">
+    <Position X="14.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAACAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ProfessionCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Race" Collapsed="true">
+    <Position X="12.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAIAAQAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\RaceCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
