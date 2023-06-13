@@ -16,7 +16,7 @@ public class Player {
 	private Gender gender;
 	private HashMap<UUID, Card> handCards;
 	private HashMap<UUID, Card> backpack;
-	private int playerLevel;
+	private int level;
 	private int combatLevel;
 	
 	
@@ -30,7 +30,7 @@ public class Player {
 		this.gender = gender;
 		this.handCards = handCards;
 		this.backpack = backpack;
-		this.playerLevel = playerLevel;
+		this.level = playerLevel;
 		this.combatLevel = combatLevel;
 	}
 	
@@ -127,10 +127,10 @@ public class Player {
 		this.backpack = backpack;
 	}
 	public int getPlayerLevel() {
-		return playerLevel;
+		return level;
 	}
 	public void setPlayerLevel(int playerLevel) {
-		this.playerLevel = playerLevel;
+		this.level = playerLevel;
 	}
 	public int getCombatLevel() {
 		return combatLevel;

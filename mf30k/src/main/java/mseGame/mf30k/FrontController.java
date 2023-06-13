@@ -150,7 +150,7 @@ public class FrontController {
 			RunData current = new RunData(user, 0, 0, 0, null, null);
 			current = run_mgr.insertRun(current);
 			curRunID = current.getId();
-			System.out.println(curRunID);
+			System.out.println("Current Run Id is: " + curRunID);
 			return true;
 		} else {
 			return false;
@@ -191,7 +191,12 @@ public class FrontController {
 	@PutMapping(value = "/player/{playerID}", consumes = "application/json")
 	public void updatePlayer(@PathVariable(name = "playerID") String playerID, @RequestBody Player playerDetails) {
 		Player updated = player_mgr.updatePlayer(playerID, playerDetails);
-		System.out.println(updated);
+		System.out.println("Updated Player: " + updated.getName());
+		System.out.println(updated.getRace());
+		System.out.println(updated.getProfession());
+		System.out.println(updated.getGender());
+		System.out.println(updated.getPlayerLevel());
+		System.out.println(updated.getCombatLevel());
 		return;
 	}
 
