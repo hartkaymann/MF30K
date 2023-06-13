@@ -43,8 +43,8 @@ public class FrontController {
 	// Objects for the current game play
 	private GameStage stage;
 	private int stageChanges = 0;
-	private Long curRunID;
-
+	private Long curRunID = null;
+	
 	public int getStageChanges() {
 		return this.stageChanges;
 	}
@@ -150,6 +150,7 @@ public class FrontController {
 			RunData current = new RunData(user, 0, 0, 0, null, null);
 			current = run_mgr.insertRun(current);
 			curRunID = current.getId();
+			System.out.println(curRunID);
 			return true;
 		} else {
 			return false;
@@ -167,9 +168,14 @@ public class FrontController {
 		currentRun.setProfession(data.getProfession());
 		currentRun.setRace(data.getRace());
 
-		UserData user = user_mgr.findByUserName(player_id);
+		run_mgr.update(currentRun);
+		
+		UserData user = user_mgr.findByUserName(player_id);	
+		
 		user_mgr.addRunToUser(player_id, currentRun);
 		user_mgr.update(user);
+		
+		//TODO update the wins and losses
 
 		this.curRunID = null;
 		this.stageChanges = 0;
