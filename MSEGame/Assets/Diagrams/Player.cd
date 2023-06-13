@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Player" Collapsed="true">
+    <Position X="13.25" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QAAAAUAAEAAAABCAIAAAgAQAQAmEAAEJAAIgCAACIAE=</HashCode>
+      <FileName>Assets\Scripts\Player\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerController" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAQAAAAICAggAABIAEgEAAAAIAgACAhAAEQAQAAAkA=</HashCode>
+      <FileName>Assets\Scripts\Player\PlayerController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PlayerManager" Collapsed="true">
+    <Position X="11.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CABAAAAAAAAgAQAAAAABAAAEIgBEAAAQAAICAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\PlayerManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerRenderer" Collapsed="true">
+    <Position X="13.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\PlayerRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KnightController" Collapsed="true">
+    <Position X="11.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAgAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\KnightController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfessionController" Collapsed="true">
+    <Position X="11.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAACAgAAAAAAAAAAAAIAAAAAAgAAAKAAAIAEA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\ProfessionController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueController" Collapsed="true">
+    <Position X="9.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAEAAAAAAAIAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\RogueController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WizardController" Collapsed="true">
+    <Position X="13" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\WizardController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

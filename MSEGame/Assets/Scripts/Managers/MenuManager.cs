@@ -1,61 +1,50 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour
+public class MenuManager : Manager<MenuManager>
 {
+    [SerializeField] private Image playerImg;
+    [SerializeField] private Sprite imgHuman;
+    [SerializeField] private Sprite imgElf;
+    [SerializeField] private Sprite imgOrc;
 
-    [SerializeField] private Transform inputName;
-    [SerializeField] private Transform inputRace;
-    [SerializeField] private Transform inputProfession;
-    [SerializeField] private Transform inputGender;
 
-    public static MenuManager Instance { get; private set; }
+    [SerializeField] private TMP_Dropdown inputRace;
+    [SerializeField] private TMP_Dropdown inputProfession;
+    [SerializeField] private TMP_Dropdown inputGender;
+
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
+        AudioListener.volume = 0.0f;
     }
-
     public void StartGame()
     {
-        // Shouldn't be setting default values here
-        string name = "";
-        Race race = Race.Human;
-        Profession profession = Profession.Barbarian;
-        Gender gender = Gender.Male;
+        Race race = ParseEnum<Race>(inputRace.options[inputRace.value].text);
+        Profession profession = ParseEnum<Profession>(inputProfession.options[inputProfession.value].text);
+        Gender gender = ParseEnum<Gender>(inputGender.options[inputGender.value].text);
 
-        if (inputName.TryGetComponent<InputField>(out var fieldName))
+        if (SessionData.Username.Length == 0)
         {
-            name = fieldName.text;
+            SessionData.Username = "Empty";
         }
 
-        if (inputRace.TryGetComponent<Dropdown>(out var fieldRace))
+        Player player = new(SessionData.Username, race, profession, gender, 1, 0);
+        StartCoroutine(NetworkManager.Instance.PostPlayer(player));
+        SceneManager.LoadScene("Intro");
+    }
+
+    public void UpdatePlayerImage()
+    {
+        playerImg.sprite = ParseEnum<Race>(inputRace.options[inputRace.value].text) switch
         {
-            race = ParseEnum<Race>(fieldRace.options[fieldRace.value].text);
-        }
-
-        if (inputRace.TryGetComponent<Dropdown>(out var fieldProfession))
-        {
-            profession = ParseEnum<Profession>(fieldProfession.options[fieldProfession.value].text);
-        }
-
-        if (inputRace.TryGetComponent<Dropdown>(out var fieldGender))
-        {
-            gender = ParseEnum<Gender>(fieldGender.options[fieldGender.value].text);
-        }
-
-
-        NetworkManager.Instance.PostPlayer(new Player(name, race, profession, gender, 1, 1));
-
-        SceneManager.LoadScene(1);
+            Race.Human => imgHuman,
+            Race.Elf => imgElf,
+            Race.Orc => imgOrc,
+            _ => imgHuman,
+        };
     }
 
     public void QuitGame()
@@ -69,5 +58,10 @@ public class MenuManager : MonoBehaviour
     public static T ParseEnum<T>(string value)
     {
         return (T)Enum.Parse(typeof(T), value, true);
+    }
+
+    public void LogOut()
+    {
+        SceneManager.LoadScene("Login");
     }
 }

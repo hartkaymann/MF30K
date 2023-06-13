@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SpriteManager : MonoBehaviour
+public class SpriteManager : Manager<SpriteManager>
 {
-    public static SpriteManager Instance { get; private set; }
-
-
     [Serializable]
     public struct NamedSprite
     {
@@ -17,6 +14,7 @@ public class SpriteManager : MonoBehaviour
 
     [SerializeField] private NamedSprite[] namedSprites;
     [SerializeField] private NamedSprite[] starterSprites;
+    [SerializeField] private NamedSprite[] npcSprites;
     [SerializeField] private Sprite[] cardSprites;
     [SerializeField] private Sprite[] weaponSprites;
     [SerializeField] private Sprite[] helmetSprites;
@@ -28,18 +26,10 @@ public class SpriteManager : MonoBehaviour
 
     private Dictionary<string, Sprite> sprites;
     private Dictionary<string, Sprite> starters;
+    private Dictionary<string, Sprite> npcs;
 
-    private void Awake()
+    protected override void Init()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-
         sprites = new Dictionary<string, Sprite>();
         for (int i = 0; i < namedSprites.Length; i++)
         {
@@ -52,6 +42,13 @@ public class SpriteManager : MonoBehaviour
         {
             NamedSprite ns = starterSprites[i];
             starters.Add(ns.name, ns.sprite);
+        }
+
+        npcs = new Dictionary<string, Sprite>();
+        for (int i = 0; i < npcSprites.Length; i++)
+        {
+            NamedSprite ns = npcSprites[i];
+            npcs.Add(ns.name, ns.sprite);
         }
     }
 
@@ -86,6 +83,11 @@ public class SpriteManager : MonoBehaviour
     public Sprite GetStarterSprite(EquipmentSlot slot)
     {
         return starters[slot.ToString()];
+    }
+
+    public Sprite GetNpcSprite(Race race, Profession profession)
+    {
+        return npcs[race.ToString() + profession.ToString()];
     }
 
     public Sprite GetCardSprite()

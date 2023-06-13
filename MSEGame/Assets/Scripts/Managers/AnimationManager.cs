@@ -1,22 +1,35 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationManager : MonoBehaviour
+public class AnimationManager : Manager<AnimationManager>
 {
-
-    public static AnimationManager Instance { get; private set; }
-
-    private void Awake()
+    [Serializable]
+    public struct NamedAnimCtrl
     {
-        if (Instance != null && Instance != this)
+        public string name;
+        public RuntimeAnimatorController animator;
+    }
+
+    [SerializeField] private NamedAnimCtrl[] namedAnimators;
+    private Dictionary<string, RuntimeAnimatorController> animators;
+
+    protected override void Init()
+    {
+        animators = new Dictionary<string, RuntimeAnimatorController>();
+        for (int i = 0; i < namedAnimators.Length; i++)
         {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
+            NamedAnimCtrl ns = namedAnimators[i];
+            animators.Add(ns.name, ns.animator);
         }
     }
+
+    public RuntimeAnimatorController GetAnimator(string name)
+    {
+        return animators[name];
+    }
+
 
     public IEnumerator MoveFromTo(Transform transform, Vector3 startPosition, Vector3 targetPosition, float duration)
     {

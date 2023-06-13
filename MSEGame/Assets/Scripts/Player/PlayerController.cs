@@ -1,16 +1,21 @@
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour, IDropHandler
+[RequireComponent(typeof(Animator))]
+public class PlayerController : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private PlayerRenderer playerRenderer;
 
     private Player player;
-    private int roundBonus = 0;
+    private GameObject description;
 
     private Animator animator;
     private int isRunningHash;
+    private int isAttackingHash;
+
+    [SerializeField] private AudioSource soundWalking;
+    [SerializeField] private AudioSource soundAttack;
 
     public Player Player
     {
@@ -23,107 +28,133 @@ public class PlayerController : MonoBehaviour, IDropHandler
             if (player != value)
             {
                 player = value;
-                playerRenderer.Render();
+
+                player.OnProfessionChanged += OnPlayerProfessionChanged;
+                player.OnRaceChanged += OnPlayerRaceChanged;
+                player.OnPropertyChanged += OnPlayerPropertyChanged;
+
+                OnPlayerProfessionChanged();
+                OnPlayerRaceChanged();
+                OnPlayerPropertyChanged();
             }
         }
     }
 
-    public int RoundBonus
+    void Awake()
     {
-        get
-        {
-            return roundBonus;
-        }
-        set
-        {
-            if (roundBonus != value)
-            {
-                roundBonus = value;
-                CalculateCombatLevel();
-            }
-        }
+        description = GameObject.Find("PlayerDescription");
+        animator = GetComponent<Animator>();
+        isRunningHash = Animator.StringToHash("isRunning");
+        isAttackingHash = Animator.StringToHash("Attack");
     }
-
-    [SerializeField] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     void Start()
     {
-        animator = GetComponent<Animator>();
-        isRunningHash = Animator.StringToHash("isRunning");
-
-        equipment = new Dictionary<EquipmentSlot, EquipmentCard>();
-
-        EquipmentCard starterWeaponR = new("Wooden Shield", EquipmentType.Weapon, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.WeaponR), 0, 1);
-        EquipmentCard starterWeaponL = new("Rusty Sword", EquipmentType.Weapon, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.WeaponL), 0, 1);
-        EquipmentCard starterHelmet = new("Rusty Helmet", EquipmentType.Helmet, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Helmet), 0, 1);
-        EquipmentCard starterArmor = new("Rusty Armor", EquipmentType.Armor, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Armor), 0, 1);
-        EquipmentCard starterBoots = new("Rusty Boots", EquipmentType.Boots, "0", SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Boots), 0, 1);
-
-        CardController ccWeaponR = CardManager.instance.InstantiateCard(starterWeaponR);
-        CardController ccWeaponL = CardManager.instance.InstantiateCard(starterWeaponL);
-        CardController ccHelmet = CardManager.instance.InstantiateCard(starterHelmet);
-        CardController ccArmor = CardManager.instance.InstantiateCard(starterArmor);
-        CardController ccBoots = CardManager.instance.InstantiateCard(starterBoots);
-
-        EquipToSlot(EquipmentSlot.WeaponR, ccWeaponR);
-        EquipToSlot(EquipmentSlot.WeaponL, ccWeaponL);
-        EquipToSlot(EquipmentSlot.Helmet, ccHelmet);
-        EquipToSlot(EquipmentSlot.Boots, ccBoots);
-        EquipToSlot(EquipmentSlot.Armor, ccArmor);
+        if (description != null)
+            description.SetActive(false);
     }
 
-    public void Equip(EquipmentSlot slot, EquipmentCard card)
+    private void OnPlayerPropertyChanged()
     {
-        equipment[slot] = card;
+        if (description == null)
+            return;
 
-        CalculateCombatLevel();
+        if (description.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var textDescName))
+        {
+            textDescName.text = $"Name: {Player.Name}";
+        }
 
-        NetworkManager.Instance.PutEquipment(player, equipment);
+        if (description.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var textDescCooldown))
+        {
+            textDescCooldown.text = $"Level: {Player.Level}";
+        }
+
+        if (description.transform.Find("CombatLevel").TryGetComponent<TextMeshProUGUI>(out var textDescCombat))
+        {
+            int buff = Player.RaceEffect + Player.RoundBonus;
+            string buffTxt = $"({buff})";
+            textDescCombat.text = $"Combat: {Player.CombatLevel} {(buff > 0 ? buffTxt : "")}";
+        }
+
+        if (description.transform.Find("Race").TryGetComponent<TextMeshProUGUI>(out var textDescRace))
+        {
+            textDescRace.text = $"Race: {Player.Race}";
+        }
+
+        if (description.transform.Find("Profession").TryGetComponent<TextMeshProUGUI>(out var textDescRrofession))
+        {
+            textDescRrofession.text = $"Profession: {Player.Profession}";
+        }
     }
 
-    public void Uneqip(EquipmentSlot slot)
+    private void OnPlayerProfessionChanged()
     {
-        equipment[slot] = null;
+        Debug.Log("Handing On Player Profession changed");
 
-        CalculateCombatLevel();
+        if (TryGetComponent<ProfessionController>(out var oldProfCtrl))
+            Destroy(oldProfCtrl);
 
-        NetworkManager.Instance.PutEquipment(player, equipment);
+        switch (player.Profession)
+        {
+            case Profession.Knight:
+                gameObject.AddComponent<KnightController>();
+                break;
+            case Profession.Wizard:
+                gameObject.AddComponent<WizardController>();
+                break;
+            case Profession.Rogue:
+                gameObject.AddComponent<RogueController>();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void OnPlayerRaceChanged()
+    {
+        Debug.Log("Handing On Player Race changed");
+        if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+        {
+            spriteRenderer.sprite = SpriteManager.Instance.GetSprite(Player.Race.ToString());
+        }
+
+        if (TryGetComponent<Animator>(out var animator))
+        {
+            animator.runtimeAnimatorController = AnimationManager.Instance.GetAnimator(Player.Race.ToString());
+        }
     }
 
     public void EquipToSlot(EquipmentSlot slot, CardController cardController)
     {
         GameObject equipmentGo = GameObject.Find("Equipment");
         if (equipmentGo == null)
+        {
+            Debug.LogWarning($"Could not find Equipment GameObject");
             return;
+        }
 
-        //Debug.Log($"Attaching to Slots/{slot}");
-        GameObject slotGo = equipmentGo.transform.Find($"Slots/{slot}").gameObject;
+        GameObject slotGo = equipmentGo.transform.Find($"Slots/{slot}/Slot").gameObject;
         if (slotGo == null)
+        {
+            Debug.LogWarning($"Could not find Slots/{slot} GameObject");
             return;
+        }
+
 
         if (slotGo.TryGetComponent<EquipmentController>(out var equipmentController))
         {
             equipmentController.EquipItem(cardController);
             cardController.transform.SetParent(slotGo.transform);
         }
-    }
-
-    private void CalculateCombatLevel()
-    {
-        int newCombatLevel = 0;
-        foreach (var card in equipment.Values)
+        else
         {
-            if (card == null)
-                continue;
-
-            newCombatLevel += card.bonus;
+            Debug.LogWarning($"Could not find EquipmentController Component");
         }
-        Player.CombatLevel = newCombatLevel + roundBonus;
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (GameManager.Instance.Stage != GameStage.CombatPreparations)
+        if (GameManager.Instance.Stage != GameStage.CombatPreparation)
             return;
 
         GameObject draggedObj = eventData.pointerDrag;
@@ -132,11 +163,46 @@ public class PlayerController : MonoBehaviour, IDropHandler
             if (cc.Card is ConsumableCard consumable)
             {
                 // Add consumable bonus to round bonus
-                RoundBonus += consumable.bonus;
+                Player.RoundBonus += consumable.bonus;
 
                 Destroy(draggedObj);
             }
         }
+    }
+
+    public void Equip(EquipmentSlot slot, EquipmentCard card)
+    {
+        Player.Equipment[slot] = card;
+        Player.CalculateCombatLevel();
+        StartCoroutine(NetworkManager.Instance.PutEquipment(Player, Player.Equipment));
+    }
+
+    public void Uneqip(EquipmentSlot slot)
+    {
+        Player.Equipment[slot] = null;
+        Player.CalculateCombatLevel();
+        StartCoroutine(NetworkManager.Instance.PutEquipment(Player, Player.Equipment));
+    }
+
+    public void EquipStarterGear()
+    {
+        EquipmentCard starterWeaponR = new("Wooden Shield", EquipmentType.Weapon, null, SpriteManager.Instance.GetStarterSprite(EquipmentSlot.WeaponR), 0, 1);
+        EquipmentCard starterWeaponL = new("Rusty Sword", EquipmentType.Weapon, null, SpriteManager.Instance.GetStarterSprite(EquipmentSlot.WeaponL), 0, 1);
+        EquipmentCard starterHelmet = new("Rusty Helmet", EquipmentType.Helmet, null, SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Helmet), 0, 1);
+        EquipmentCard starterArmor = new("Rusty Armor", EquipmentType.Armor, null, SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Armor), 0, 1);
+        EquipmentCard starterBoots = new("Rusty Boots", EquipmentType.Boots, null, SpriteManager.Instance.GetStarterSprite(EquipmentSlot.Boots), 0, 1);
+
+        CardController ccWeaponR = CardManager.Instance.InstantiateCard(starterWeaponR);
+        CardController ccWeaponL = CardManager.Instance.InstantiateCard(starterWeaponL);
+        CardController ccHelmet = CardManager.Instance.InstantiateCard(starterHelmet);
+        CardController ccArmor = CardManager.Instance.InstantiateCard(starterArmor);
+        CardController ccBoots = CardManager.Instance.InstantiateCard(starterBoots);
+
+        EquipToSlot(EquipmentSlot.WeaponR, ccWeaponR);
+        EquipToSlot(EquipmentSlot.WeaponL, ccWeaponL);
+        EquipToSlot(EquipmentSlot.Helmet, ccHelmet);
+        EquipToSlot(EquipmentSlot.Boots, ccBoots);
+        EquipToSlot(EquipmentSlot.Armor, ccArmor);
     }
 
     public void RunForDuration(float duration)
@@ -145,15 +211,40 @@ public class PlayerController : MonoBehaviour, IDropHandler
         Invoke(nameof(StopRunning), duration);
     }
 
-    [ContextMenu("Player Run")] 
+    [ContextMenu("Player Run")]
     public void StartRunning()
     {
+        if (soundWalking != null)
+            soundWalking.Play();
+
         animator.SetBool(isRunningHash, true);
     }
 
     [ContextMenu("Player Stop")]
     public void StopRunning()
     {
+        if (soundWalking != null)
+            soundWalking.Stop();
+
         animator.SetBool(isRunningHash, false);
+    }
+
+    [ContextMenu("Player Attack")]
+    public void Attack()
+    {
+        if (soundAttack != null)
+            soundAttack.Play();
+
+        animator.SetTrigger(isAttackingHash);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        description.SetActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        description.SetActive(false);
     }
 }

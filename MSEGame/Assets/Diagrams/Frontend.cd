@@ -1,0 +1,443 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Card">
+    <Position X="15.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQQAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\Cards\Card.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CardController">
+    <Position X="15.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAUCAIQAIAAAAAAIEABAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\CardController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cardRenderer" />
+      <Property Name="Card" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CardManager">
+    <Position X="15.25" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="Manager&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="1.656" Y="2.377" />
+        <Point X="1.656" Y="2.741" />
+        <Point X="14.875" Y="2.741" />
+        <Point X="14.875" Y="6.079" />
+        <Point X="16.75" Y="6.079" />
+        <Point X="16.75" Y="5.704" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAACAAAIAACAAAAAAAEAAAQ=</HashCode>
+      <FileName>Assets\Scripts\Cards\CardManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CardRenderer">
+    <Position X="18" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAQQAAAAAAAAACAAAAAAABACAAABAgAAAAIAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\CardRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConsequenceCardController" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="20.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAECAIRAAAAEAAAAEABAAAgAAAAAAAAAAACAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ConsequenceCardController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ConsumableCard">
+    <Position X="19" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ConsumableCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DoorCard">
+    <Position X="12.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\DoorCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EquipmentCard">
+    <Position X="16.75" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\EquipmentCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonsterCard">
+    <Position X="9.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAEAAAABAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\MonsterCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfessionCard">
+    <Position X="12.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ProfessionCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RaceCard">
+    <Position X="14.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\RaceCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TreasureCard">
+    <Position X="18" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\TreasureCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Draggable">
+    <Position X="13" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAIAAAAABAEQAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Draggable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BackpackController">
+    <Position X="23" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAACAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Inventory\BackpackController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EquipmentController" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="26.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQAAAAAACAIAAIAAAAAAAAAAAABAAAhAAASAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Inventory\EquipmentController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HandController">
+    <Position X="25.25" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAACAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Inventory\HandController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Inventory">
+    <Position X="24.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAQAAAAAAQ=</HashCode>
+      <FileName>Assets\Scripts\Inventory\Inventory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AnimationManager">
+    <Position X="6" Y="20" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="AnimationManager.NamedAnimCtrl">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Managers\AnimationManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <InheritanceLine Type="Manager&lt;T&gt;" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.25" Y="2.377" />
+        <Point X="1.25" Y="19.639" />
+        <Point X="6.75" Y="19.639" />
+        <Point X="6.75" Y="20" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>BEAAAAAAAAAAACAAAAAEAAAAAAIAABAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\AnimationManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager">
+    <Position X="2" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IACQQAEAQCAAABAAAkAQAAgAYgCACAgAImoAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\GameManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Stage" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SessionData">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LoginManager">
+    <Position X="6" Y="12.75" Width="1.5" />
+    <InheritanceLine Type="Manager&lt;T&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="1.25" Y="2.377" />
+        <Point X="1.25" Y="12.24" />
+        <Point X="1.37" Y="12.24" Type="JumpStart" />
+        <Point X="1.536" Y="12.24" Type="JumpEnd" />
+        <Point X="6.75" Y="12.24" />
+        <Point X="6.75" Y="12.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AQAAQACAACABCAAAAAABAAACAAAAAAAIQAAAIgABAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\LoginManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Manager&lt;T&gt;">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAACAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Managers\Manager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MenuManager">
+    <Position X="4" Y="12.75" Width="1.5" />
+    <InheritanceLine Type="Manager&lt;T&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="1.25" Y="2.377" />
+        <Point X="1.25" Y="12.256" />
+        <Point X="1.37" Y="12.256" Type="JumpStart" />
+        <Point X="1.536" Y="12.256" Type="JumpEnd" />
+        <Point X="4.75" Y="12.256" />
+        <Point X="4.75" Y="12.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQAIAAAAAAAEAAAIgQAEIAgAAAAAAAgAAAAAAAAAFE=</HashCode>
+      <FileName>Assets\Scripts\Managers\MenuManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkManager">
+    <Position X="4" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAABAAAAEAIgAAEABEAAxAAqCAgAgAABAhECAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\NetworkManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoundManager">
+    <Position X="4" Y="20" Width="1.5" />
+    <InheritanceLine Type="Manager&lt;T&gt;" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.25" Y="2.377" />
+        <Point X="1.25" Y="19.639" />
+        <Point X="4.75" Y="19.639" />
+        <Point X="4.75" Y="20" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAEAAQAAAAEAAABAQAAAAAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>Assets\Scripts\Managers\SoundManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpriteManager">
+    <Position X="2" Y="20" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="SpriteManager.NamedSprite">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Managers\SpriteManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>UAQEAAABAAQIMFQIAgAAQgACAAAAgIABCAoCAACgAAg=</HashCode>
+      <FileName>Assets\Scripts\Managers\SpriteManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NpcController">
+    <Position X="7" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAEAgAAAgAAAAAAEAAABACAAAQAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\NpcController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player">
+    <Position X="21.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAUAAEAAAABCAIAAAgAQAQAmEAAEJAAIgCAACIAE=</HashCode>
+      <FileName>Assets\Scripts\Player\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerController" BaseTypeListCollapsed="true">
+    <Position X="24" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAQAAAAICAggAABIAEgEAAAAIAgACAhAAEQAQAAAkA=</HashCode>
+      <FileName>Assets\Scripts\Player\PlayerController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Player" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PlayerManager">
+    <Position X="24" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="Manager&lt;T&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="1.25" Y="2.377" />
+        <Point X="1.25" Y="2.741" />
+        <Point X="1.37" Y="2.741" Type="JumpStart" />
+        <Point X="1.536" Y="2.741" Type="JumpEnd" />
+        <Point X="24.75" Y="2.741" />
+        <Point X="24.75" Y="3.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>CABAAAAAAAAgAQAAAAABAAAEIgBEAAAQAAICAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\PlayerManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PlayerController" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="KnightController">
+    <Position X="26.25" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAgAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\KnightController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfessionController">
+    <Position X="26.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAACAgAAAAAAAAAAAAIAAAAAAgAAAKAAAIAEA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\ProfessionController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueController">
+    <Position X="28.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAEAAAAAAAIAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\RogueController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WizardController">
+    <Position X="30.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player\Profession\WizardController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RoomController">
+    <Position X="9.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAgCQCAAAAAAIAAABAAAEAAAAAAAAACAAAQAgEA=</HashCode>
+      <FileName>Assets\Scripts\Room\RoomController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Renderer" />
+      <Property Name="NPC" />
+      <Property Name="Card" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RoomManager">
+    <Position X="9.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAgAAAgAAgAIBABA=</HashCode>
+      <FileName>Assets\Scripts\Room\RoomManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="currentRoom" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RoomRenderer">
+    <Position X="9.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAIAABAA=</HashCode>
+      <FileName>Assets\Scripts\Room\RoomRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIManager">
+    <Position X="2" Y="12.75" Width="1.5" />
+    <InheritanceLine Type="Manager&lt;T&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="1.25" Y="2.377" />
+        <Point X="1.25" Y="12.261" />
+        <Point X="1.37" Y="12.261" Type="JumpStart" />
+        <Point X="1.536" Y="12.261" Type="JumpEnd" />
+        <Point X="2.75" Y="12.261" />
+        <Point X="2.75" Y="12.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AIBBAGAEQMAAAAAJACQIAAQAABAEAAAAAAAiCAQAAAI=</HashCode>
+      <FileName>Assets\Scripts\UI\UIManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AbilityButton">
+    <Position X="29.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAIAAAAAgIAAAAhAACAAgAAAoAAAAAQAAAEA=</HashCode>
+      <FileName>Assets\Scripts\UI\AbilityButton.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProfessionController" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Enum Name="BuffTarget" Collapsed="true">
+    <Position X="19" Y="19.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAgAAAQAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ConsumableCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EquipmentType" Collapsed="true">
+    <Position X="16.75" Y="19.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAEAAAAAAAAAI=</HashCode>
+      <FileName>Assets\Scripts\Cards\EquipmentCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Profession" Collapsed="true">
+    <Position X="12.25" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAACAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\ProfessionCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Race" Collapsed="true">
+    <Position X="14.5" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAIAAQAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cards\RaceCard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EquipmentSlot" Collapsed="true">
+    <Position X="26.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAEAAACgAAAAI=</HashCode>
+      <FileName>Assets\Scripts\Inventory\EquipmentController.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="GameStage" Collapsed="true">
+    <Position X="2" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IACAAAAAgAAAAAAAAAAAAAAAEAAAAAgAABAAAAAAQAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RequestType" Collapsed="true">
+    <Position X="4" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAEAQAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\NetworkManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

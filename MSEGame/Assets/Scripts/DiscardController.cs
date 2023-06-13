@@ -11,10 +11,12 @@ public class DiscardController : MonoBehaviour, IDropHandler
             if (cc.Card is TreasureCard treasure)
             {
                 // Add consumable bonus to round bonus
-                PlayerManager.Instance.CurrentPlayer.Player.Gold += treasure.value;
+                PlayerManager.Instance.PlayerController.Player.Gold += treasure.value;
 
                 Destroy(draggedObj);
                 Debug.Log($"Sold {treasure.title} for {treasure.value} gold.");
+
+                StartCoroutine(NetworkManager.Instance.SellCard(PlayerManager.Instance.PlayerController.Player, treasure));
             }
         }
     }

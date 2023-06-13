@@ -1,29 +1,16 @@
-using TMPro;
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class RoomManager : MonoBehaviour
+public class RoomManager : Manager<RoomManager>
 {
-    public static RoomManager Instance { get; private set; }
-
     [SerializeField] private RoomController currentRoom;
     public RoomController CurrentRoom { get { return currentRoom; } }
 
     [SerializeField] private GameObject roomPrefab;
-
-    [SerializeField] private GameObject npcInfoPrefab;
-    private GameObject currentNpcInfo;
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
+    [SerializeField] private GameObject npcPrefab;
+    [SerializeField] private GameObject slimePrefab;
+    [SerializeField] private GameObject ghostPrefab;
 
     public void InstantiateRoom(DoorCard card)
     {
@@ -36,34 +23,33 @@ public class RoomManager : MonoBehaviour
         currentRoom = obj.GetComponent<RoomController>();
         currentRoom.Card = card;
 
-
-        // Create NPC info
-        if (currentNpcInfo != null)
-            Destroy(currentNpcInfo);
-
-        currentNpcInfo = Instantiate(npcInfoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
-        Transform npc = obj.transform.Find("NPC");
-        if (currentNpcInfo.TryGetComponent<ObjectFollow>(out var follow))
+        Transform npcPosition = currentRoom.transform.Find("NPC");
+        if (card is MonsterCard monsterCard)
         {
-            follow.Follow = npc.Find("Info");
+            GameObject prefab = monsterCard.title.ToLower().EndsWith("slime") ? slimePrefab : ghostPrefab;
+            currentRoom.NPC = Instantiate(prefab, npcPosition.position, Quaternion.identity, npcPosition).GetComponent<NpcController>();
         }
-
-        if (currentNpcInfo.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var infoName))
+        else
         {
-            infoName.text = card.title;
-        }
+            currentRoom.NPC = Instantiate(npcPrefab, npcPosition.position, Quaternion.identity, npcPosition).GetComponent<NpcController>();
 
-        if (currentNpcInfo.transform.Find("Level").TryGetComponent<TextMeshProUGUI>(out var infoLevel))
-        {
-            if (card is MonsterCard monsterCard)
+            Race race = PlayerManager.Instance.PlayerController.Player.Race;
+            Profession profession = PlayerManager.Instance.PlayerController.Player.Profession;
+
+            if (card is RaceCard raceCard)
             {
-                infoLevel.gameObject.SetActive(true);
-                infoLevel.text = monsterCard.level.ToString();
+                race = raceCard.race;
             }
-            else
+            else if (card is ProfessionCard professionCard)
             {
-                infoLevel.gameObject.SetActive(false);
+                profession = professionCard.profession;
             }
+
+            SpriteRenderer sr = currentRoom.NPC.GetComponent<SpriteRenderer>();
+            sr.sprite = SpriteManager.Instance.GetNpcSprite(race, profession);
+
+            sr.flipX = (profession == Profession.Knight);
+
         }
     }
 }
