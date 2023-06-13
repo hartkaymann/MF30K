@@ -13,7 +13,7 @@ public class UIRunController : MonoBehaviour
     {
         if (transform.Find("Overview").TryGetComponent<Image>(out var img))
         {
-            img.color = run.Level == 10 ? GameColor.Green : GameColor.Red;
+            img.color = run.PlayerLevel == 10 ? GameColor.Green : GameColor.Red;
         }
 
         FillCombatData(run.Combats);
@@ -29,9 +29,9 @@ public class UIRunController : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent as RectTransform);
     }
 
-    public void FillCombatData(List<Combat> combats)
+    public void FillCombatData(Combat[] combats)
     {
-        for (int i = 0; i < combats.Count; i++)
+        for (int i = 0; i < combats.Length; i++)
         {
             Combat combat = combats[i];
 

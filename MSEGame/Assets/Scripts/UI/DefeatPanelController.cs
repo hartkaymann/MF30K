@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DefeatPanelController : MonoBehaviour
 {
-    [SerializeField] private GameObject[] cards; 
+    [SerializeField] private GameObject[] cards;
 
     public void OnEnable()
     {
@@ -10,12 +10,21 @@ public class DefeatPanelController : MonoBehaviour
         Shuffle(cards);
         CreateCards();
 
-        if(PlayerManager.Instance.PlayerController.TryGetComponent<RogueController>(out var rogueCtrl))
+        if (PlayerManager.Instance.PlayerController.TryGetComponent<RogueController>(out var rogueCtrl))
         {
-            if(rogueCtrl.IsActive)
+            if (rogueCtrl.IsActive)
             {
-                Destroy(transform.Find("Cards").transform.Find("RunAwayCard").gameObject);
-                Debug.Log("Destroying Run Away card.");
+                foreach (Transform t in transform.Find("Cards")) {
+                    if (t.TryGetComponent<ConsequenceCardController>(out var cardController))
+                    {
+                        if (cardController.consequence == 0)
+                        {
+                            Destroy(cardController.gameObject);
+                            Debug.Log("Destroying Run Away card.");
+
+                        }
+                    }
+                }
             }
         }
     }
@@ -30,7 +39,7 @@ public class DefeatPanelController : MonoBehaviour
 
     private void CreateCards()
     {
-        foreach(GameObject card in cards)
+        foreach (GameObject card in cards)
         {
             Instantiate(card, transform.Find("Cards"));
         }

@@ -2,10 +2,7 @@ using UnityEngine;
 
 public class RoomController : MonoBehaviour
 {
-
     private DoorCard card;
-    [SerializeField] private RoomRenderer roomRenderer;
-    public RoomRenderer Renderer { get { return roomRenderer; } }
 
     public NpcController NPC { get; set; }
 
@@ -14,6 +11,8 @@ public class RoomController : MonoBehaviour
     private int isDoorOpenHash;
 
     private Transform playerPosition;
+    private RoomRenderer roomRenderer;
+    public RoomRenderer Renderer { get { return roomRenderer; } }
 
     public DoorCard Card
     {
@@ -25,11 +24,11 @@ public class RoomController : MonoBehaviour
         {
             if (card != value)
             {
-
                 card = value;
+                Debug.Log("Renderer: " + roomRenderer.name);
+                Debug.Log("Card: " + card.title);
                 roomRenderer.Render(card);
             }
-
         }
     }
 
@@ -38,6 +37,7 @@ public class RoomController : MonoBehaviour
         doorAnimator = transform.Find("Door").GetComponent<Animator>();
         isDoorOpenHash = Animator.StringToHash("isOpen");
 
+        roomRenderer = gameObject.GetComponent<RoomRenderer>();
         playerPosition = transform.Find("Player").transform;
     }
 

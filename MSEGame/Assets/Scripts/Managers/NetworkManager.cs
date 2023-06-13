@@ -30,7 +30,7 @@ public class NetworkManager : Manager<NetworkManager>
         if (data != null)
         {
             string jsonData = JsonConvert.SerializeObject(data);
-            //Debug.Log($"Request Body: {jsonData}");
+            Debug.Log($"Request Body: {jsonData}");
             var bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         }
@@ -166,20 +166,6 @@ public class NetworkManager : Manager<NetworkManager>
         }
         req.Dispose();
     }
-
-    public IEnumerator PostEndRun(Player player)
-    {
-        Debug.Log("Endrun Called");
-        string path = $"http://{url}:{port}/player/{player.Name}/run";
-        UnityWebRequest req = CreateRequest(path, RequestType.POST, player);
-        yield return req.SendWebRequest();
-        while (!req.isDone)
-        {
-            yield return null;
-        }
-        req.Dispose();
-    }
-
     public IEnumerator PostCombat(Player player, Combat combat)
     {
         string path = $"http://{url}:{port}/player/{player.Name}/combat";
@@ -322,7 +308,7 @@ public class NetworkManager : Manager<NetworkManager>
         );
     }
 
-    public async Task<User> GetUserStats()
+    public async Task<UserData> GetUserStats()
     {
         string username = SessionData.Username;
         if (username.Length == 0)
@@ -330,60 +316,13 @@ public class NetworkManager : Manager<NetworkManager>
 
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stats/{username}", RequestType.GET);
 
-        var userObj = await SendRequestWithResponse(req);
-
-        // Amen
-        User user = new()
-        {
-            Id = (string)userObj.SelectToken("id"),
-            Username = (string)userObj.SelectToken("username"),
-            Wins = int.Parse((string)userObj.SelectToken("wins")),
-            Losses = int.Parse((string)userObj.SelectToken("losses")),
-            Runs = new Func<List<Run>>(() =>
-            {
-                string[] runsString = userObj.SelectToken("runs")?.ToObject<string[]>();
-                JArray array = JArray.Parse(null);
-
-                List<Run> runs = new();
-                foreach (JObject runObj in array.Children<JObject>())
-                {
-                    Run run = new()
-                    {
-                        Id = int.Parse((string)runObj.SelectToken("id")),
-                        Level = int.Parse((string)runObj.SelectToken("level")),
-                        CombatLevel = int.Parse((string)runObj.SelectToken("combatlevel")),
-                        GoldSold = int.Parse((string)runObj.SelectToken("goldsold")),
-                        Profession = ParseEnum<Profession>((string)runObj.SelectToken("profession")),
-                        Race = ParseEnum<Race>((string)runObj.SelectToken("race")),
-                        Combats = new Func<List<Combat>>(() =>
-                        {
-                            string runsString = (string)userObj.SelectToken("runs");
-                            JArray array = JArray.Parse(runsString);
-
-                            List<Combat> combats = new();
-                            foreach (JObject combatObj in array.Children<JObject>())
-                            {
-                                Combat combat = new()
-                                {
-                                    PlayerLevel = int.Parse((string)combatObj.SelectToken("playerlevel")),
-                                    MonsterLevel = int.Parse((string)combatObj.SelectToken("monsterlevel")),
-                                    Victory = bool.Parse((string)combatObj.SelectToken("victory")),
-                                    Consequence = int.Parse((string)combatObj.SelectToken("consequence")),
-                                };
-                                combats.Add(combat);
-                            }
-                            return combats;
-                        })()
-                    };
-                    runs.Add(run);
-                }
-                return runs;
-            })()
-        };
-
+        var json = await SendRequestWithResponse(req);
+        Debug.Log(json.ToLineSeparatedString());
+        var user = JsonConvert.DeserializeObject<UserData>(json.ToString());
+        Debug.Log("Username from deserialized: " + user.Username);
         req.Dispose();
 
-        return null;
+        return user;
     }
 
     /////////
@@ -402,6 +341,18 @@ public class NetworkManager : Manager<NetworkManager>
     {
         UnityWebRequest req = CreateRequest($"http://{url}:{port}/stage", RequestType.PUT, stage.ToString());
         yield return req.SendWebRequest();
+        req.Dispose();
+    }
+
+    public IEnumerator PutRun(Player player)
+    {
+        string path = $"http://{url}:{port}/player/{player.Name}/run";
+        UnityWebRequest req = CreateRequest(path, RequestType.PUT);
+        yield return req.SendWebRequest();
+        while (!req.isDone)
+        {
+            yield return null;
+        }
         req.Dispose();
     }
 

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class AnimationManager : Manager<AnimationManager>
@@ -10,15 +9,15 @@ public class AnimationManager : Manager<AnimationManager>
     public struct NamedAnimCtrl
     {
         public string name;
-        public AnimatorController animator;
+        public RuntimeAnimatorController animator;
     }
 
     [SerializeField] private NamedAnimCtrl[] namedAnimators;
-    private Dictionary<string, AnimatorController> animators;
+    private Dictionary<string, RuntimeAnimatorController> animators;
 
     protected override void Init()
     {
-        animators = new Dictionary<string, AnimatorController>();
+        animators = new Dictionary<string, RuntimeAnimatorController>();
         for (int i = 0; i < namedAnimators.Length; i++)
         {
             NamedAnimCtrl ns = namedAnimators[i];
@@ -26,7 +25,7 @@ public class AnimationManager : Manager<AnimationManager>
         }
     }
 
-    public AnimatorController GetAnimator(string name)
+    public RuntimeAnimatorController GetAnimator(string name)
     {
         return animators[name];
     }
