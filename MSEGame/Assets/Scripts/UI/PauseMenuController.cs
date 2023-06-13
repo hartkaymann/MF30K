@@ -6,22 +6,13 @@ using UnityEngine.UI;
 public class PauseMenuController : MonoBehaviour
 {
 
-    [SerializeField] private Button buttonMusic;
-    [SerializeField] private Button buttonSound;
-
     [SerializeField] private TextMeshProUGUI textMusic;
     [SerializeField] private TextMeshProUGUI textSound;
-
-    private void Awake()
-    {
-        buttonMusic.onClick.AddListener(OnButtonMusicClicked);
-        buttonSound.onClick.AddListener(OnButtonSoundClicked);
-    }
 
     public void ExitRound()
     {
         Player player = PlayerManager.Instance.PlayerController.Player;
-        StartCoroutine(NetworkManager.Instance.PostEndRun(player));
+        StartCoroutine(NetworkManager.Instance.PutRun(player));
 
         SceneManager.LoadScene("MainMenu");
     }

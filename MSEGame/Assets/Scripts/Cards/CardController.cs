@@ -4,7 +4,6 @@ using UnityEngine.EventSystems;
 
 public class CardController : Draggable, IPointerDownHandler
 {
-    private Card card;
     [SerializeField] private CardRenderer cardRenderer;
 
     [SerializeField] private GameObject frontFace;
@@ -13,6 +12,7 @@ public class CardController : Draggable, IPointerDownHandler
     // Flipping card
     private bool facedUp = true;
     private bool isFlipped = false;
+    private Card card;
 
     public Card Card
     {

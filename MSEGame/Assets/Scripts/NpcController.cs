@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Animator))]
 public class NpcController : MonoBehaviour
@@ -16,23 +17,26 @@ public class NpcController : MonoBehaviour
 
     private void Awake()
     {
-        if (info != null)
-        {
-
-            info = Instantiate(infoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
-            if (info.TryGetComponent<ObjectFollow>(out var follow))
-            {
-                follow.Follow = transform.Find("Info");
-            }
-            UpdateInfo();
-        }
-
         animator = GetComponent<Animator>();
         deathHash = Animator.StringToHash("Death");
-    }
+
+        if (SceneManager.GetActiveScene().name != "Gameplay")
+            return;
+
+        info = Instantiate(infoPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("UI").transform);
+        if (info.TryGetComponent<ObjectFollow>(out var follow))
+        {
+            follow.Follow = transform.Find("Info");
+        }
+        UpdateInfo();
+
+        }
 
     public void UpdateInfo()
     {
+        if (SceneManager.GetActiveScene().name != "Gameplay")
+            return;
+
         if (info.transform.Find("Name").TryGetComponent<TextMeshProUGUI>(out var infoName))
         {
             infoName.text = RoomManager.Instance.CurrentRoom.Card.title;

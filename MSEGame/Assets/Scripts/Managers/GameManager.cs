@@ -47,6 +47,7 @@ public class GameManager : Manager<GameManager>
 
                 UIManager.Instance.ToggleBlackScreen();
                 StartCoroutine(UIManager.Instance.FadeToBlack(1f));
+                PlayerManager.Instance.PlayerController.RunForDuration(.9f);
                 StartCoroutine(AnimationManager.Instance.MoveFromTo(playerController.transform, playerController.transform.position, doorPosition, .9f));
 
                 Invoke(nameof(DrawDoorCard), 1f);
@@ -130,19 +131,19 @@ public class GameManager : Manager<GameManager>
         int playerLvl = PlayerManager.Instance.PlayerController.Player.CombatLevel;
         int enemyLvl = monsterCard.Level;
 
-        currentCombat = new Combat()
+        currentCombat = new()
         {
-            PlayerLevel = playerLvl,
-            MonsterLevel = enemyLvl
+            CombatLvlPlayer = playerLvl,
+            CombatLvlMonster = enemyLvl
         };
 
-        currentCombat.Victory = await TurnCombatWheel();
+        currentCombat.Win = await TurnCombatWheel();
 
         // If knight ability is acive, you can go again
-        if (!currentCombat.Victory && PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
+        if (!currentCombat.Win && PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
         {
             if (knightCtrl.Active)
-                currentCombat.Victory = await TurnCombatWheel();
+                currentCombat.Win = await TurnCombatWheel();
             knightCtrl.Active = false;
         }
 
@@ -164,7 +165,7 @@ public class GameManager : Manager<GameManager>
         currentPlayer.Attack();
         yield return new WaitForSeconds(0.8f);
 
-        if (currentCombat.Victory)
+        if (currentCombat.Win)
         {
             RoomManager.Instance.CurrentRoom.NPC.Die();
         }
@@ -180,9 +181,9 @@ public class GameManager : Manager<GameManager>
 
         playerTransform.Rotate(Vector2.up, 180f);
         yield return StartCoroutine(AnimationManager.Instance.MoveFromTo(playerTransform, playerTransform.position, startPos, 1f));
+        currentPlayer.StopRunning();
         playerTransform.Rotate(Vector2.up, 180f);
 
-        currentPlayer.StopRunning();
 
         Invoke(nameof(NextStage), 1f);
     }
@@ -191,7 +192,7 @@ public class GameManager : Manager<GameManager>
     {
         combatWheel.Reset();
         UIManager.Instance.ToggleCombatPanel();
-        combatWheel.SetRatio(currentCombat.PlayerLevel / (float)(currentCombat.PlayerLevel + currentCombat.MonsterLevel));
+        combatWheel.SetRatio(currentCombat.CombatLvlPlayer / (float)(currentCombat.CombatLvlPlayer + currentCombat.CombatLvlMonster));
         while (!combatWheel.IsFinished)
         {
             await Task.Delay(500);
@@ -301,7 +302,7 @@ public class GameManager : Manager<GameManager>
         // Show victory screen?
         Debug.Log($"Victory");
 
-        StartCoroutine(NetworkManager.Instance.PostEndRun(player));
+        StartCoroutine(NetworkManager.Instance.PutRun(player));
 
         Invoke(nameof(Exit), 3);
     }
@@ -356,7 +357,7 @@ public class GameManager : Manager<GameManager>
                 UpdateGameStage(GameStage.Combat);
                 break;
             case GameStage.Combat:
-                UpdateGameStage(currentCombat.Victory ? GameStage.Victory : GameStage.Defeat);
+                UpdateGameStage(currentCombat.Win ? GameStage.Victory : GameStage.Defeat);
                 break;
             case GameStage.Victory:
                 UpdateGameStage(GameStage.InventoryManagement);

@@ -115,7 +115,9 @@ public class UIManager : Manager<UIManager>
         {
             elapsedTime += Time.deltaTime;
             float alpha = Mathf.Lerp(0f, 1f, elapsedTime / duration);
-            panelBlack.GetComponent<Image>().color = Color.black.WithAlpha(alpha);
+            Color c = Color.black;
+            c.a = alpha;
+            panelBlack.GetComponent<Image>().color = c;
             yield return null;
         }
     }

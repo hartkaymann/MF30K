@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class StatisticsMenu : MonoBehaviour
@@ -14,14 +15,16 @@ public class StatisticsMenu : MonoBehaviour
 
     private async void FillMatchHistory()
     {
-        User user = await NetworkManager.Instance.GetUserStats();
+        UserData user = await NetworkManager.Instance.GetUserStats();
         if (user == null)
             return;
 
-        int[] levelCount = new int[10];
-        for (int i = 0; i < user.Runs.Count; i++)
+        int[] levelCount = new int[11];
+        for (int i = 0; i < user.Runs.Length; i++)
         {
-            levelCount[user.Runs[i].Level - 1] += 1;
+            int clampedLevel = (int)Math.Clamp(user.Runs[i].PlayerLevel, 0, 10);
+
+            levelCount[clampedLevel] += 1;
             Instantiate(matchPanelPrefab, runsParent).GetComponent<UIRunController>().SetData(user.Runs[i]);
         }
 
