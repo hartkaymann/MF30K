@@ -23,7 +23,7 @@ public class Player
     [JsonIgnore] private int roundBonus;
     [JsonIgnore] private int raceEffect;
 
-    [JsonProperty] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
+    [JsonIgnore] private Dictionary<EquipmentSlot, EquipmentCard> equipment;
 
     public event Action OnPropertyChanged;
     public event Action OnProfessionChanged;
@@ -168,6 +168,7 @@ public class Player
         }
     }
 
+    [JsonIgnore]
     public Dictionary<EquipmentSlot, EquipmentCard> Equipment
     {
         get
@@ -209,7 +210,7 @@ public class Player
 
             newCombatLevel += card.bonus;
         }
-        CombatLevel = newCombatLevel + roundBonus + raceEffect;
+        CombatLevel = level + newCombatLevel + roundBonus + raceEffect;
         //Debug.Log($"Combat level: {CombatLevel} (Base: {newCombatLevel}, Bonus: {roundBonus}, Passive: {raceEffect})");
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,24 @@ public class UIRunController : MonoBehaviour
         {
             img.color = run.PlayerLevel == 10 ? GameColor.Green : GameColor.Red;
         }
+
+        if (transform.Find("TextName").TryGetComponent<TextMeshProUGUI>(out var textName))
+            textName.text = SessionData.Username;
+
+        if (transform.Find("TextLevel").TryGetComponent<TextMeshProUGUI>(out var textLevel))
+            textLevel.text = run.PlayerLevel.ToString();
+
+        if (transform.Find("TextCombatLevel").TryGetComponent<TextMeshProUGUI>(out var textCombatlvl))
+            textCombatlvl.text = textCombatlvl.ToString();
+
+        if (transform.Find("TextProfession").TryGetComponent<TextMeshProUGUI>(out var textProfession))
+            textProfession.text = run.Profession;
+
+        if (transform.Find("TextRace").TryGetComponent<TextMeshProUGUI>(out var textRace))
+            textRace.text = run.Race;
+
+        if (transform.Find("TextGold").TryGetComponent<TextMeshProUGUI>(out var textGold))
+            textGold.text = run.Goldsold.ToString();
 
         FillCombatData(run.Combats);
     }

@@ -140,9 +140,9 @@ public class GameManager : Manager<GameManager>
         currentCombat.Win = await TurnCombatWheel();
 
         // If knight ability is acive, you can go again
-        if (!currentCombat.Win && PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
+        if (PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
         {
-            if (knightCtrl.Active)
+            if (!currentCombat.Win && knightCtrl.Active)
                 currentCombat.Win = await TurnCombatWheel();
             knightCtrl.Active = false;
         }
