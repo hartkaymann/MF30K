@@ -1131,7 +1131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1201,6 +1201,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   details: {fileID: 3841935306725070536}
+  imgHuman: {fileID: -2000102094, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
+  imgElf: {fileID: -1716116172, guid: b3e8644f8f8327041b8ea5a35c47c11c, type: 3}
+  imgOrc: {fileID: -984695302, guid: 9df0d5a2805f16a43ac1b7cf13d1e128, type: 3}
   combatPrefab: {fileID: 7391551223091852563, guid: 8d223fec45f4feb42bab324b82adb51d, type: 3}
   combatParent: {fileID: 3970979545760705496}
 --- !u!1 &2461364599149632869
@@ -1215,7 +1218,7 @@ GameObject:
   - component: {fileID: 2461364599149632874}
   - component: {fileID: 2461364599149632875}
   m_Layer: 5
-  m_Name: ImagePlayer
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1262,16 +1265,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 0.5019608}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -2000102094, guid: 13ae9fa3123178944a50874e1df53b0f, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

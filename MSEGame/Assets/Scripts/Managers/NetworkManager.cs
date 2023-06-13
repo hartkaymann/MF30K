@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 enum RequestType
 {
@@ -153,6 +154,7 @@ public class NetworkManager : Manager<NetworkManager>
             yield return null;
         }
         req.Dispose();
+        yield return null;
     }
 
     public IEnumerator PostRun(Player player)

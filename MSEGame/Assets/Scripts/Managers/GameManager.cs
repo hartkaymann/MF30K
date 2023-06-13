@@ -60,15 +60,15 @@ public class GameManager : Manager<GameManager>
                 ChangeClass();
                 break;
             case GameStage.Combat:
-                RestartStageTimer(30);
+                RestartStageTimer(120);
                 Combat();
                 break;
             case GameStage.Victory:
-                RestartStageTimer(20);
+                RestartStageTimer(120);
                 Victory();
                 break;
             case GameStage.Defeat:
-                RestartStageTimer(20);
+                RestartStageTimer(120);
                 Defeat();
                 break;
             default:
@@ -147,7 +147,10 @@ public class GameManager : Manager<GameManager>
             knightCtrl.Active = false;
         }
 
-        StartCoroutine(SequenceCombat());
+        if(currentCombat.Win)
+            StartCoroutine(SequenceCombat());
+        else
+            Invoke(nameof(NextStage), 1f);
     }
 
     private IEnumerator SequenceCombat()
