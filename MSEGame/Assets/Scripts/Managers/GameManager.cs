@@ -265,9 +265,11 @@ public class GameManager : Manager<GameManager>
             case 2:
                 {
                     GameObject hand = GameObject.Find($"Hand/Grid");
-                    int idx = Random.Range(0, hand.transform.childCount);
+                    if (hand.transform.childCount == 0)
+                        break;
 
-                    if (idx > 0 && hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
+                    int idx = Random.Range(0, hand.transform.childCount);
+                    if (hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
                     {
                         ctrl.Discard();
                     }
