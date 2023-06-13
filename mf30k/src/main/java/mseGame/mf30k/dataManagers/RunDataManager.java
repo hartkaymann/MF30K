@@ -52,7 +52,7 @@ public class RunDataManager {
 	@Transactional
 	public RunData addCombatToRun(Long run_id, CombatData combat) {
 		RunData run = findOne(run_id);
-		comb_repo.save(combat);
+		combat = comb_repo.save(combat);
 		run.addCombat(combat);
 		combat.setOwner_run(run);
 		return run;
