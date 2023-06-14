@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -212,11 +213,11 @@ public class GameManager : Manager<GameManager>
 
         PlayerManager.Instance.PlayerController.Player.Level += 1;
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(false);
-        DrawTreasureCard();
 
-        if (PlayerManager.Instance.PlayerController.TryGetComponent<RogueController>(out var rogueCtrl) && rogueCtrl.IsActive)
+        if (RoomManager.Instance.CurrentRoom.Card is MonsterCard monster)
         {
-            DrawTreasureCard();
+            for (int i = 0; i < monster.Treasures; i++)
+                DrawTreasureCard();
         }
     }
 

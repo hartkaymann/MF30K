@@ -51,7 +51,7 @@ public class Player
         {
             if (value != level)
             {
-                level = value;
+                level = Math.Max(value, 0);
                 OnPropertyChanged?.Invoke();
             }
         }

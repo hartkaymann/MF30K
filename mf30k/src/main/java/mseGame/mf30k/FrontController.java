@@ -60,7 +60,7 @@ public class FrontController {
 		System.out.println(p.getRace());
 		System.out.println(p.getProfession());
 		System.out.println(p.getGender());
-		System.out.println(p.getPlayerLevel());
+		System.out.println(p.getLevel());
 		System.out.println(p.getCombatLevel());
 		player_mgr.addPlayer(p);
 		return;
@@ -164,7 +164,7 @@ public class FrontController {
 
 		Player data = player_mgr.getPlayer(player_id);
 		currentRun.setCombatLevel(data.getCombatLevel());
-		currentRun.setPlayerLevel(data.getPlayerLevel());
+		currentRun.setPlayerLevel(data.getLevel());
 		currentRun.setProfession(data.getProfession());
 		currentRun.setRace(data.getRace());
 
@@ -195,7 +195,7 @@ public class FrontController {
 		System.out.println(updated.getRace());
 		System.out.println(updated.getProfession());
 		System.out.println(updated.getGender());
-		System.out.println(updated.getPlayerLevel());
+		System.out.println(updated.getLevel());
 		System.out.println(updated.getCombatLevel());
 		return;
 	}

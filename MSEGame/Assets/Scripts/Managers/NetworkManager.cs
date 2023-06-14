@@ -292,10 +292,10 @@ public class NetworkManager : Manager<NetworkManager>
             return Player.GetDummy();
         }
 
+        int level = int.Parse((string)obj.SelectToken("level"));
         string gender = (string)obj.SelectToken("gender");
         string race = (string)obj.SelectToken("race");
         string profession = (string)obj.SelectToken("profession");
-        int level = int.Parse((string)obj.SelectToken("playerLevel"));
         int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
 
         req.Dispose();
