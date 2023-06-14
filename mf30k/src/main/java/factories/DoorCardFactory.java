@@ -77,11 +77,11 @@ public class DoorCardFactory extends CardFactory {
 	@Override
 	public Card createCard() {
 		double chance = rand.nextDouble();
-		if (chance < 0.8) {
+		if (chance < 0.75) {
 			return createMonster(gameProgression);
-		} else if(chance >= 0.8 && chance < 0.9) {
+		} else if(chance >= 0.75 && chance < 0.875) {
 			return createProfession();
-		} else if (chance >= 0.9 && chance < 1) {
+		} else if (chance >= 0.875 && chance < 1) {
 			return createRace();
 		} else {
 			return createMonster(gameProgression);
