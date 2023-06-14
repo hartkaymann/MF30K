@@ -1,0 +1,1131 @@
+{
+	"info": {
+		"_postman_id": "d95eb8a3-429a-410d-886c-3436b2981be0",
+		"name": "Requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26862483",
+		"_collection_link": "https://crimson-comet-885396.postman.co/workspace/MF30K~5be2551f-14ef-4576-bf9e-70a1cb5f2fda/collection/26862483-d95eb8a3-429a-410d-886c-3436b2981be0?action=share&creator=26862483&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Player",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Kay\",\r\n    \"race\": \"Human\",\r\n    \"profession\": \"Knight\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/addPlayer",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"addPlayer"
+					]
+				},
+				"description": "Add a new player to the controller."
+			},
+			"response": [
+				{
+					"name": "Player",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"bambi\",\r\n    \"race\": \"Human\",\r\n    \"profession\": \"Barbarian\",\r\n    \"gender\": \"Male\",\r\n    \"playerLevel\": 1,\r\n    \"combatLevel\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/player",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"player"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"description": "Adds a new player to the controller",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "combat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"combatLvlPlayer\": 2,\n    \"combatLvlMonster\": 5,\n    \"win\": false,\n    \"consequence\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/player/{player_id}/combat",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player",
+						"{player_id}",
+						"combat"
+					]
+				},
+				"description": "Add a new combat to a running game. Belongs to the player specified in \"player_id\""
+			},
+			"response": []
+		},
+		{
+			"name": "New User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/signup/{username}",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"signup",
+						"{username}"
+					]
+				},
+				"description": "Adds a new user to the database, if username is not already taken.\n\nReturn false, if the username is taken, true otherwise."
+			},
+			"response": [
+				{
+					"name": "New User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/signup/bambi",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"signup",
+								"bambi"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "true"
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/signin/{username}",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"signin",
+						"{username}"
+					]
+				},
+				"description": "Logs an existing user in, if the username already exists.\n\nOn success, returns the userdata."
+			},
+			"response": [
+				{
+					"name": "Login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/signin/bambi",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"signin",
+								"bambi"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n        \"id\": 1,\n        \"username\": \"bambi\",\n        \"wins\": 6,\n        \"losses\": 2,\n        \"registrationDate\": \"2023-05-30\",\n        \"combats\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Add New Run",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/player/{player_id}/run",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player",
+						"{player_id}",
+						"run"
+					]
+				},
+				"description": "Signals a new run started by the player specified by \"player_id\" to the backend."
+			},
+			"response": [
+				{
+					"name": "Add New Run",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/player/bambi/run",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"player",
+								"bambi",
+								"run"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "User Stats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/stats/kay",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"stats",
+						"kay"
+					]
+				},
+				"description": "Response:  \n\n{  \n\n\"id\": 1,  \n\"username\": \"bambi\",  \n\"wins\": 0,  \n\"losses\": 0,  \n\"registrationDate\": \"2023-05-30\",  \n\"runs\": \\[\\]\n\n}"
+			},
+			"response": [
+				{
+					"name": "User Stats",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/stats/bambi",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"stats",
+								"bambi"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"username\": \"bambi\",\n    \"wins\": 6,\n    \"losses\": 2,\n    \"registrationDate\": \"2023-05-30\",\n    \"runs\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						""
+					]
+				},
+				"description": "Sens a test request, to ensure that the server is running, before signing up or logging in."
+			},
+			"response": []
+		},
+		{
+			"name": "Card",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/card?type=treasureOrdoor",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"card"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "treasureOrdoor"
+						}
+					]
+				},
+				"description": "Draw a random Card from the door Stack, can either be a profession, a race or a monsterSpawn."
+			},
+			"response": [
+				{
+					"name": "EquipmentCard",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/card?type=treasure",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"card"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "treasure",
+									"description": "Gets a random doorCard (either Race, Class or MonsterSpawn)"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"<uuid>\",\n    \"type\": \"Equipment\",\n    \"name\": \"SomeTestEqipment\",\n    \"equipType\": \"Helmet\",\n    \"goldValue\": 3,\n    \"combatBonus\": 2\n}"
+				},
+				{
+					"name": "MonsterCard",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/card?type=door",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"card"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "door"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"Monster\",\n    \"name\": \"VeryStrongMonster\",\n    \"combatLevel\": 9,\n    \"treasureAmount\": 2\n}"
+				},
+				{
+					"name": "ConsumableCard",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/card?type=treasure",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"card"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "treasure"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"Consumable\",\n    \"name\": \"testName\",\n    \"goldValue\": 10,\n    \"combatBonus\": 5,\n    \"monsterSide\": true,\n    \"heroSide\": false\n}"
+				}
+			]
+		},
+		{
+			"name": "Player",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/player/{playerID}",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player",
+						"{playerID}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Player",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/player/Kay",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"player",
+								"Kay"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\":\"DummyPlayer\",\n    \"equipment\":{\n        \"<uuid>\":{\n            \"name\":\"testHelmet\",\n            \"id\": \"<uuid>\",\n            \"goldValue\":1,\n            \"combatBonus\":2,\n            \"type\":\"HELMET\"\n        }\n    },\n    \"profession\":\"Barbarian\",\n    \"race\":\"Dwarf\",\n    \"gender\":\"Female\",\n    \"handCards\":{},\n    \"backpack\":{},\n    \"playerLevel\":2,\n    \"combatLevel\":4\n}"
+				}
+			]
+		},
+		{
+			"name": "Stage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/getStage",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"getStage"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Stage",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/stage",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"stage"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"stage\": \"Combat\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Run",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/player/{player_id}/run",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player",
+						"{player_id}",
+						"run"
+					]
+				},
+				"description": "Signal that the current run is finished to the backend. Backend updates the run data with the latest player data and adds it to the database."
+			},
+			"response": [
+				{
+					"name": "Run",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/player/bambi/run",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"player",
+								"bambi",
+								"run"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Player",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Name\",\r\n    \"level\": 1,\r\n    \"combatLevel\": 2,\r\n    \"profession\": \"WIZARD\",\r\n    \"race\": \"HUMAN\",\r\n    \"gender\": \"FEMALE\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/player?id=123",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Player",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 123,\r\n    \"name\" : \"kay\",\r\n    \"level\": 1,\r\n    \"combatLevel\": 2,\r\n    \"profession\": \"Wizard\", //changed profession\r\n    \"race\": \"Human\",\r\n    \"gender\": \"Male\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/player?id=123",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"player"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "123"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Stage",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"stage\" : \"SOMESTAGE\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/stage",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"stage"
+					]
+				},
+				"description": "Update the game stage."
+			},
+			"response": [
+				{
+					"name": "CombatPrep",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/stage",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"stage"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"GameStage\": \"COMBATPREPARATION\"\n}"
+				},
+				{
+					"name": "Combat",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/stage",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"stage"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "stageName",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"GameStage\": \"COMBAT\"\n}"
+				},
+				{
+					"name": "ManageInventory",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/stage",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"stage"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "stageName",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"GameStage\": \"MANAGEINVENTORY\"\n}"
+				},
+				{
+					"name": "RaceOrProfession",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/stage",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"stage"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "stageName",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"GameStage\": \"SELECTION\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Backpack",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"<uuid1>\": {\r\n        \"id\" : \"<uuid1>\",\r\n        \"type\": \"Equipment\",\r\n        \"name\": \"SomeTestEqipment\",\r\n        \"equipType\": \"Helmet\",\r\n        \"goldValue\": 3,\r\n        \"combatBonus\": 2\r\n            },\r\n    \"<uuid2>\": {\r\n        \"id\": \"<uuid2>\",\r\n        \"type\": \"Consumable\",\r\n        \"name\": \"testName\",\r\n        \"goldValue\": 10,\r\n        \"combatBonus\": 5,\r\n        \"monsterSide\": true,\r\n        \"heroSide\": false\r\n            }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/player/{playerID}/backpack",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player",
+						"{playerID}",
+						"backpack"
+					]
+				},
+				"description": "update the cards contained in the backpack of the player."
+			},
+			"response": [
+				{
+					"name": "Backpack",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"<uuid>\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/player/Kay/backpack",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"player",
+								"Kay",
+								"backpack"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Equipment",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"helmet\": 1, //UUID\r\n    \"armor\": 2,\r\n    \"boots\": 3,\r\n    \"weaponL\": 4,\r\n    \"weaponR\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/player/{playerID}/equipment",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player",
+						"{playerID}",
+						"equipment"
+					]
+				},
+				"description": "Update the Equipment of the player."
+			},
+			"response": [
+				{
+					"name": "Equipment",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"3ae7d1dd-cd07-446e-8d3a-91e855ff7201\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}:{{port}}/player/Kay/equipment",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"player",
+								"Kay",
+								"equipment"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Discard",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/discard?cardId=123",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"discard"
+					],
+					"query": [
+						{
+							"key": "cardId",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "dsicard",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/card?cardId=3ae7d1dd-cd07-446e-8d3a-91e855ff7201",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"card"
+							],
+							"query": [
+								{
+									"key": "cardId",
+									"value": "3ae7d1dd-cd07-446e-8d3a-91e855ff7201"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Sell",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}:{{port}}/player/{playerID}/sell?cardId=<uuid>",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"player",
+						"{playerID}",
+						"sell"
+					],
+					"query": [
+						{
+							"key": "cardId",
+							"value": "<uuid>"
+						}
+					]
+				},
+				"description": "Returns the gold value of the sold card."
+			},
+			"response": []
+		}
+	]
+}
