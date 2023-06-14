@@ -18,13 +18,18 @@ public class RandomNames {
 	};
 	
 	private static String[] weapons = {
+			/*
 		"Blade",
 		"Sword",
 		"Rapier",
 		"Axe",
 		"Dagger",
-		"Halbard",
-		"Stick"
+		"Bow"*/
+		"Monsterslayer",
+		"Hellspawn",
+		"Skullsplitter",
+		"Faewrath",
+		"Faithbringer"
 	};
 	
 	private static String[] consumable = {

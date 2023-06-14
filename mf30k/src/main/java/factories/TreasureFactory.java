@@ -31,7 +31,13 @@ public class TreasureFactory extends CardFactory {
 		
 		equipmentType _type = equip[index];
 		
-		_name = _name + " " + _type.toString();
+		if(_type == equipmentType.Weapon) {
+			_name = _name + " " + RandomNames.randomWeapon();
+		} else {
+			_name = _name + " " + _type.toString();
+		}
+		
+		
 		
 		
 		Equipment equipment = new Equipment(_name, _gold, _combat, _type, _id);
@@ -44,8 +50,8 @@ public class TreasureFactory extends CardFactory {
 		String _name = RandomNames.randomAdjective();
 		_name += " " + RandomNames.randomConsumable();
 		
-		int _combat = rand.nextInt(1, 6);
-		int _gold = rand.nextInt(1, _combat+1);
+		int _combat = rand.nextInt(1, 7);
+		int _gold = rand.nextInt(Math.max(1, _combat-2), _combat+1);
 		
 		BuffTarget targets[] = BuffTarget.values();
 		int index = rand.nextInt(targets.length);
