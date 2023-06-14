@@ -12,6 +12,9 @@ import mseGame.mf30k.repo.*;
 public class RunDataManager {
 	@Autowired
 	RunDataRepositoryJpa repo;
+	
+	@Autowired
+	CombatDataRepository comb_repo;
 
 	public RunData insertRun(RunData r) {
 		return repo.save(r);
@@ -49,6 +52,7 @@ public class RunDataManager {
 	@Transactional
 	public RunData addCombatToRun(Long run_id, CombatData combat) {
 		RunData run = findOne(run_id);
+		combat = comb_repo.save(combat);
 		run.addCombat(combat);
 		combat.setOwner_run(run);
 		return run;

@@ -43,8 +43,8 @@ public class FrontController {
 	// Objects for the current game play
 	private GameStage stage;
 	private int stageChanges = 0;
-	private Long curRunID;
-
+	private Long curRunID = null;
+	
 	public int getStageChanges() {
 		return this.stageChanges;
 	}
@@ -60,7 +60,7 @@ public class FrontController {
 		System.out.println(p.getRace());
 		System.out.println(p.getProfession());
 		System.out.println(p.getGender());
-		System.out.println(p.getPlayerLevel());
+		System.out.println(p.getLevel());
 		System.out.println(p.getCombatLevel());
 		player_mgr.addPlayer(p);
 		return;
@@ -150,6 +150,7 @@ public class FrontController {
 			RunData current = new RunData(user, 0, 0, 0, null, null);
 			current = run_mgr.insertRun(current);
 			curRunID = current.getId();
+			System.out.println("Current Run Id is: " + curRunID);
 			return true;
 		} else {
 			return false;
@@ -163,13 +164,18 @@ public class FrontController {
 
 		Player data = player_mgr.getPlayer(player_id);
 		currentRun.setCombatLevel(data.getCombatLevel());
-		currentRun.setPlayerLevel(data.getPlayerLevel());
+		currentRun.setPlayerLevel(data.getLevel());
 		currentRun.setProfession(data.getProfession());
 		currentRun.setRace(data.getRace());
 
-		UserData user = user_mgr.findByUserName(player_id);
+		run_mgr.update(currentRun);
+		
+		UserData user = user_mgr.findByUserName(player_id);	
+		
 		user_mgr.addRunToUser(player_id, currentRun);
 		user_mgr.update(user);
+		
+		//TODO update the wins and losses
 
 		this.curRunID = null;
 		this.stageChanges = 0;
@@ -185,7 +191,12 @@ public class FrontController {
 	@PutMapping(value = "/player/{playerID}", consumes = "application/json")
 	public void updatePlayer(@PathVariable(name = "playerID") String playerID, @RequestBody Player playerDetails) {
 		Player updated = player_mgr.updatePlayer(playerID, playerDetails);
-		System.out.println(updated);
+		System.out.println("Updated Player: " + updated.getName());
+		System.out.println(updated.getRace());
+		System.out.println(updated.getProfession());
+		System.out.println(updated.getGender());
+		System.out.println(updated.getLevel());
+		System.out.println(updated.getCombatLevel());
 		return;
 	}
 

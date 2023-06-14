@@ -4,7 +4,7 @@ using UnityEngine;
 public class MonsterCard : DoorCard
 {
     private int level;
-    public int treasures;
+    private int treasures;
 
     [JsonIgnore]
     public int CombatBuff { get; set; }
@@ -14,6 +14,13 @@ public class MonsterCard : DoorCard
     {
         get { return level + CombatBuff; }
         private set { level = value; }
+    }
+
+    [JsonIgnore]
+    public int Treasures
+    {
+        get { return treasures; }
+        set { treasures = value; }
     }
 
     public MonsterCard(string name, string id, Sprite artwork, int combatLevel, int treasures) : base(name, CardType.Monster, id, artwork)

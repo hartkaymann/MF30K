@@ -14,8 +14,8 @@ import cards.RaceCard;
 @Service
 public class DoorCardFactory extends CardFactory {
 	
-	public DoorCardFactory(Random _rand) {
-		super(_rand);
+	public DoorCardFactory() {
+		super();
 	}
 
 	int gameProgression;

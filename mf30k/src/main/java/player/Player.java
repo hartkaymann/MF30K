@@ -16,12 +16,12 @@ public class Player {
 	private Gender gender;
 	private HashMap<UUID, Card> handCards;
 	private HashMap<UUID, Card> backpack;
-	private int playerLevel;
+	private int level;
 	private int combatLevel;
 	
 	
 	public Player(String name, HashMap<UUID, Equipment> equipment, Profession profession, Race race, Gender gender,
-			HashMap<UUID, Card> handCards, HashMap<UUID, Card> backpack, int playerLevel, int combatLevel) {
+			HashMap<UUID, Card> handCards, HashMap<UUID, Card> backpack, int level, int combatLevel) {
 		super();
 		this.name = name;
 		this.equipment = equipment;
@@ -30,7 +30,7 @@ public class Player {
 		this.gender = gender;
 		this.handCards = handCards;
 		this.backpack = backpack;
-		this.playerLevel = playerLevel;
+		this.level = level;
 		this.combatLevel = combatLevel;
 	}
 	
@@ -126,11 +126,11 @@ public class Player {
 	public void setBackpack(HashMap<UUID, Card> backpack) {
 		this.backpack = backpack;
 	}
-	public int getPlayerLevel() {
-		return playerLevel;
+	public int getLevel() {
+		return level;
 	}
-	public void setPlayerLevel(int playerLevel) {
-		this.playerLevel = playerLevel;
+	public void setLevel(int level) {
+		this.level = level;
 	}
 	public int getCombatLevel() {
 		return combatLevel;

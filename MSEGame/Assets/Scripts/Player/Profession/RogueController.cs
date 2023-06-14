@@ -13,6 +13,8 @@ public class RogueController : ProfessionController
     {
         base.UseAbility();
         IsActive = true;
+        if (RoomManager.Instance.CurrentRoom.Card is MonsterCard monster)
+            monster.Treasures += 1; IsActive = true;
     }
 
     public override void HandleNewCycle()
