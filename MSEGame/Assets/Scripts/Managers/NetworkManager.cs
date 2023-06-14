@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 enum RequestType
 {
@@ -153,6 +154,7 @@ public class NetworkManager : Manager<NetworkManager>
             yield return null;
         }
         req.Dispose();
+        yield return null;
     }
 
     public IEnumerator PostRun(Player player)
@@ -290,10 +292,10 @@ public class NetworkManager : Manager<NetworkManager>
             return Player.GetDummy();
         }
 
+        int level = int.Parse((string)obj.SelectToken("level"));
         string gender = (string)obj.SelectToken("gender");
         string race = (string)obj.SelectToken("race");
         string profession = (string)obj.SelectToken("profession");
-        int level = int.Parse((string)obj.SelectToken("playerLevel"));
         int combatLvl = int.Parse((string)obj.SelectToken("combatLevel"));
 
         req.Dispose();

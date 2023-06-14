@@ -15,6 +15,7 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private GameObject panelHand;
     [SerializeField] private GameObject nextStage;
     [SerializeField] private GameObject backpack;
+    [SerializeField] private GameObject buttonBackpack;
     [SerializeField] private GameObject equipment;
     [SerializeField] private AbilityButton buttonAbility;
 
@@ -39,6 +40,10 @@ public class UIManager : Manager<UIManager>
         panelVictory.SetActive(stage == GameStage.Victory);
         panelDefeat.SetActive(stage == GameStage.Defeat);
         nextStage.SetActive(!(stage == GameStage.Combat || stage == GameStage.DrawCard));
+        buttonBackpack.SetActive(stage != GameStage.CombatPreparation);
+
+        if (stage == GameStage.CombatPreparation)
+            backpack.SetActive(false);
 
         if (stage == GameStage.Victory)
             UpdateVictoryPanel();

@@ -17,7 +17,7 @@ public class PlayerManager {
 		System.out.println(p.getRace());
 		System.out.println(p.getProfession());
 		System.out.println(p.getGender());
-		System.out.println(p.getPlayerLevel());
+		System.out.println(p.getLevel());
 		System.out.println(p.getCombatLevel());
 		if(players.containsKey(p.getName())) {
 			return false;
@@ -46,7 +46,7 @@ public class PlayerManager {
 	public Player updatePlayer(String name, Player updatedPlayer) {
 		Player plr = players.get(name);
 		plr.setCombatLevel(updatedPlayer.getCombatLevel());
-		plr.setPlayerLevel(updatedPlayer.getPlayerLevel());
+		plr.setLevel(updatedPlayer.getLevel());
 		plr.setGender(updatedPlayer.getGender());
 		plr.setProfession(updatedPlayer.getProfession());
 		plr.setRace(updatedPlayer.getRace());

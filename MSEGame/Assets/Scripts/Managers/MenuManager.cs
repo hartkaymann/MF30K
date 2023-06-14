@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,7 +33,12 @@ public class MenuManager : Manager<MenuManager>
         }
 
         Player player = new(SessionData.Username, race, profession, gender, 1, 0);
-        StartCoroutine(NetworkManager.Instance.PostPlayer(player));
+        StartCoroutine(LoadGame(player));
+    }
+
+    public IEnumerator LoadGame(Player player)
+    {
+        yield return StartCoroutine(NetworkManager.Instance.PostPlayer(player));
         SceneManager.LoadScene("Intro");
     }
 

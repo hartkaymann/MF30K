@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -60,15 +61,15 @@ public class GameManager : Manager<GameManager>
                 ChangeClass();
                 break;
             case GameStage.Combat:
-                RestartStageTimer(30);
+                RestartStageTimer(120);
                 Combat();
                 break;
             case GameStage.Victory:
-                RestartStageTimer(20);
+                RestartStageTimer(120);
                 Victory();
                 break;
             case GameStage.Defeat:
-                RestartStageTimer(20);
+                RestartStageTimer(120);
                 Defeat();
                 break;
             default:
@@ -140,14 +141,17 @@ public class GameManager : Manager<GameManager>
         currentCombat.Win = await TurnCombatWheel();
 
         // If knight ability is acive, you can go again
-        if (!currentCombat.Win && PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
+        if (PlayerManager.Instance.PlayerController.TryGetComponent<KnightController>(out var knightCtrl))
         {
-            if (knightCtrl.Active)
+            if (!currentCombat.Win && knightCtrl.Active)
                 currentCombat.Win = await TurnCombatWheel();
             knightCtrl.Active = false;
         }
 
-        StartCoroutine(SequenceCombat());
+        if(currentCombat.Win)
+            StartCoroutine(SequenceCombat());
+        else
+            Invoke(nameof(NextStage), 1f);
     }
 
     private IEnumerator SequenceCombat()
@@ -209,11 +213,11 @@ public class GameManager : Manager<GameManager>
 
         PlayerManager.Instance.PlayerController.Player.Level += 1;
         RoomManager.Instance.CurrentRoom.Renderer.OpenTreasure(false);
-        DrawTreasureCard();
 
-        if (PlayerManager.Instance.PlayerController.TryGetComponent<RogueController>(out var rogueCtrl) && rogueCtrl.IsActive)
+        if (RoomManager.Instance.CurrentRoom.Card is MonsterCard monster)
         {
-            DrawTreasureCard();
+            for (int i = 0; i < monster.Treasures; i++)
+                DrawTreasureCard();
         }
     }
 
@@ -265,9 +269,11 @@ public class GameManager : Manager<GameManager>
             case 2:
                 {
                     GameObject hand = GameObject.Find($"Hand/Grid");
-                    int idx = Random.Range(0, hand.transform.childCount);
+                    if (hand.transform.childCount == 0)
+                        break;
 
-                    if (idx > 0 && hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
+                    int idx = Random.Range(0, hand.transform.childCount);
+                    if (hand.transform.GetChild(idx).TryGetComponent<CardController>(out var ctrl))
                     {
                         ctrl.Discard();
                     }

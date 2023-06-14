@@ -23,6 +23,8 @@ public class ConsequenceCardController : MonoBehaviour, IPointerDownHandler
         frontFace.SetActive(true);
         backFace.SetActive(false);
 
+
+
         GameManager.Instance.ConsequenceChosen(consequence);
     }
 
@@ -44,7 +46,14 @@ public class ConsequenceCardController : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!isFlipped)
+        // Check if no siblings have already been flipped
+        bool otherIsFlipped = false;
+        foreach (var ccc in transform.parent.GetComponentsInChildren<ConsequenceCardController>())
+        {
+            if (ccc.isFlipped) otherIsFlipped = true;
+        }
+
+        if (!otherIsFlipped && !isFlipped)
             StartCoroutine(AnimateFlip());
 
         isFlipped = true;

@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: human_attacking
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,7 +18,8 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: -950544144, guid: 3e846554e74406246987b5bb4803471b, type: 3}
     - time: 0.083333336
@@ -41,13 +42,16 @@ AnimationClip:
     path: 
     classID: 212
     script: {fileID: 0}
-  - curve:
+    flags: 2
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: 2100000, guid: 989badc6aa4072c4a80aef5641f3ece2, type: 2}
     attribute: m_Materials.Array.data[0]
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 12
   m_WrapMode: 0
   m_Bounds:
@@ -62,6 +66,8 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     - serializedVersion: 2
       path: 0
       attribute: 0
@@ -69,6 +75,8 @@ AnimationClip:
       typeID: 212
       customType: 21
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: -950544144, guid: 3e846554e74406246987b5bb4803471b, type: 3}
     - {fileID: 530759501, guid: 3e846554e74406246987b5bb4803471b, type: 3}
